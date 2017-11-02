@@ -88,9 +88,24 @@ class SupplierCellRenderer extends CellRendererAbstract {
 /**
  * The default cell renderer. Just returns the value of the cell
  */
-class DefaultCellRenderer extends CellRendererAbstract {
+class DefaultVertexRenderer extends CellRendererAbstract {
     getRenderedLabel(cell: any): HTMLElement {
         return cell.value;
+    }
+
+    getTooltip(cell: any): String {
+        return "";
+    }
+
+    isLabelClipped(cell: any) : boolean { return false;}    
+}
+
+/**
+ * The default edge renderer.
+ */
+class DefaultEdgeRenderer extends CellRendererAbstract {
+    getRenderedLabel(cell: any): HTMLElement {
+        return undefined;
     }
 
     getTooltip(cell: any): String {
@@ -107,14 +122,20 @@ export class GraphCellRenderer {
     private mapping: { [name: string]: CellRendererConstructor } = {
         "part": PartRenderer,
         "supplier": SupplierCellRenderer,
-        "default": DefaultCellRenderer
+        "defaultVertex": DefaultVertexRenderer,
+        "defaultEdge": DefaultEdgeRenderer
     }
 
     private getRendererForCell(cell: any): CellRendererConstructor {
         if (cell && this.mapping[cell.style]) {
             return this.mapping[cell.style];
         } else {
-            return this.mapping["default"];
+            if(cell.isVertex()) {
+                return this.mapping["defaultVertex"]; 
+            } else {
+                return this.mapping["defaultEdge"];
+            }
+            
         }
     }
 

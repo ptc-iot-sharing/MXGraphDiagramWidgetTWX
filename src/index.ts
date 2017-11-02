@@ -12,7 +12,7 @@ let mxGraph = mxgraph.mxGraph,
   mxLayoutManager = mxgraph.mxLayoutManager,
   mxConstants = mxgraph.mxConstants,
   mxEdgeStyle = mxgraph.mxEdgeStyle;
-  
+
   let mxCellRenderer = mxgraph.mxCellRenderer;
   
 window.onload = function () {
@@ -45,7 +45,7 @@ window.onload = function () {
       graph.graphHandler.removeCellsFromParent = false;
       graph.collapseToPreferredSize = false;
       graph.constrainChildren = false;
-      graph.cellsSelectable = false;
+      graph.cellsSelectable = true;
       graph.extendParentsOnAdd = false;
       graph.extendParents = false;
       graph.border = 10;
@@ -62,6 +62,7 @@ window.onload = function () {
       style[mxConstants.STYLE_SHAPE] = mxConstants.SHAPE_SWIMLANE;
       style[mxConstants.STYLE_VERTICAL_ALIGN] = 'middle';
       style[mxConstants.STYLE_FONTSIZE] = 13;
+      style[mxConstants.STYLE_ALIGN] = mxConstants.ALIGN_LEFT;
       style[mxConstants.STYLE_STARTSIZE] = 22;
       style[mxConstants.STYLE_HORIZONTAL] = false;
       style[mxConstants.STYLE_FONTCOLOR] = 'black';
