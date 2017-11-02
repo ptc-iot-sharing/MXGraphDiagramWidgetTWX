@@ -1,24 +1,20 @@
-let mxgraph = require("mxgraph")({
-  mxImageBasePath: "./node_modules/mxgraph/javascript/src/images",
-  mxBasePath: "./node_modules/mxgraph/javascript/src"
-});
+import {mxgraph} from "./mxGraphImport"
+import "./FlexArrowShape";
+import {GraphCellRenderer} from './CellRenderer'
+
 let mxGraph = mxgraph.mxGraph,
   mxShape = mxgraph.mxShape,
-  mxConnectionConstraint = mxgraph.mxConnectionConstraint,
-  mxPoint = mxgraph.mxPoint,
-  mxPolyline = mxgraph.mxPolyline,
-  mxEvent = mxgraph.mxEvent,
   mxRubberband = mxgraph.mxRubberband,
-  myCellState = mxgraph.mxCellState,
   mxClient = mxgraph.mxClient,
   mxUtils = mxgraph.mxUtils,
   mxCellTracker = mxgraph.mxCellTracker,
-  mxFastOrganicLayout = mxgraph.mxFastOrganicLayout,
   mxStackLayout = mxgraph.mxStackLayout,
   mxLayoutManager = mxgraph.mxLayoutManager,
   mxConstants = mxgraph.mxConstants,
   mxEdgeStyle = mxgraph.mxEdgeStyle;
-
+  
+  let mxCellRenderer = mxgraph.mxCellRenderer;
+  
 window.onload = function () {
   // Program starts here. Creates a sample graph in the
   // DOM node with the specified ID. This function is invoked
@@ -34,6 +30,7 @@ window.onload = function () {
     else {
       // Creates the graph inside the given container
       var graph = new mxGraph(container);
+      container.style.background = 'url("node_modules/mxgraph/javascript/examples/editors/images/grid.gif")';
       // Enables tooltips, panning and resizing of the container
       graph.setPanning(true);
       graph.setResizeContainer(true);
@@ -45,51 +42,69 @@ window.onload = function () {
       graph.setCellsEditable(false);
       graph.setDropEnabled(false);
       graph.setSplitEnabled(false);
-      new mxCellTracker(graph);
-      // Enables crisp rendering of rectangles in SVG
-      mxConstants.ENTITY_SEGMENT = 20;
-      var style = graph.getStylesheet().getDefaultEdgeStyle();
-      style[mxConstants.STYLE_EDGE] = mxEdgeStyle.EntityRelation;
-      style[mxConstants.STYLE_ROUNDED] = true;
-
-      style = graph.getStylesheet().getDefaultVertexStyle();
-      style[mxConstants.STYLE_FILLCOLOR] = '#ffffff';
-      style[mxConstants.STYLE_SHAPE] = 'swimlane';
-      style[mxConstants.STYLE_STARTSIZE] = 30;
-
-      style = [];
-      style[mxConstants.STYLE_SHAPE] = mxConstants.SHAPE_RECTANGLE;
-      style[mxConstants.STYLE_STROKECOLOR] = 'none';
-      style[mxConstants.STYLE_FILLCOLOR] = 'none';
-      style[mxConstants.STYLE_FOLDABLE] = false;
-      graph.getStylesheet().putCellStyle('column', style);
-      // Installs a custom tooltip for cells
-      graph.getTooltipForCell = function (cell) {
-        return 'Doubleclick and right- or shiftclick';
-      }
+      graph.graphHandler.removeCellsFromParent = false;
       graph.collapseToPreferredSize = false;
       graph.constrainChildren = false;
       graph.cellsSelectable = false;
       graph.extendParentsOnAdd = false;
       graph.extendParents = false;
       graph.border = 10;
-      // Returns a HTML representation of the cell where the
-      // upper half is the first value, lower half is second
-      // value
+
+      let graphRenderer = new GraphCellRenderer();
+
+      new mxCellTracker(graph);
+      // Enables crisp rendering of rectangles in SVG
+      var style = graph.getStylesheet().getDefaultEdgeStyle();
+      style[mxConstants.STYLE_ROUNDED] = false;
+
+      // create the supplier cell
+      style = mxUtils.clone(style);
+      style[mxConstants.STYLE_SHAPE] = mxConstants.SHAPE_SWIMLANE;
+      style[mxConstants.STYLE_VERTICAL_ALIGN] = 'middle';
+      style[mxConstants.STYLE_FONTSIZE] = 13;
+      style[mxConstants.STYLE_STARTSIZE] = 22;
+      style[mxConstants.STYLE_HORIZONTAL] = false;
+      style[mxConstants.STYLE_FONTCOLOR] = 'black';
+      style[mxConstants.STYLE_STROKECOLOR] = 'black';
+      graph.getStylesheet().putCellStyle('supplier', style);
+
+      // create the style for the part cell
+      style = mxUtils.clone(graph.getStylesheet().getDefaultEdgeStyle());
+      style[mxConstants.STYLE_STROKECOLOR] = 'black';
+      style[mxConstants.STYLE_SHAPE] = mxConstants.SHAPE_RECTANGLE;
+      graph.getStylesheet().putCellStyle('part', style);
+      // Creates the default style for edges
+      style = {
+        "endArrow": "block",
+        "edgeStyle": mxEdgeStyle.ElbowConnector,
+        "strokeColor": 'black',
+        "shape": "flexArrow",
+        "fillColor": "#B3FF66",
+        "width": "4",
+        "endSize": "4.42",
+        "endWidth": "11",
+      };
+      graph.getStylesheet().putDefaultEdgeStyle(style);
+      // Installs a custom tooltip for cells
+      graph.getTooltipForCell = graphRenderer.getCellTooltip;
+      graph.isLabelClipped = graphRenderer.isLabelClipped;
+
       // Installs auto layout for all levels
       var layout = new mxStackLayout(graph, true);
+      layout.resizeParent = true;
+
       layout.border = graph.border;
       var layoutMgr = new mxLayoutManager(graph);
       layoutMgr.getLayout = function (cell) {
         if (!cell.collapsed) {
           if (cell.parent != graph.model.root) {
             layout.resizeParent = true;
-            layout.horizontal = false;
-            layout.spacing = 10;
+            layout.horizontal = true;
+            layout.spacing = 40;
           }
           else {
             layout.resizeParent = true;
-            layout.horizontal = true;
+            layout.horizontal = false;
             layout.spacing = 40;
           }
 
@@ -98,37 +113,25 @@ window.onload = function () {
 
         return null;
       };
+      // Returns a html representation of the cell
+      graph.getLabel = graphRenderer.getCellLabel;
 
-      graph.getLabel = function (cell) {
-        if (cell.isVertex()) {
-          var table = document.createElement('table');
-          table.style.height = '100%';
-          table.style.width = '100%';
+      // Extends mxGraphModel.getStyle to show an image when collapsed
+      var modelGetStyle = graph.model.getStyle;
+      graph.model.getStyle = function (cell) {
+        if (cell != null) {
+          var style = modelGetStyle.apply(this, arguments);
 
-          var body = document.createElement('tbody');
-          var tr1 = document.createElement('tr');
-          var td1 = document.createElement('td');
-          td1.style.textAlign = 'center';
-          td1.style.fontSize = '12px';
-          td1.style.color = '#774400';
-          mxUtils.write(td1, cell.value.first || cell.value);
+          if (cell.style == 'supplier' && this.isCollapsed(cell)) {
+            style = 'rectangle';
+          }
 
-          var tr2 = document.createElement('tr');
-          var td2 = document.createElement('td');
-          td2.style.textAlign = 'center';
-          td2.style.fontSize = '12px';
-          td2.style.color = '#774400';
-          mxUtils.write(td2, cell.value.second || cell.value);
-
-          tr1.appendChild(td1);
-          tr2.appendChild(td2);
-          body.appendChild(tr1);
-          body.appendChild(tr2);
-          table.appendChild(body);
-
-          return table;
+          return style;
         }
+
+        return null;
       };
+
       // Enables rubberband selection
       new mxRubberband(graph);
 
@@ -144,50 +147,56 @@ window.onload = function () {
       // Adds cells to the model in a single step
       graph.getModel().beginUpdate();
       try {
-        var col1 = graph.insertVertex(parent, null, '', 0, 0, 120, 0, 'column');
+        var data = {
+          'PlantName': 'Industrialesud GmbH',
+          'Lft-Nr+ZA': '151573-12',
+          'Ort / Land': 'Landau / DE',
+          'Produktion': undefined,
+          'Sequenzprod.': 'ja',
+          'Teilefamilie': undefined,
+          'Name': 'Himmel',
+          'Variantenzahl': 'G30/F90: 18; F34/F36: 132',
+          'BehälterTyp': '3104026',
+          'Füllgrad': '6'
+        };
+        var supplier1 = graph.insertVertex(parent, null, 'Industrialesud GmbH / Landau / DE', 0, 0, 400, 250, 'supplier');
 
-        var v1 = graph.insertVertex(col1, null, '1', 0, 0, 100, 30);
-        // v1.collapsed = true;
+        var v1 = graph.insertVertex(supplier1, null, { data: data, title: 'Himmel G30//F34/F36 H50' }, 0, 0, 200, 220, "part");
+        v1.collapsed = false;
+        var v2 = graph.insertVertex(supplier1, null, { data: data, title: 'Himmel F34/F36/G30/G22/G82 H50' }, 0, 0, 200, 220, 'part');
+        v1.collapsed = false;
+        var supplier1 = graph.insertVertex(parent, null, 'Grupo Antolin Bohema A.S.  / Liberec / CZ / G31/ G32', 0, 0, 400, 250, 'supplier');
+        var t = v1;
+        var v22 = graph.insertVertex(supplier1, null, { data: data, title: 'Himmel G31 / G32' }, 0, 0, 200, 220, "part");
+        v1.collapsed = false;
+        graph.insertEdge(parent, null, 'test', v1, v22);
+        graph.insertEdge(parent, null, 'test', v2, v22);
 
-        var v11 = graph.insertVertex(v1, null, '1.1', 0, 0, 80, 30);
-        v11.collapsed = true;
+        var supplier1 = graph.insertVertex(parent, null, 'Industrialesud GmbH / Landau / DE', 0, 0, 400, 250, 'supplier');
 
-        var v111 = graph.insertVertex(v11, null, '1.1.1', 0, 0, 60, 30);
-        var v112 = graph.insertVertex(v11, null, '1.1.2', 0, 0, 60, 30);
+        var v1 = graph.insertVertex(supplier1, null, { data: data, title: 'Himmel G30//F34/F36 H50' }, 0, 0, 200, 220, "part");
+        v1.collapsed = false;
+        var v2 = graph.insertVertex(supplier1, null, { data: data, title: 'Himmel F34/F36/G30/G22/G82 H50' }, 0, 0, 200, 220, 'part');
+        v1.collapsed = false;
+        var supplier1 = graph.insertVertex(parent, null, 'Grupo Antolin Bohema A.S.  / Liberec / CZ / G31/ G32', 0, 0, 400, 250, 'supplier');
 
-        var v12 = graph.insertVertex(v1, null, '1.2', 0, 0, 80, 30);
+        var v22 = graph.insertVertex(supplier1, null, { data: data, title: 'Himmel G31 / G32' }, 0, 0, 200, 220, "part");
+        v1.collapsed = false;
+        graph.insertEdge(parent, null, 'test', v1, v22);
+        graph.insertEdge(parent, null, 'test', v2, t);
 
-        var col2 = graph.insertVertex(parent, null, '', 0, 0, 120, 0, 'column');
+        var supplier1 = graph.insertVertex(parent, null, 'Industrialesud GmbH / Landau / DE', 0, 0, 400, 250, 'supplier');
 
-        var v2 = graph.insertVertex(col2, null, '2', 0, 0, 100, 30);
-        v2.collapsed = true;
+        var v1 = graph.insertVertex(supplier1, null, { data: data, title: 'Himmel G30//F34/F36 H50' }, 0, 0, 200, 220, "part");
+        v1.collapsed = false;
+        var v2 = graph.insertVertex(supplier1, null, { data: data, title: 'Himmel F34/F36/G30/G22/G82 H50' }, 0, 0, 200, 220, 'part');
+        v1.collapsed = false;
+        var supplier1 = graph.insertVertex(parent, null, 'Grupo Antolin Bohema A.S.  / Liberec / CZ / G31/ G32', 0, 0, 400, 250, 'supplier');
 
-        var v21 = graph.insertVertex(v2, null, '2.1', 0, 0, 80, 30);
-        v21.collapsed = true;
-
-        var v211 = graph.insertVertex(v21, null, '2.1.1', 0, 0, 60, 30);
-        var v212 = graph.insertVertex(v21, null, '2.1.2', 0, 0, 60, 30);
-
-        var v22 = graph.insertVertex(v2, null, '2.2', 0, 0, 80, 30);
-
-        var v3 = graph.insertVertex(col2, null, '3', 0, 0, 100, 30);
-        // v3.collapsed = true;
-
-        var v31 = graph.insertVertex(v3, null, '3.1', 0, 0, 80, 30);
-        v31.collapsed = true;
-
-        var v311 = graph.insertVertex(v31, null, '3.1.1', 0, 0, 60, 30);
-        var v312 = graph.insertVertex(v31, null, '3.1.2', 0, 0, 60, 30);
-
-        var v32 = graph.insertVertex(v3, null, '3.2', 0, 0, 80, 30);
-
-        graph.insertEdge(parent, null, '', v111, v211);
-        graph.insertEdge(parent, null, '', v112, v212);
-        graph.insertEdge(parent, null, '', v112, v22);
-
-        graph.insertEdge(parent, null, '', v12, v311);
-        graph.insertEdge(parent, null, '', v12, v312);
-        graph.insertEdge(parent, null, '', v12, v32);
+        var v22 = graph.insertVertex(supplier1, null, { data: data, title: 'Himmel G31 / G32' }, 0, 0, 200, 220, "part");
+        v1.collapsed = false;
+        graph.insertEdge(parent, null, 'test', v1, v22);
+        graph.insertEdge(parent, null, 'test', v2, t);
       }
       finally {
         // Updates the display
