@@ -1,6 +1,6 @@
-import {mxgraph} from "./mxGraphImport"
+import { mxgraph } from "./mxGraphImport"
 import "./FlexArrowShape";
-import {GraphCellRenderer} from './CellRenderer'
+import { GraphCellRenderer } from './CellRenderer'
 
 let mxGraph = mxgraph.mxGraph,
   mxShape = mxgraph.mxShape,
@@ -15,10 +15,12 @@ let mxGraph = mxgraph.mxGraph,
   mxRectangle = mxgraph.mxRectangle,
   mxOutline = mxgraph.mxOutline,
   mxEvent = mxgraph.mxEvent,
-  mxEditor = mxgraph.mxEditor;
+  mxToolbar = mxgraph.mxToolbar,
+  mxPrintPreview = mxgraph.mxPrintPreview,
+  mxWindow = mxgraph.mxWindow;
 
-  let mxCellRenderer = mxgraph.mxCellRenderer;
-  
+let mxCellRenderer = mxgraph.mxCellRenderer;
+
 window.onload = function () {
   // Program starts here. Creates a sample graph in the
   // DOM node with the specified ID. This function is invoked
@@ -26,16 +28,14 @@ window.onload = function () {
   // Program starts here. Creates a sample graph in the
   // DOM node with the specified ID. This function is invoked
   // from the onLoad event handler of the document (see below).
-  function main(container, outline, toolbar) {
+  function main(container) {
     // Checks if the browser is supported
     if (!mxClient.isBrowserSupported()) {
       mxUtils.error('Browser is not supported!', 200, false);
     }
     else {
       // Creates the graph inside the given container
-      var editor = new mxEditor();
-      editor.setGraphContainer(container);
-      var graph = editor.graph;
+      var graph = new mxGraph(container);
       container.style.background = 'url("node_modules/mxgraph/javascript/examples/editors/images/grid.gif")';
       // Enables tooltips, panning and resizing of the container
       graph.setPanning(true);
@@ -50,11 +50,12 @@ window.onload = function () {
       graph.setSplitEnabled(false);
       graph.graphHandler.removeCellsFromParent = false;
       graph.collapseToPreferredSize = false;
-      graph.constrainChildren = false;      
+      graph.constrainChildren = false;
       graph.cellsSelectable = true;
       graph.extendParentsOnAdd = false;
       graph.extendParents = false;
       graph.border = 10;
+      graph.setAutoSizeCells(true);
 
       let graphRenderer = new GraphCellRenderer();
 
@@ -73,6 +74,7 @@ window.onload = function () {
       style[mxConstants.STYLE_HORIZONTAL] = false;
       style[mxConstants.STYLE_FONTCOLOR] = 'black';
       style[mxConstants.STYLE_STROKECOLOR] = 'black';
+      style['html'] = 1
       graph.getStylesheet().putCellStyle('supplier', style);
 
       // create the style for the part cell
@@ -171,7 +173,7 @@ window.onload = function () {
         var v1 = graph.insertVertex(supplier1, null, { data: data, title: 'Himmel G30//F34/F36 H50' }, 0, 0, 200, 220, "part");
         v1.collapsed = false;
         supplier1.geometry.alternateBounds = new mxRectangle(0, 0, 300, 30);
-        
+
         var v2 = graph.insertVertex(supplier1, null, { data: data, title: 'Himmel F34/F36/G30/G22/G82 H50' }, 0, 0, 200, 220, 'part');
         v1.collapsed = false;
         var supplier1 = graph.insertVertex(parent, null, 'Grupo Antolin Bohema A.S.  / Liberec / CZ / G31/ G32', 0, 0, 400, 250, 'supplier');
@@ -211,48 +213,75 @@ window.onload = function () {
         // Updates the display
         graph.getModel().endUpdate();
       }
+      createToolbar(graph);
+      createOutlineView(graph);
+    };
+
+    function createOutlineView(graph) {
       // Creates the outline (navigator, overview) for moving
-				// around the graph in the top, right corner of the window.
-				var outln = new mxOutline(graph, outline);
-      // Creates a new DIV that is used as a toolbar and adds
-				// toolbar buttons.
-				var spacer = document.createElement('div');
-				spacer.style.display = 'inline';
-        spacer.style.padding = '8px';
-        
-        addToolbarButton(editor, toolbar, 'show', 'Show', 'images/camera.png', false);
-				addToolbarButton(editor, toolbar, 'print', 'Print', 'images/printer.png', false);
+      // around the graph in an mxWindow
+      var content = document.createElement('div');
+      content.style.position = 'absolute';
+      content.style.width = '100%';
+      content.style.height = '100%';
+      content.style.border = '1px solid whiteSmoke';
+      content.style.overflow = 'hidden';
+      var outline = new mxOutline(graph, content);
+      // create the window itself
+      let outlineWindow = new mxWindow('Outline', content, 200, 0, 200, 300, true);
+      outlineWindow.setMaximizable(false);
+      outlineWindow.setScrollable(false);
+      outlineWindow.setResizable(true);
+      outlineWindow.setVisible(true);
+      outlineWindow.setClosable(true);
+      // zoom actual to view the full chart
+      graph.zoomActual()
     }
 
-    function addToolbarButton(editor, toolbar, action, label, image, isTransparent)
-		{
-			var button = document.createElement('button');
-			button.style.fontSize = '10';
-			if (image != null)
-			{
-				var img = document.createElement('img');
-				img.setAttribute('src', image);
-				img.style.width = '16px';
-				img.style.height = '16px';
-				img.style.verticalAlign = 'middle';
-				img.style.marginRight = '2px';
-				button.appendChild(img);
-			}
-			if (isTransparent)
-			{
-				button.style.background = 'transparent';
-				button.style.color = '#FFFFFF';
-				button.style.border = 'none';
-			}
-			mxEvent.addListener(button, 'click', function(evt)
-			{
-				editor.execute(action);
-			});
-			mxUtils.write(button, label);
-			toolbar.appendChild(button);
-		};
-  };
+    function createToolbar(graph) {
+      var content = document.createElement('div');
+      content.style.padding = '4px';
+
+      var tb = new mxToolbar(content);
+
+      tb.addItem('Zoom In', 'images/zoom_in32.png', function (evt) {
+        graph.zoomIn();
+      });
+
+      tb.addItem('Zoom Out', 'images/zoom_out32.png', function (evt) {
+        graph.zoomOut();
+      });
+
+      tb.addItem('Actual Size', 'images/view_1_132.png', function (evt) {
+        graph.zoomActual();
+      });
+
+      tb.addItem('Print', 'images/print32.png', function (evt) {
+        var preview = new mxPrintPreview(graph, 1);
+        preview.open();
+      });
+      tb.addItem('Show', 'images/print32.png', function (evt) {
+        mxUtils.show(graph, null, 10, 10);
+      });
+
+      tb.addItem('Poster Print', 'images/press32.png', function (evt) {
+        var pageCount = mxUtils.prompt('Enter maximum page count', '1');
+
+        if (pageCount != null) {
+          var scale = mxUtils.getScaleForPageCount(pageCount, graph);
+          var preview = new mxPrintPreview(graph, scale);
+          preview.open();
+        }
+      });
+
+      let toolsWindow = new mxWindow('Tools', content, 0, 0, 200, 66, true);
+      toolsWindow.setMaximizable(false);
+      toolsWindow.setScrollable(false);
+      toolsWindow.setResizable(false);
+      toolsWindow.setVisible(true);
+    }
+  }
 
 
-  main(document.getElementById('graphContainer'), document.getElementById('outlineContainer'), document.getElementById('toolbarContainer'));
+  main(document.getElementById('graphContainer'));
 };
