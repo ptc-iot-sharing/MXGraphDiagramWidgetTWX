@@ -235,7 +235,7 @@ window.onload = function () {
       outlineWindow.setVisible(true);
       outlineWindow.setClosable(true);
       // zoom actual to view the full chart
-      graph.zoomActual()
+      graph.zoomActual();
     }
 
     function createToolbar(graph) {

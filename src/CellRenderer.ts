@@ -106,7 +106,16 @@ class DefaultVertexRenderer extends CellRendererAbstract {
  */
 class DefaultEdgeRenderer extends CellRendererAbstract {
     getRenderedLabel(cell: any): HTMLElement {
-        return undefined;
+        let content = document.createElement('div');
+        content.style.height = '100%';
+        content.style.width = '100%';
+        content.textContent = cell.value;
+        let image = document.createElement('img');
+        image.src = 'https://upload.wikimedia.org/wikipedia/commons/thumb/1/1d/Linecons_small-truck.svg/2000px-Linecons_small-truck.svg.png'
+        image.style.width = '25px';
+        image.style.height = '25px';
+        content.appendChild(image);
+        return content;
     }
 
     getTooltip(cell: any): String {
