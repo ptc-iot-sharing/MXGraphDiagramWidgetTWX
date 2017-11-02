@@ -46,6 +46,7 @@ class PartRenderer extends CellRendererAbstract {
                     let td1 = document.createElement('td');
                     td1.style.textAlign = 'left';
                     td1.style.border = '1px solid black';
+                    td1.style.fontSize = '12px';                    
                     if (!cell.value.data[key]) {
                         td1.style.fontWeight = 'bold';
                     }

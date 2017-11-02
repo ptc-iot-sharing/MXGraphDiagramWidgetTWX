@@ -11,7 +11,11 @@ let mxGraph = mxgraph.mxGraph,
   mxStackLayout = mxgraph.mxStackLayout,
   mxLayoutManager = mxgraph.mxLayoutManager,
   mxConstants = mxgraph.mxConstants,
-  mxEdgeStyle = mxgraph.mxEdgeStyle;
+  mxEdgeStyle = mxgraph.mxEdgeStyle,
+  mxRectangle = mxgraph.mxRectangle,
+  mxOutline = mxgraph.mxOutline,
+  mxEvent = mxgraph.mxEvent,
+  mxEditor = mxgraph.mxEditor;
 
   let mxCellRenderer = mxgraph.mxCellRenderer;
   
@@ -22,14 +26,16 @@ window.onload = function () {
   // Program starts here. Creates a sample graph in the
   // DOM node with the specified ID. This function is invoked
   // from the onLoad event handler of the document (see below).
-  function main(container) {
+  function main(container, outline, toolbar) {
     // Checks if the browser is supported
     if (!mxClient.isBrowserSupported()) {
       mxUtils.error('Browser is not supported!', 200, false);
     }
     else {
       // Creates the graph inside the given container
-      var graph = new mxGraph(container);
+      var editor = new mxEditor();
+      editor.setGraphContainer(container);
+      var graph = editor.graph;
       container.style.background = 'url("node_modules/mxgraph/javascript/examples/editors/images/grid.gif")';
       // Enables tooltips, panning and resizing of the container
       graph.setPanning(true);
@@ -44,7 +50,7 @@ window.onload = function () {
       graph.setSplitEnabled(false);
       graph.graphHandler.removeCellsFromParent = false;
       graph.collapseToPreferredSize = false;
-      graph.constrainChildren = false;
+      graph.constrainChildren = false;      
       graph.cellsSelectable = true;
       graph.extendParentsOnAdd = false;
       graph.extendParents = false;
@@ -164,6 +170,8 @@ window.onload = function () {
 
         var v1 = graph.insertVertex(supplier1, null, { data: data, title: 'Himmel G30//F34/F36 H50' }, 0, 0, 200, 220, "part");
         v1.collapsed = false;
+        supplier1.geometry.alternateBounds = new mxRectangle(0, 0, 300, 30);
+        
         var v2 = graph.insertVertex(supplier1, null, { data: data, title: 'Himmel F34/F36/G30/G22/G82 H50' }, 0, 0, 200, 220, 'part');
         v1.collapsed = false;
         var supplier1 = graph.insertVertex(parent, null, 'Grupo Antolin Bohema A.S.  / Liberec / CZ / G31/ G32', 0, 0, 400, 250, 'supplier');
@@ -203,9 +211,48 @@ window.onload = function () {
         // Updates the display
         graph.getModel().endUpdate();
       }
+      // Creates the outline (navigator, overview) for moving
+				// around the graph in the top, right corner of the window.
+				var outln = new mxOutline(graph, outline);
+      // Creates a new DIV that is used as a toolbar and adds
+				// toolbar buttons.
+				var spacer = document.createElement('div');
+				spacer.style.display = 'inline';
+        spacer.style.padding = '8px';
+        
+        addToolbarButton(editor, toolbar, 'show', 'Show', 'images/camera.png', false);
+				addToolbarButton(editor, toolbar, 'print', 'Print', 'images/printer.png', false);
     }
+
+    function addToolbarButton(editor, toolbar, action, label, image, isTransparent)
+		{
+			var button = document.createElement('button');
+			button.style.fontSize = '10';
+			if (image != null)
+			{
+				var img = document.createElement('img');
+				img.setAttribute('src', image);
+				img.style.width = '16px';
+				img.style.height = '16px';
+				img.style.verticalAlign = 'middle';
+				img.style.marginRight = '2px';
+				button.appendChild(img);
+			}
+			if (isTransparent)
+			{
+				button.style.background = 'transparent';
+				button.style.color = '#FFFFFF';
+				button.style.border = 'none';
+			}
+			mxEvent.addListener(button, 'click', function(evt)
+			{
+				editor.execute(action);
+			});
+			mxUtils.write(button, label);
+			toolbar.appendChild(button);
+		};
   };
 
 
-  main(document.getElementById('graphContainer'));
+  main(document.getElementById('graphContainer'), document.getElementById('outlineContainer'), document.getElementById('toolbarContainer'));
 };
