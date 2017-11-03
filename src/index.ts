@@ -17,7 +17,8 @@ let mxGraph = mxgraph.mxGraph,
   mxEvent = mxgraph.mxEvent,
   mxToolbar = mxgraph.mxToolbar,
   mxPrintPreview = mxgraph.mxPrintPreview,
-  mxWindow = mxgraph.mxWindow;
+  mxWindow = mxgraph.mxWindow,
+  mxSwimlaneManager = mxgraph.mxSwimlaneManager;
 
 let mxCellRenderer = mxgraph.mxCellRenderer;
 
@@ -56,7 +57,7 @@ window.onload = function () {
       graph.extendParents = false;
       graph.border = 10;
       graph.setAutoSizeCells(true);
-
+      
       let graphRenderer = new GraphCellRenderer();
 
       new mxCellTracker(graph);
@@ -81,23 +82,27 @@ window.onload = function () {
       style = mxUtils.clone(graph.getStylesheet().getDefaultEdgeStyle());
       style[mxConstants.STYLE_STROKECOLOR] = 'black';
       style[mxConstants.STYLE_SHAPE] = mxConstants.SHAPE_RECTANGLE;
+      style[mxConstants.STYLE_PERIMETER] = mxConstants.PERIMETER_RECTANGLE;
       graph.getStylesheet().putCellStyle('part', style);
       // Creates the default style for edges
-      style = {
-        "endArrow": "block",
-        "edgeStyle": mxEdgeStyle.ElbowConnector,
-        "strokeColor": 'black',
-        "shape": "flexArrow",
-        "fillColor": "#B3FF66",
-        "width": "4",
-        "endSize": "4.42",
-        "endWidth": "11",
-      };
+      style={};
+      style[mxConstants.STYLE_ROUNDED] = true;
+      style[mxConstants.STYLE_EDGE] = mxEdgeStyle.OrthConnector;
+      style[mxConstants.STYLE_SHAPE] = 'flexArrow';
+      style[mxConstants.STYLE_ENDARROW] = mxConstants.ARROW_CLASSIC;
+      style['width'] = 3;
+      style['endSize'] = 4.5;
+      style['endWidth'] = 11;
+      style[mxConstants.STYLE_VERTICAL_ALIGN] = mxConstants.ALIGN_MIDDLE;
+      style[mxConstants.STYLE_ALIGN] = mxConstants.ALIGN_CENTER;
+      style[mxConstants.STYLE_STROKECOLOR] = "#6482B9";
+      style[mxConstants.STYLE_FILLCOLOR] = "#B3FF66";
+      style[mxConstants.STYLE_FONTCOLOR] = "#446299";
       graph.getStylesheet().putDefaultEdgeStyle(style);
       // Installs a custom tooltip for cells
       graph.getTooltipForCell = graphRenderer.getCellTooltip;
       graph.isLabelClipped = graphRenderer.isLabelClipped;
-
+     
       // Installs auto layout for all levels
       var layout = new mxStackLayout(graph, true);
       layout.resizeParent = true;
@@ -122,9 +127,10 @@ window.onload = function () {
 
         return null;
       };
-      // Returns a html representation of the cell
-      graph.getLabel = graphRenderer.getCellLabel;
-
+    
+      new mxSwimlaneManager(graph);
+       // Returns a html representation of the cell
+       graph.getLabel = graphRenderer.getCellLabel;
       // Extends mxGraphModel.getStyle to show an image when collapsed
       var modelGetStyle = graph.model.getStyle;
       graph.model.getStyle = function (cell) {
@@ -171,9 +177,9 @@ window.onload = function () {
         var supplier1 = graph.insertVertex(parent, null, 'Industrialesud GmbH / Landau / DE', 0, 0, 400, 250, 'supplier');
 
         var v1 = graph.insertVertex(supplier1, null, { data: data, title: 'Himmel G30//F34/F36 H50' }, 0, 0, 200, 220, "part");
-        v1.collapsed = false;
         supplier1.geometry.alternateBounds = new mxRectangle(0, 0, 300, 30);
-
+        var v1 = graph.insertVertex(supplier1, null, { data: data, title: 'Himmel G30//F34/F36 H50' }, 0, 0, 200, 220, "part");
+        
         var v2 = graph.insertVertex(supplier1, null, { data: data, title: 'Himmel F34/F36/G30/G22/G82 H50' }, 0, 0, 200, 220, 'part');
         v1.collapsed = false;
         var supplier1 = graph.insertVertex(parent, null, 'Grupo Antolin Bohema A.S.  / Liberec / CZ / G31/ G32', 0, 0, 400, 250, 'supplier');
