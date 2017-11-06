@@ -18,7 +18,8 @@ let mxGraph = mxgraph.mxGraph,
   mxToolbar = mxgraph.mxToolbar,
   mxPrintPreview = mxgraph.mxPrintPreview,
   mxWindow = mxgraph.mxWindow,
-  mxSwimlaneManager = mxgraph.mxSwimlaneManager;
+  mxParallelEdgeLayout = mxgraph.mxParallelEdgeLayout,
+  mxCircleLayout = mxgraph.mxCircleLayout;
 
 let mxCellRenderer = mxgraph.mxCellRenderer;
 
@@ -50,20 +51,27 @@ window.onload = function () {
       graph.setDropEnabled(false);
       graph.setSplitEnabled(false);
       graph.graphHandler.removeCellsFromParent = false;
-      graph.collapseToPreferredSize = false;
-      graph.constrainChildren = false;
+      graph.collapseToPreferredSize = true;
+      graph.constrainChildren = true;
       graph.cellsSelectable = true;
-      graph.extendParentsOnAdd = false;
-      graph.extendParents = false;
+      graph.extendParentsOnAdd = true;
+      graph.extendParents = true;
       graph.border = 10;
       graph.setAutoSizeCells(true);
-      
+
       let graphRenderer = new GraphCellRenderer();
 
       new mxCellTracker(graph);
       // Enables crisp rendering of rectangles in SVG
       var style = graph.getStylesheet().getDefaultEdgeStyle();
       style[mxConstants.STYLE_ROUNDED] = false;
+
+      // create the suppliers cell
+      style = mxUtils.clone(style);
+      style[mxConstants.STYLE_FILLCOLOR] = 'transparent';
+      style[mxConstants.STYLE_SHAPE] = mxConstants.SHAPE_RECTANGLE;
+      style[mxConstants.STYLE_PERIMETER] = mxConstants.PERIMETER_RECTANGLE;
+      graph.getStylesheet().putCellStyle('suppliers', style);
 
       // create the supplier cell
       style = mxUtils.clone(style);
@@ -75,7 +83,6 @@ window.onload = function () {
       style[mxConstants.STYLE_HORIZONTAL] = false;
       style[mxConstants.STYLE_FONTCOLOR] = 'black';
       style[mxConstants.STYLE_STROKECOLOR] = 'black';
-      style['html'] = 1
       graph.getStylesheet().putCellStyle('supplier', style);
 
       // create the style for the part cell
@@ -85,7 +92,7 @@ window.onload = function () {
       style[mxConstants.STYLE_PERIMETER] = mxConstants.PERIMETER_RECTANGLE;
       graph.getStylesheet().putCellStyle('part', style);
       // Creates the default style for edges
-      style={};
+      style = {};
       style[mxConstants.STYLE_ROUNDED] = true;
       style[mxConstants.STYLE_EDGE] = mxEdgeStyle.OrthConnector;
       style[mxConstants.STYLE_SHAPE] = 'flexArrow';
@@ -102,7 +109,10 @@ window.onload = function () {
       // Installs a custom tooltip for cells
       graph.getTooltipForCell = graphRenderer.getCellTooltip;
       graph.isLabelClipped = graphRenderer.isLabelClipped;
-     
+
+      // Make sure the cells can be folded
+      graph.isCellFoldable = graphRenderer.isCellFodable;
+
       // Installs auto layout for all levels
       var layout = new mxStackLayout(graph, true);
       layout.resizeParent = true;
@@ -110,27 +120,25 @@ window.onload = function () {
       layout.border = graph.border;
       var layoutMgr = new mxLayoutManager(graph);
       layoutMgr.getLayout = function (cell) {
-        if (!cell.collapsed) {
-          if (cell.parent != graph.model.root) {
-            layout.resizeParent = true;
-            layout.horizontal = true;
-            layout.spacing = 40;
-          }
-          else {
-            layout.resizeParent = true;
-            layout.horizontal = false;
-            layout.spacing = 40;
-          }
-
+        if (cell.style == 'supplier') {
+          layout.horizontal = true;
+          layout.spacing = 20;
+          layout.x0 = 20;
+          return layout;
+        } else if (cell.style == 'suppliers') {
+          layout.horizontal = false;
+          layout.spacing = 20;
+          return layout;
+        } else if (cell.parent == graph.model.root) {
+          layout.horizontal = true;
+          layout.spacing = 50;
           return layout;
         }
 
-        return null;
-      };
-    
-      new mxSwimlaneManager(graph);
-       // Returns a html representation of the cell
-       graph.getLabel = graphRenderer.getCellLabel;
+      }
+
+      // Returns a html representation of the cell
+      graph.getLabel = graphRenderer.getCellLabel;
       // Extends mxGraphModel.getStyle to show an image when collapsed
       var modelGetStyle = graph.model.getStyle;
       graph.model.getStyle = function (cell) {
@@ -140,7 +148,6 @@ window.onload = function () {
           if (cell.style == 'supplier' && this.isCollapsed(cell)) {
             style = 'rectangle';
           }
-
           return style;
         }
 
@@ -153,7 +160,10 @@ window.onload = function () {
       // Adds a button to execute the layout
       document.body.appendChild(mxUtils.button('Arrange', function (evt) {
         var parent = graph.getDefaultParent();
-        layout.execute(parent);
+        layoutMgr.executeLayout(parent);
+        new mxCircleLayout(graph).execute(graph.getDefaultParent());
+        // new mxParallelEdgeLayout(graph).execute(graph.getDefaultParent());
+
       }));
       // Gets the default parent for inserting new cells. This
       // is normally the first child of the root (ie. layer 0).
@@ -174,12 +184,14 @@ window.onload = function () {
           'BehälterTyp': '3104026',
           'Füllgrad': '6'
         };
+        var parent = graph.insertVertex(parent, null, null, 0, 0, 400, 250, 'suppliers');
+        var parent2 = graph.insertVertex(graph.getDefaultParent(), null, null, 0, 0, 400, 250, 'suppliers');
+        
         var supplier1 = graph.insertVertex(parent, null, 'Industrialesud GmbH / Landau / DE', 0, 0, 400, 250, 'supplier');
-
+        var supplier11 = supplier1;
         var v1 = graph.insertVertex(supplier1, null, { data: data, title: 'Himmel G30//F34/F36 H50' }, 0, 0, 200, 220, "part");
         supplier1.geometry.alternateBounds = new mxRectangle(0, 0, 300, 30);
         var v1 = graph.insertVertex(supplier1, null, { data: data, title: 'Himmel G30//F34/F36 H50' }, 0, 0, 200, 220, "part");
-        
         var v2 = graph.insertVertex(supplier1, null, { data: data, title: 'Himmel F34/F36/G30/G22/G82 H50' }, 0, 0, 200, 220, 'part');
         v1.collapsed = false;
         var supplier1 = graph.insertVertex(parent, null, 'Grupo Antolin Bohema A.S.  / Liberec / CZ / G31/ G32', 0, 0, 400, 250, 'supplier');
@@ -202,13 +214,13 @@ window.onload = function () {
         graph.insertEdge(parent, null, 'test', v1, v22);
         graph.insertEdge(parent, null, 'test', v2, t);
 
-        var supplier1 = graph.insertVertex(parent, null, 'Industrialesud GmbH / Landau / DE', 0, 0, 400, 250, 'supplier');
+        var supplier1 = graph.insertVertex(parent2, null, 'Industrialesud GmbH / Landau / DE', 0, 0, 400, 250, 'supplier');
 
         var v1 = graph.insertVertex(supplier1, null, { data: data, title: 'Himmel G30//F34/F36 H50' }, 0, 0, 200, 220, "part");
         v1.collapsed = false;
         var v2 = graph.insertVertex(supplier1, null, { data: data, title: 'Himmel F34/F36/G30/G22/G82 H50' }, 0, 0, 200, 220, 'part');
         v1.collapsed = false;
-        var supplier1 = graph.insertVertex(parent, null, 'Grupo Antolin Bohema A.S.  / Liberec / CZ / G31/ G32', 0, 0, 400, 250, 'supplier');
+        var supplier1 = graph.insertVertex(parent2, null, 'Grupo Antolin Bohema A.S.  / Liberec / CZ / G31/ G32', 0, 0, 400, 250, 'supplier');
 
         var v22 = graph.insertVertex(supplier1, null, { data: data, title: 'Himmel G31 / G32' }, 0, 0, 200, 220, "part");
         v1.collapsed = false;
@@ -219,6 +231,10 @@ window.onload = function () {
         // Updates the display
         graph.getModel().endUpdate();
       }
+      var parentGeometry = parent.getGeometry();
+
+      graph.autoSizeCell(parent, false);
+
       createToolbar(graph);
       createOutlineView(graph);
     };

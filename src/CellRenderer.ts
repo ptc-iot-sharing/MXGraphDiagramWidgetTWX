@@ -12,7 +12,9 @@ abstract class CellRendererAbstract {
 
     getTooltip(cell: any): String { return; }
 
-    isLabelClipped(cell: any) : boolean { return false;}
+    isLabelClipped(cell: any): boolean { return false; }
+
+    isCellFodable(cell: any): boolean { return true; }    
 }
 
 class PartRenderer extends CellRendererAbstract {
@@ -46,7 +48,7 @@ class PartRenderer extends CellRendererAbstract {
                     let td1 = document.createElement('td');
                     td1.style.textAlign = 'left';
                     td1.style.border = '1px solid black';
-                    td1.style.fontSize = '11px';                    
+                    td1.style.fontSize = '11px';
                     if (!cell.value.data[key]) {
                         td1.style.fontWeight = 'bold';
                     }
@@ -67,8 +69,10 @@ class PartRenderer extends CellRendererAbstract {
         return cell.value.title;
     }
 
-    isLabelClipped(cell: any) : boolean { return true;}
-    
+    isLabelClipped(cell: any): boolean { return true; }
+
+    isCellFodable(cell: any): boolean { return true; }
+
 }
 /**
  * Renderer of a supplier cell
@@ -83,7 +87,9 @@ class SupplierCellRenderer extends CellRendererAbstract {
         return cell.value;
     }
 
-    isLabelClipped(cell: any) : boolean { return true;}
+    isLabelClipped(cell: any): boolean { return true; }
+    
+    isCellFodable(cell: any): boolean { return true; }    
 }
 
 /**
@@ -98,7 +104,9 @@ class DefaultVertexRenderer extends CellRendererAbstract {
         return "";
     }
 
-    isLabelClipped(cell: any) : boolean { return false;}    
+    isLabelClipped(cell: any): boolean { return false; }
+
+    isCellFodable(cell: any): boolean { return false; }    
 }
 
 /**
@@ -122,7 +130,9 @@ class DefaultEdgeRenderer extends CellRendererAbstract {
         return "";
     }
 
-    isLabelClipped(cell: any) : boolean { return false;}    
+    isLabelClipped(cell: any): boolean { return false; }
+
+    isCellFodable(cell: any): boolean { return false; }    
 }
 
 /**
@@ -140,12 +150,12 @@ export class GraphCellRenderer {
         if (cell && this.mapping[cell.style]) {
             return this.mapping[cell.style];
         } else {
-            if(cell.isVertex()) {
-                return this.mapping["defaultVertex"]; 
+            if (cell.isVertex()) {
+                return this.mapping["defaultVertex"];
             } else {
                 return this.mapping["defaultEdge"];
             }
-            
+
         }
     }
 
@@ -153,13 +163,18 @@ export class GraphCellRenderer {
         let cellRenderer = this.getRendererForCell(cell);
         return new cellRenderer().getRenderedLabel(cell);
     }
-    public getCellTooltip =  (cell) => {
+    public getCellTooltip = (cell) => {
         let cellRenderer = this.getRendererForCell(cell);
         return new cellRenderer().getTooltip(cell);
     }
 
-    public isLabelClipped =  (cell) => {
+    public isLabelClipped = (cell) => {
         let cellRenderer = this.getRendererForCell(cell);
         return new cellRenderer().isLabelClipped(cell);
+    }
+
+    public isCellFodable = (cell) => {
+        let cellRenderer = this.getRendererForCell(cell);
+        return new cellRenderer().isCellFodable(cell);
     }
 }
