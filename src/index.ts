@@ -58,52 +58,12 @@ window.onload = function () {
       graph.border = 10;
       graph.setAutoSizeCells(true);
 
+      createStyles(graph);
+
       let graphRenderer = new GraphCellRenderer(graph);
 
       new mxCellTracker(graph);
-      // Enables crisp rendering of rectangles in SVG
-      var style = graph.getStylesheet().getDefaultEdgeStyle();
-      style[mxConstants.STYLE_ROUNDED] = false;
-
-      // create the suppliers cell
-      style = mxUtils.clone(style);
-      style[mxConstants.STYLE_FILLCOLOR] = 'transparent';
-      style[mxConstants.STYLE_STROKECOLOR] = 'transparent';
-      style[mxConstants.STYLE_SHAPE] = mxConstants.SHAPE_RECTANGLE;
-      style[mxConstants.STYLE_PERIMETER] = mxConstants.PERIMETER_RECTANGLE;
-      graph.getStylesheet().putCellStyle('suppliers', style);
-
-      // create the supplier cell
-      style = mxUtils.clone(style);
-      style[mxConstants.STYLE_SHAPE] = 'mxgraph.lean_mapping.outside_sources';
-      style[mxConstants.STYLE_FONTSIZE] = 13;
-      //style[mxConstants.STYLE_ALIGN] = mxConstants.ALIGN_LEFT;
-      // style[mxConstants.STYLE_STARTSIZE] = 22;
-      style[mxConstants.STYLE_FONTCOLOR] = 'black';
-      style[mxConstants.STYLE_STROKECOLOR] = 'black';
-      graph.getStylesheet().putCellStyle('supplier', style);
-
-      // create the style for the part cell
-      style = mxUtils.clone(graph.getStylesheet().getDefaultEdgeStyle());
-      style[mxConstants.STYLE_STROKECOLOR] = 'black';
-      style[mxConstants.STYLE_SHAPE] = mxConstants.SHAPE_RECTANGLE;
-      style[mxConstants.STYLE_PERIMETER] = mxConstants.PERIMETER_RECTANGLE;
-      graph.getStylesheet().putCellStyle('part', style);
-      // Creates the default style for edges
-      style = {};
-      style[mxConstants.STYLE_ROUNDED] = true;
-      style[mxConstants.STYLE_EDGE] = mxEdgeStyle.OrthConnector;
-      style[mxConstants.STYLE_SHAPE] = 'flexArrow';
-      style[mxConstants.STYLE_ENDARROW] = mxConstants.ARROW_CLASSIC;
-      style['width'] = 3;
-      style['endSize'] = 4.5;
-      style['endWidth'] = 11;
-      style[mxConstants.STYLE_VERTICAL_ALIGN] = mxConstants.ALIGN_MIDDLE;
-      style[mxConstants.STYLE_ALIGN] = mxConstants.ALIGN_CENTER;
-      style[mxConstants.STYLE_STROKECOLOR] = "#6482B9";
-      style[mxConstants.STYLE_FILLCOLOR] = "#B3FF66";
-      style[mxConstants.STYLE_FONTCOLOR] = "#446299";
-      graph.getStylesheet().putDefaultEdgeStyle(style);
+     
       // Installs a custom tooltip for cells
       graph.getTooltipForCell = graphRenderer.getCellTooltip;
       graph.isLabelClipped = graphRenderer.isLabelClipped;
@@ -270,6 +230,52 @@ window.onload = function () {
       toolsWindow.setScrollable(false);
       toolsWindow.setResizable(false);
       toolsWindow.setVisible(true);
+    }
+
+    function createStyles(graph) {
+       // Enables crisp rendering of rectangles in SVG
+       var style = graph.getStylesheet().getDefaultEdgeStyle();
+       style[mxConstants.STYLE_ROUNDED] = false;
+ 
+       // create the suppliers cell
+       style = mxUtils.clone(style);
+       style[mxConstants.STYLE_FILLCOLOR] = 'transparent';
+       style[mxConstants.STYLE_STROKECOLOR] = 'transparent';
+       style[mxConstants.STYLE_SHAPE] = mxConstants.SHAPE_RECTANGLE;
+       style[mxConstants.STYLE_PERIMETER] = mxConstants.PERIMETER_RECTANGLE;
+       graph.getStylesheet().putCellStyle('suppliers', style);
+ 
+       // create the supplier cell
+       style = mxUtils.clone(style);
+       style[mxConstants.STYLE_SHAPE] = 'mxgraph.lean_mapping.outside_sources';
+       style[mxConstants.STYLE_FONTSIZE] = 13;
+       //style[mxConstants.STYLE_ALIGN] = mxConstants.ALIGN_LEFT;
+       // style[mxConstants.STYLE_STARTSIZE] = 22;
+       style[mxConstants.STYLE_FONTCOLOR] = 'black';
+       style[mxConstants.STYLE_STROKECOLOR] = 'black';
+       graph.getStylesheet().putCellStyle('supplier', style);
+ 
+       // create the style for the part cell
+       style = mxUtils.clone(graph.getStylesheet().getDefaultEdgeStyle());
+       style[mxConstants.STYLE_STROKECOLOR] = 'black';
+       style[mxConstants.STYLE_SHAPE] = mxConstants.SHAPE_RECTANGLE;
+       style[mxConstants.STYLE_PERIMETER] = mxConstants.PERIMETER_RECTANGLE;
+       graph.getStylesheet().putCellStyle('part', style);
+       // Creates the default style for edges
+       style = {};
+       style[mxConstants.STYLE_ROUNDED] = true;
+       style[mxConstants.STYLE_EDGE] = mxEdgeStyle.OrthConnector;
+       style[mxConstants.STYLE_SHAPE] = 'flexArrow';
+       style[mxConstants.STYLE_ENDARROW] = mxConstants.ARROW_CLASSIC;
+       style['width'] = 3;
+       style['endSize'] = 4.5;
+       style['endWidth'] = 11;
+       style[mxConstants.STYLE_VERTICAL_ALIGN] = mxConstants.ALIGN_MIDDLE;
+       style[mxConstants.STYLE_ALIGN] = mxConstants.ALIGN_CENTER;
+       style[mxConstants.STYLE_STROKECOLOR] = "#6482B9";
+       style[mxConstants.STYLE_FILLCOLOR] = "#B3FF66";
+       style[mxConstants.STYLE_FONTCOLOR] = "#446299";
+       graph.getStylesheet().putDefaultEdgeStyle(style);
     }
   }
 
