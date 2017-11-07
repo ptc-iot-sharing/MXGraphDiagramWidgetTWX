@@ -22,8 +22,6 @@ let mxGraph = mxgraph.mxGraph,
   mxParallelEdgeLayout = mxgraph.mxParallelEdgeLayout,
   mxCircleLayout = mxgraph.mxCircleLayout;
 
-let mxCellRenderer = mxgraph.mxCellRenderer;
-
 window.onload = function () {
   // Program starts here. Creates a sample graph in the
   // DOM node with the specified ID. This function is invoked
@@ -134,6 +132,17 @@ window.onload = function () {
         }
 
         return null;
+      };
+
+      // Extends mxCellRenderer.getControlBounds to move the collapse icon lower for factories and suppliers
+      var cellRendererControlBounds = graph.cellRenderer.getControlBounds;
+      graph.cellRenderer.getControlBounds = function (state, w, h) {
+        var value = cellRendererControlBounds.apply(this, arguments);
+
+        if (state.style.shape == "mxgraph.lean_mapping.outside_sources") {
+          return state.shape.getControlBounds(value, w, h);
+        }
+        return value;
       };
 
       // Enables rubberband selection
