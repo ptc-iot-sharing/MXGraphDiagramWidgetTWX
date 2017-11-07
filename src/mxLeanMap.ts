@@ -6,7 +6,8 @@ let mxShape = mxgraph.mxShape,
     mxConnectionConstraint = mxgraph.mxConnectionConstraint,
     mxPoint = mxgraph.mxPoint,
     mxConstants = mxgraph.mxConstants,
-    mxArrow = mxgraph.mxArrow;
+    mxArrow = mxgraph.mxArrow,
+    mxRectangle = mxgraph.mxRectangle;
 
 /**
  * $Id: mxLeanMap.js,v 1.3 2013/05/30 14:19:14 mate Exp $
@@ -247,22 +248,36 @@ mxLeanCustomerSupplier.prototype.paintVertexShape = function(c, x, y, w, h)
 	c.translate(x, y);
 
 	this.background(c, w, h);
-	c.setShadow(false);
+    c.setShadow(false);
 };
 
 mxLeanCustomerSupplier.prototype.background = function(c, w, h)
 {
 	c.begin();
-	c.moveTo(0, h);
-	c.lineTo(0, h * 0.3);
-	c.lineTo(w * 0.33, h * 0.02);
-	c.lineTo(w * 0.33, h * 0.3);
-	c.lineTo(w * 0.67, h * 0.02);
-	c.lineTo(w * 0.67, h * 0.3);
-	c.lineTo(w, h * 0.02);
+    c.moveTo(0, h);
+    // we don't want the header to expand forever;
+    var clampedHeight = Math.min(h * 0.3, 75);
+    c.lineTo(0, clampedHeight);
+	c.lineTo(w * 0.33, 0);
+	c.lineTo(w * 0.33, clampedHeight);
+	c.lineTo(w * 0.67, 0);
+	c.lineTo(w * 0.67, clampedHeight);
+	c.lineTo(w, 0);
 	c.lineTo(w, h);
 	c.close();
 	c.fillAndStroke();
+};
+
+mxLeanCustomerSupplier.prototype.getLabelBounds = function(rect)
+{
+    var clampedHeight = Math.min(rect.height * 0.3, 75);
+	return new mxRectangle(rect.x, rect.y + clampedHeight, rect.width, 30);
+};
+
+mxLeanCustomerSupplier.prototype.getGradientBounds = function(c, x, y, w, h)
+{
+    var clampedHeight = Math.min(h * 0.3, 75);
+	return new mxRectangle(x, y + clampedHeight + 30, w, h - clampedHeight - 30);
 };
 
 mxCellRenderer.registerShape('mxgraph.lean_mapping.outside_sources', mxLeanCustomerSupplier);

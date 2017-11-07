@@ -1,8 +1,42 @@
 import { mxgraph } from "./mxGraphImport"
 
+let mxStackLayout = mxgraph.mxStackLayout;
+
 interface CellRendererConstructor {
     new(): CellRendererAbstract;
 }
+
+class LayoutFactory {
+    static defaultLayout;
+    static supplierLayout;
+    static partLayout;
+    static allSuppliersLayout;
+
+    public static initialize = function (graph) {
+        LayoutFactory.defaultLayout = new mxStackLayout(graph, false);
+        LayoutFactory.defaultLayout.resizeParent = true;
+        LayoutFactory.defaultLayout.border = graph.border;
+        LayoutFactory.defaultLayout.horizontal = true;
+        LayoutFactory.defaultLayout.spacing = 50;
+        LayoutFactory.defaultLayout.resizeParent = true;
+
+        LayoutFactory.supplierLayout = new mxStackLayout(graph, true);
+        LayoutFactory.supplierLayout.resizeParent = true;
+        LayoutFactory.supplierLayout.spacing = 20;
+        LayoutFactory.supplierLayout.marginTop = 110;
+        LayoutFactory.supplierLayout.marginLeft = 10;
+
+        LayoutFactory.partLayout = new mxStackLayout(graph, false);
+        LayoutFactory.partLayout.resizeParent = true;
+        LayoutFactory.partLayout.fill = true;
+
+        LayoutFactory.allSuppliersLayout = new mxStackLayout(graph, false);
+        LayoutFactory.allSuppliersLayout.resizeParent = true;
+        LayoutFactory.allSuppliersLayout.spacing = 20;
+    }
+
+}
+
 
 /**
  * A abstract cell renderer. This is responsible for rendering the label, and tooltip of a cell
@@ -14,52 +48,21 @@ abstract class CellRendererAbstract {
 
     isLabelClipped(cell: any): boolean { return false; }
 
-    isCellFodable(cell: any): boolean { return true; }    
+    isCellFodable(cell: any): boolean { return true; }
+
+    getLayout(cell: any): any { return LayoutFactory.defaultLayout };
+
+    isCellSelectable(cell: any): boolean { return true }
 }
 
 class PartRenderer extends CellRendererAbstract {
     cell: any;
     /**
-     * Renderer of a cell that represents a part
-     * It is rendered as a html table with all the data.
+     * Renderer of a cell that represents a part. Don't return anything since the data inside
+     * is redered as separate cells
      */
-    getRenderedLabel(cell: any): HTMLElement {
-        if (cell.collapsed) {
-            return cell.value.title;
-        } else {
-            let table = document.createElement('table');
-            table.style.height = '100%';
-            table.style.width = '100%';
-            table.style.borderCollapse = 'collapse';
-            let body = document.createElement('tbody');
-            table.appendChild(body);
-            let tr1 = document.createElement('tr');
-            let td1 = document.createElement('td');
-            td1.style.textAlign = 'left';
-            td1.style.border = '1px solid black';
-            td1.style.fontSize = '12px';
-            td1.style.color = '#774400';
-            td1.textContent = cell.value.title;
-            tr1.appendChild(td1);
-            body.appendChild(tr1);
-            for (let key in cell.value.data) {
-                if (cell.value.data.hasOwnProperty(key)) {
-                    let tr1 = document.createElement('tr');
-                    let td1 = document.createElement('td');
-                    td1.style.textAlign = 'left';
-                    td1.style.border = '1px solid black';
-                    td1.style.fontSize = '11px';
-                    if (!cell.value.data[key]) {
-                        td1.style.fontWeight = 'bold';
-                    }
-                    td1.textContent = key + ":" + cell.value.data[key];
-                    tr1.appendChild(td1);
-                    body.appendChild(tr1);
-                }
-            }
-
-            return table;
-        }
+    getRenderedLabel(cell: any): any {
+        return "";
     };
 
     /**
@@ -72,6 +75,10 @@ class PartRenderer extends CellRendererAbstract {
     isLabelClipped(cell: any): boolean { return true; }
 
     isCellFodable(cell: any): boolean { return true; }
+
+    getLayout(cell: any): any { return LayoutFactory.partLayout }
+
+    isCellSelectable(cell: any): boolean { return true; }  
 
 }
 /**
@@ -88,8 +95,13 @@ class SupplierCellRenderer extends CellRendererAbstract {
     }
 
     isLabelClipped(cell: any): boolean { return true; }
+
+    isCellFodable(cell: any): boolean { return true; }
+
+    getLayout(cell: any): any { return LayoutFactory.supplierLayout }
+
+    isCellSelectable(cell: any): boolean { return true; }
     
-    isCellFodable(cell: any): boolean { return true; }    
 }
 
 /**
@@ -106,7 +118,12 @@ class DefaultVertexRenderer extends CellRendererAbstract {
 
     isLabelClipped(cell: any): boolean { return false; }
 
-    isCellFodable(cell: any): boolean { return false; }    
+    isCellFodable(cell: any): boolean { return false; }
+
+    getLayout(cell: any): any { return LayoutFactory.defaultLayout }
+
+    isCellSelectable(cell: any): boolean { return true; }
+    
 }
 
 /**
@@ -132,7 +149,40 @@ class DefaultEdgeRenderer extends CellRendererAbstract {
 
     isLabelClipped(cell: any): boolean { return false; }
 
-    isCellFodable(cell: any): boolean { return false; }    
+    isCellFodable(cell: any): boolean { return false; }
+
+    isCellSelectable(cell: any): boolean { return true; }
+    
+}
+
+class AllSupplierCell {
+    getRenderedLabel(cell: any): HTMLElement { return; };
+
+    getTooltip(cell: any): String { return; }
+
+    isLabelClipped(cell: any): boolean { return false; }
+
+    isCellFodable(cell: any): boolean { return true; }
+
+    getLayout(cell: any): any { return LayoutFactory.allSuppliersLayout }
+
+    isCellSelectable(cell: any): boolean { return false; }
+    
+}
+
+class PartDetailsCell {
+    getRenderedLabel(cell: any): HTMLElement { return cell.value; };
+
+    getTooltip(cell: any): String { return cell.value; }
+
+    isLabelClipped(cell: any): boolean { return false; }
+
+    isCellFodable(cell: any): boolean { return false; }
+
+    getLayout(cell: any): any { return LayoutFactory.defaultLayout }
+
+    isCellSelectable(cell: any): boolean { return false; }
+    
 }
 
 /**
@@ -143,7 +193,13 @@ export class GraphCellRenderer {
         "part": PartRenderer,
         "supplier": SupplierCellRenderer,
         "defaultVertex": DefaultVertexRenderer,
-        "defaultEdge": DefaultEdgeRenderer
+        "defaultEdge": DefaultEdgeRenderer,
+        "suppliers": AllSupplierCell,
+        "partDetails": PartDetailsCell
+    }
+
+    constructor(graph) {
+        LayoutFactory.initialize(graph);
     }
 
     private getRendererForCell(cell: any): CellRendererConstructor {
@@ -176,5 +232,15 @@ export class GraphCellRenderer {
     public isCellFodable = (cell) => {
         let cellRenderer = this.getRendererForCell(cell);
         return new cellRenderer().isCellFodable(cell);
+    }
+
+    public getLayout = (cell) => {
+        let cellRenderer = this.getRendererForCell(cell);
+        return new cellRenderer().getLayout(cell);
+    }
+
+    public isCellSelectable = (cell) => {
+        let cellRenderer = this.getRendererForCell(cell);
+        return new cellRenderer().isCellSelectable(cell);
     }
 }
