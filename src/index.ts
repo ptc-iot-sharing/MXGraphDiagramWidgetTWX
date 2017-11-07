@@ -3,6 +3,8 @@ import "./FlexArrowShape";
 import "./mxLeanMap";
 import { GraphCellRenderer } from './CellFactory'
 
+import  './dataExample'
+
 let mxGraph = mxgraph.mxGraph,
   mxShape = mxgraph.mxShape,
   mxRubberband = mxgraph.mxRubberband,
@@ -22,6 +24,7 @@ let mxGraph = mxgraph.mxGraph,
   mxParallelEdgeLayout = mxgraph.mxParallelEdgeLayout,
   mxCircleLayout = mxgraph.mxCircleLayout;
 
+
 window.onload = function () {
   // Program starts here. Creates a sample graph in the
   // DOM node with the specified ID. This function is invoked
@@ -38,9 +41,11 @@ window.onload = function () {
       // Creates the graph inside the given container
       var graph = new mxGraph(container);
       container.style.background = 'url("node_modules/mxgraph/javascript/examples/editors/images/grid.gif")';
-      // Enables tooltips, panning and resizing of the container
+      // Allow panning using the right click buttion
       graph.setPanning(true);
+      // allow resizing the container when an vertex moves outside of it
       graph.setResizeContainer(true);
+      // enable the display of tooltips
       graph.setTooltips(true);
       // disable new connections and cloning cells, as well as drag and drop outside
       graph.setConnectable(false);
@@ -49,21 +54,28 @@ window.onload = function () {
       graph.setCellsEditable(false);
       graph.setDropEnabled(false);
       graph.setSplitEnabled(false);
+      // don't allow cells to be dropped outside of their current parent
       graph.graphHandler.removeCellsFromParent = false;
+      // when a cells is collapsed, recalculate its preffered size
       graph.collapseToPreferredSize = true;
+      // cells should not be bigger than their parents
       graph.constrainChildren = true;
-      graph.cellsSelectable = true;
       graph.extendParentsOnAdd = true;
       graph.extendParents = true;
-      graph.border = 10;
       graph.setAutoSizeCells(true);
+      // allow selection of cells
+      graph.cellsSelectable = true;
+      graph.border = 10;
 
+      // create the styles used in the graph
       createStyles(graph);
 
+      // construct the graph renderer that will allow us render each type of cells
       let graphRenderer = new GraphCellRenderer(graph);
 
+      // allow highlighting of cells on mouse over
       new mxCellTracker(graph);
-     
+
       // Installs a custom tooltip for cells
       graph.getTooltipForCell = graphRenderer.getCellTooltip;
       graph.isLabelClipped = graphRenderer.isLabelClipped;
@@ -78,9 +90,12 @@ window.onload = function () {
       let layoutMgr = new mxLayoutManager(graph);
       layoutMgr.getLayout = graphRenderer.getLayout;
 
-      // Returns a html representation of the cell
+      // for each type of cell, grab the cell label in a different way
       graph.getLabel = graphRenderer.getCellLabel;
-      // Extends mxGraphModel.getStyle to show an image when collapsed
+
+      // Extends mxGraphModel.getStyle change the style of suppliers when collapsed
+      // TODO: this should not be needed. Collapsing should go back to the correct size of the supplier cell
+      // however, the preffered size is not computed correctly
       var modelGetStyle = graph.model.getStyle;
       graph.model.getStyle = function (cell) {
         if (cell != null) {
@@ -115,8 +130,8 @@ window.onload = function () {
         layoutMgr.executeLayout(parent);
         new mxCircleLayout(graph).execute(graph.getDefaultParent());
         // new mxParallelEdgeLayout(graph).execute(graph.getDefaultParent());
-
       }));
+
       // Gets the default parent for inserting new cells. This
       // is normally the first child of the root (ie. layer 0).
       var parent = graph.getDefaultParent();
@@ -233,49 +248,49 @@ window.onload = function () {
     }
 
     function createStyles(graph) {
-       // Enables crisp rendering of rectangles in SVG
-       var style = graph.getStylesheet().getDefaultEdgeStyle();
-       style[mxConstants.STYLE_ROUNDED] = false;
- 
-       // create the suppliers cell
-       style = mxUtils.clone(style);
-       style[mxConstants.STYLE_FILLCOLOR] = 'transparent';
-       style[mxConstants.STYLE_STROKECOLOR] = 'transparent';
-       style[mxConstants.STYLE_SHAPE] = mxConstants.SHAPE_RECTANGLE;
-       style[mxConstants.STYLE_PERIMETER] = mxConstants.PERIMETER_RECTANGLE;
-       graph.getStylesheet().putCellStyle('suppliers', style);
- 
-       // create the supplier cell
-       style = mxUtils.clone(style);
-       style[mxConstants.STYLE_SHAPE] = 'mxgraph.lean_mapping.outside_sources';
-       style[mxConstants.STYLE_FONTSIZE] = 13;
-       //style[mxConstants.STYLE_ALIGN] = mxConstants.ALIGN_LEFT;
-       // style[mxConstants.STYLE_STARTSIZE] = 22;
-       style[mxConstants.STYLE_FONTCOLOR] = 'black';
-       style[mxConstants.STYLE_STROKECOLOR] = 'black';
-       graph.getStylesheet().putCellStyle('supplier', style);
- 
-       // create the style for the part cell
-       style = mxUtils.clone(graph.getStylesheet().getDefaultEdgeStyle());
-       style[mxConstants.STYLE_STROKECOLOR] = 'black';
-       style[mxConstants.STYLE_SHAPE] = mxConstants.SHAPE_RECTANGLE;
-       style[mxConstants.STYLE_PERIMETER] = mxConstants.PERIMETER_RECTANGLE;
-       graph.getStylesheet().putCellStyle('part', style);
-       // Creates the default style for edges
-       style = {};
-       style[mxConstants.STYLE_ROUNDED] = true;
-       style[mxConstants.STYLE_EDGE] = mxEdgeStyle.OrthConnector;
-       style[mxConstants.STYLE_SHAPE] = 'flexArrow';
-       style[mxConstants.STYLE_ENDARROW] = mxConstants.ARROW_CLASSIC;
-       style['width'] = 3;
-       style['endSize'] = 4.5;
-       style['endWidth'] = 11;
-       style[mxConstants.STYLE_VERTICAL_ALIGN] = mxConstants.ALIGN_MIDDLE;
-       style[mxConstants.STYLE_ALIGN] = mxConstants.ALIGN_CENTER;
-       style[mxConstants.STYLE_STROKECOLOR] = "#6482B9";
-       style[mxConstants.STYLE_FILLCOLOR] = "#B3FF66";
-       style[mxConstants.STYLE_FONTCOLOR] = "#446299";
-       graph.getStylesheet().putDefaultEdgeStyle(style);
+      // Enables crisp rendering of rectangles in SVG
+      var style = graph.getStylesheet().getDefaultEdgeStyle();
+      style[mxConstants.STYLE_ROUNDED] = false;
+
+      // create the suppliers cell
+      style = mxUtils.clone(style);
+      style[mxConstants.STYLE_FILLCOLOR] = 'transparent';
+      style[mxConstants.STYLE_STROKECOLOR] = 'transparent';
+      style[mxConstants.STYLE_SHAPE] = mxConstants.SHAPE_RECTANGLE;
+      style[mxConstants.STYLE_PERIMETER] = mxConstants.PERIMETER_RECTANGLE;
+      graph.getStylesheet().putCellStyle('suppliers', style);
+
+      // create the supplier cell
+      style = mxUtils.clone(style);
+      style[mxConstants.STYLE_SHAPE] = 'mxgraph.lean_mapping.outside_sources';
+      style[mxConstants.STYLE_FONTSIZE] = 13;
+      //style[mxConstants.STYLE_ALIGN] = mxConstants.ALIGN_LEFT;
+      // style[mxConstants.STYLE_STARTSIZE] = 22;
+      style[mxConstants.STYLE_FONTCOLOR] = 'black';
+      style[mxConstants.STYLE_STROKECOLOR] = 'black';
+      graph.getStylesheet().putCellStyle('supplier', style);
+
+      // create the style for the part cell
+      style = mxUtils.clone(graph.getStylesheet().getDefaultEdgeStyle());
+      style[mxConstants.STYLE_STROKECOLOR] = 'black';
+      style[mxConstants.STYLE_SHAPE] = mxConstants.SHAPE_RECTANGLE;
+      style[mxConstants.STYLE_PERIMETER] = mxConstants.PERIMETER_RECTANGLE;
+      graph.getStylesheet().putCellStyle('part', style);
+      // Creates the default style for edges
+      style = {};
+      style[mxConstants.STYLE_ROUNDED] = true;
+      style[mxConstants.STYLE_EDGE] = mxEdgeStyle.OrthConnector;
+      style[mxConstants.STYLE_SHAPE] = 'flexArrow';
+      style[mxConstants.STYLE_ENDARROW] = mxConstants.ARROW_CLASSIC;
+      style['width'] = 3;
+      style['endSize'] = 4.5;
+      style['endWidth'] = 11;
+      style[mxConstants.STYLE_VERTICAL_ALIGN] = mxConstants.ALIGN_MIDDLE;
+      style[mxConstants.STYLE_ALIGN] = mxConstants.ALIGN_CENTER;
+      style[mxConstants.STYLE_STROKECOLOR] = "#6482B9";
+      style[mxConstants.STYLE_FILLCOLOR] = "#B3FF66";
+      style[mxConstants.STYLE_FONTCOLOR] = "#446299";
+      graph.getStylesheet().putDefaultEdgeStyle(style);
     }
   }
 
