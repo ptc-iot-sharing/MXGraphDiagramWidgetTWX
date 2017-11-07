@@ -269,19 +269,19 @@ mxLeanCustomerSupplier.prototype.background = function(c, w, h)
 };
 
 mxLeanCustomerSupplier.prototype.getControlBounds =function (originalValue, w,h) {
-	var clampedHeight = Math.min(this.bounds.height * 0.3, 75);
+	var clampedHeight = Math.min(this.bounds.height * 0.3, 75) * this.scale;
 	return new mxRectangle(originalValue.x, originalValue.y + clampedHeight, originalValue.width, originalValue.height);
 }
 
 mxLeanCustomerSupplier.prototype.getLabelBounds = function(rect)
 {
-    var clampedHeight = Math.min(rect.height * 0.3, 75);
+    var clampedHeight = Math.min(rect.height * 0.3, 75) * this.scale;
 	return new mxRectangle(rect.x, rect.y + clampedHeight, rect.width, 30);
 };
 
 mxLeanCustomerSupplier.prototype.getGradientBounds = function(c, x, y, w, h)
 {
-    var clampedHeight = Math.min(h * 0.3, 75);
+    var clampedHeight = Math.min(h * 0.3, 75) * this.scale;
 	return new mxRectangle(x, y + clampedHeight + 30, w, h - clampedHeight - 30);
 };
 
