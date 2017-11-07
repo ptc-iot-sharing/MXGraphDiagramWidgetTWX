@@ -1,4 +1,4 @@
-let dataModel = {
+export let dataModel = {
     suppliers: [
         {
             name: "Industrialesud GmbH / Landau / DE",
@@ -8,7 +8,7 @@ let dataModel = {
                 {
                     'id': '2',
                     'PlantName': 'Industrialesud GmbH',
-                    'Lft-Nr+ZA': '151573-12',
+                    'Lft-Nr+ZA': '151573-12', 'title': 'Himmel G11 / G12',
                     'Ort / Land': 'Landau / DE',
                     'Produktion': undefined,
                     'Sequenzprod.': 'ja',
@@ -22,7 +22,7 @@ let dataModel = {
                 {
                     'id': '3',
                     'PlantName': 'Industrialesud GmbH',
-                    'Lft-Nr+ZA': '151573-12',
+                    'Lft-Nr+ZA': '151573-12', 'title': 'Himmel G11 / G12',
                     'Ort / Land': 'Landau / DE',
                     'Produktion': undefined,
                     'Sequenzprod.': 'ja',
@@ -36,7 +36,7 @@ let dataModel = {
                 {
                     'id': '4',
                     'PlantName': 'Industrialesud GmbH',
-                    'Lft-Nr+ZA': '151573-12',
+                    'Lft-Nr+ZA': '151573-12', 'title': 'Himmel G11 / G12',
                     'Ort / Land': 'Landau / DE',
                     'Produktion': undefined,
                     'Sequenzprod.': 'ja',
@@ -50,7 +50,7 @@ let dataModel = {
                 {
                     'id': '5',
                     'PlantName': 'Industrialesud GmbH',
-                    'Lft-Nr+ZA': '151573-12',
+                    'Lft-Nr+ZA': '151573-12', 'title': 'Himmel G11 / G12',
                     'Ort / Land': 'Landau / DE',
                     'Produktion': undefined,
                     'Sequenzprod.': 'ja',
@@ -64,7 +64,7 @@ let dataModel = {
                 {
                     'id': '6',
                     'PlantName': 'Industrialesud GmbH',
-                    'Lft-Nr+ZA': '151573-12',
+                    'Lft-Nr+ZA': '151573-12', 'title': 'Himmel G11 / G12',
                     'Ort / Land': 'Landau / DE',
                     'Produktion': undefined,
                     'Sequenzprod.': 'ja',
@@ -85,7 +85,7 @@ let dataModel = {
                 {
                     'id': '8',
                     'PlantName': 'Grupo Antolin Bohema A.S.',
-                    'Lft-Nr+ZA': '151573-12',
+                    'Lft-Nr+ZA': '151573-12', 'title': 'Himmel G11 / G12',
                     'Ort / Land': 'Landau / DE',
                     'Produktion': undefined,
                     'Sequenzprod.': 'ja',
@@ -106,7 +106,7 @@ let dataModel = {
                 {
                     'id': '10',
                     'PlantName': 'Industrialesud GmbH',
-                    'Lft-Nr+ZA': '151573-12',
+                    'Lft-Nr+ZA': '151573-12', 'title': 'Himmel G11 / G12',
                     'Ort / Land': 'Landau / DE',
                     'Produktion': undefined,
                     'Sequenzprod.': 'ja',
@@ -120,7 +120,7 @@ let dataModel = {
                 {
                     'id': '11',
                     'PlantName': 'Industrialesud GmbH',
-                    'Lft-Nr+ZA': '151573-12',
+                    'Lft-Nr+ZA': '151573-12', 'title': 'Himmel G11 / G12',
                     'Ort / Land': 'Landau / DE',
                     'Produktion': undefined,
                     'Sequenzprod.': 'ja',
@@ -141,7 +141,7 @@ let dataModel = {
                 {
                     'id': '13',
                     'PlantName': 'Industrialesud GmbH',
-                    'Lft-Nr+ZA': '151573-12',
+                    'Lft-Nr+ZA': '151573-12', 'title': 'Himmel G11 / G12',
                     'Ort / Land': 'Landau / DE',
                     'Produktion': undefined,
                     'Sequenzprod.': 'ja',
@@ -162,7 +162,7 @@ let dataModel = {
                 {
                     'id': '15',
                     'PlantName': 'Industrialesud GmbH',
-                    'Lft-Nr+ZA': '151573-12',
+                    'Lft-Nr+ZA': '151573-12', 'title': 'Himmel G11 / G12',
                     'Ort / Land': 'Landau / DE',
                     'Produktion': undefined,
                     'Sequenzprod.': 'ja',
@@ -178,7 +178,7 @@ let dataModel = {
     ],
     logisticsCenters: [
         {
-            name: " VZ3 Kühne & Nagel",
+            name: "VZ3 Kühne & Nagel",
             details: "",
             'id': '16',
             capabilities: [
@@ -396,5 +396,3 @@ let dataModel = {
     }
     ]
 }
-
-export = dataModel;
