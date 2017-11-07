@@ -11,6 +11,7 @@ class LayoutFactory {
     static supplierLayout;
     static partLayout;
     static allSuppliersLayout;
+    static hallInventoryLayout;
 
     public static initialize = function (graph) {
         LayoutFactory.defaultLayout = new mxStackLayout(graph, false);
@@ -33,6 +34,10 @@ class LayoutFactory {
         LayoutFactory.allSuppliersLayout = new mxStackLayout(graph, false);
         LayoutFactory.allSuppliersLayout.resizeParent = true;
         LayoutFactory.allSuppliersLayout.spacing = 20;
+        
+        LayoutFactory.hallInventoryLayout = new mxStackLayout(graph, false);
+        LayoutFactory.hallInventoryLayout.resizeParent = true;
+        LayoutFactory.hallInventoryLayout.spacing = 20;
     }
 
 }
@@ -48,7 +53,7 @@ abstract class CellRendererAbstract {
 
     isLabelClipped(cell: any): boolean { return false; }
 
-    isCellFodable(cell: any): boolean { return true; }
+    isCellFoldable(cell: any): boolean { return true; }
 
     getLayout(cell: any): any { return LayoutFactory.defaultLayout };
 
@@ -74,7 +79,7 @@ class PartRenderer extends CellRendererAbstract {
 
     isLabelClipped(cell: any): boolean { return true; }
 
-    isCellFodable(cell: any): boolean { return true; }
+    isCellFoldable(cell: any): boolean { return true; }
 
     getLayout(cell: any): any { return LayoutFactory.partLayout }
 
@@ -87,7 +92,7 @@ class PartRenderer extends CellRendererAbstract {
  */
 class SupplierCellRenderer extends CellRendererAbstract {
     getRenderedLabel(cell: any): HTMLElement {
-        return cell.value;
+        return cell.value.name;
     }
 
     getTooltip(cell: any): String {
@@ -96,7 +101,7 @@ class SupplierCellRenderer extends CellRendererAbstract {
 
     isLabelClipped(cell: any): boolean { return true; }
 
-    isCellFodable(cell: any): boolean { return true; }
+    isCellFoldable(cell: any): boolean { return true; }
 
     getLayout(cell: any): any { return LayoutFactory.supplierLayout }
 
@@ -118,7 +123,7 @@ class DefaultVertexRenderer extends CellRendererAbstract {
 
     isLabelClipped(cell: any): boolean { return false; }
 
-    isCellFodable(cell: any): boolean { return false; }
+    isCellFoldable(cell: any): boolean { return false; }
 
     getLayout(cell: any): any { return LayoutFactory.defaultLayout }
 
@@ -149,7 +154,7 @@ class DefaultEdgeRenderer extends CellRendererAbstract {
 
     isLabelClipped(cell: any): boolean { return false; }
 
-    isCellFodable(cell: any): boolean { return false; }
+    isCellFoldable(cell: any): boolean { return false; }
 
     isCellSelectable(cell: any): boolean { return true; }
     
@@ -162,12 +167,11 @@ class AllSupplierCell {
 
     isLabelClipped(cell: any): boolean { return false; }
 
-    isCellFodable(cell: any): boolean { return false; }
+    isCellFoldable(cell: any): boolean { return false; }
 
     getLayout(cell: any): any { return LayoutFactory.allSuppliersLayout }
 
     isCellSelectable(cell: any): boolean { return false; }
-    
 }
 
 class PartDetailsCell {
@@ -177,9 +181,25 @@ class PartDetailsCell {
 
     isLabelClipped(cell: any): boolean { return false; }
 
-    isCellFodable(cell: any): boolean { return false; }
+    isCellFoldable(cell: any): boolean { return false; }
 
     getLayout(cell: any): any { return LayoutFactory.defaultLayout }
+
+    isCellSelectable(cell: any): boolean { return false; }
+    
+}
+
+
+class HallInventoryCell {
+    getRenderedLabel(cell: any): HTMLElement { return undefined; };
+
+    getTooltip(cell: any): String { return cell.value; }
+
+    isLabelClipped(cell: any): boolean { return false; }
+
+    isCellFoldable(cell: any): boolean { return false; }
+
+    getLayout(cell: any): any { return LayoutFactory.hallInventoryLayout }
 
     isCellSelectable(cell: any): boolean { return false; }
     
@@ -195,7 +215,8 @@ export class GraphCellRenderer {
         "defaultVertex": DefaultVertexRenderer,
         "defaultEdge": DefaultEdgeRenderer,
         "suppliers": AllSupplierCell,
-        "partDetails": PartDetailsCell
+        "partDetails": PartDetailsCell,
+        "inventoryContainer": HallInventoryCell
     }
 
     constructor(graph) {
@@ -229,9 +250,9 @@ export class GraphCellRenderer {
         return new cellRenderer().isLabelClipped(cell);
     }
 
-    public isCellFodable = (cell) => {
+    public isCellFoldable = (cell) => {
         let cellRenderer = this.getRendererForCell(cell);
-        return new cellRenderer().isCellFodable(cell);
+        return new cellRenderer().isCellFoldable(cell);
     }
 
     public getLayout = (cell) => {
