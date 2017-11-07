@@ -68,6 +68,7 @@ window.onload = function () {
       // create the suppliers cell
       style = mxUtils.clone(style);
       style[mxConstants.STYLE_FILLCOLOR] = 'transparent';
+      style[mxConstants.STYLE_STROKECOLOR] = 'transparent';
       style[mxConstants.STYLE_SHAPE] = mxConstants.SHAPE_RECTANGLE;
       style[mxConstants.STYLE_PERIMETER] = mxConstants.PERIMETER_RECTANGLE;
       graph.getStylesheet().putCellStyle('suppliers', style);
@@ -186,10 +187,7 @@ window.onload = function () {
             var v2 = graph.insertVertex(v1, null, key + ":" + data[key], 0, 0, 200, 20, "partDetails");
           }
         }
-        supplier1.geometry.alternateBounds = new mxRectangle(0, 0, 300, 30);
 
-        //var supplier1 = graph.insertVertex(parent2, null, 'Industrialesud GmbH / Landau / DE', 0, 0, 400, 300, 'shape=swimlane');
-        //var supplier11 = supplier1;
         var v1 = graph.insertVertex(supplier1, null, { data: data, title: 'Himmel G30//F34/F36 H50' }, 0, 0, 200, 220, "part");
         var v2 = graph.insertVertex(v1, null, 'Himmel G30//F34/F36 H50', 0, 0, 200, 20, "partDetails");
 
@@ -198,7 +196,6 @@ window.onload = function () {
             var v2 = graph.insertVertex(v1, null, key + ":" + data[key], 0, 0, 200, 20, "partDetails");
           }
         }
-        supplier1.geometry.alternateBounds = new mxRectangle(0, 0, 300, 30);
         graph.autoSizeCell(parent, true);
         graph.autoSizeCell(supplier1, true);
       }

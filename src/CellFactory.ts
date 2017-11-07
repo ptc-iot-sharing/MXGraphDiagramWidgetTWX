@@ -162,7 +162,7 @@ class AllSupplierCell {
 
     isLabelClipped(cell: any): boolean { return false; }
 
-    isCellFodable(cell: any): boolean { return true; }
+    isCellFodable(cell: any): boolean { return false; }
 
     getLayout(cell: any): any { return LayoutFactory.allSuppliersLayout }
 
