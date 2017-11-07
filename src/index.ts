@@ -3,7 +3,7 @@ import "./FlexArrowShape";
 import "./mxLeanMap";
 import { GraphCellRenderer } from './CellFactory'
 
-import  './dataExample'
+import { dataModel } from './dataExample'
 
 let mxGraph = mxgraph.mxGraph,
   mxShape = mxgraph.mxShape,
@@ -22,7 +22,9 @@ let mxGraph = mxgraph.mxGraph,
   mxPrintPreview = mxgraph.mxPrintPreview,
   mxWindow = mxgraph.mxWindow,
   mxParallelEdgeLayout = mxgraph.mxParallelEdgeLayout,
-  mxCircleLayout = mxgraph.mxCircleLayout;
+  mxCircleLayout = mxgraph.mxCircleLayout,
+  mxStencilRegistry = mxgraph.mxStencilRegistry,
+  mxStencil = mxgraph.mxStencil;
 
 
 window.onload = function () {
@@ -38,6 +40,7 @@ window.onload = function () {
       mxUtils.error('Browser is not supported!', 200, false);
     }
     else {
+      loadLeanMappingShapes();
       // Creates the graph inside the given container
       var graph = new mxGraph(container);
       container.style.background = 'url("node_modules/mxgraph/javascript/examples/editors/images/grid.gif")';
@@ -81,7 +84,7 @@ window.onload = function () {
       graph.isLabelClipped = graphRenderer.isLabelClipped;
 
       // Make sure the cells can be folded
-      graph.isCellFoldable = graphRenderer.isCellFodable;
+      graph.isCellFoldable = graphRenderer.isCellFoldable;
 
       // make sure some of the cells can be selected
       graph.isCellSelectable = graphRenderer.isCellSelectable;
@@ -139,46 +142,124 @@ window.onload = function () {
       // Adds cells to the model in a single step
       graph.getModel().beginUpdate();
       try {
-        var data = {
-          'PlantName': 'Industrialesud GmbH',
-          'Lft-Nr+ZA': '151573-12',
-          'Ort / Land': 'Landau / DE',
-          'Produktion': undefined,
-          'Sequenzprod.': 'ja',
-          'Teilefamilie': undefined,
-          'Name': 'Himmel',
-          'Variantenzahl': 'G30/F90: 18; F34/F36: 132',
-          'BehälterTyp': '3104026',
-          'Füllgrad': '6'
-        };
-        var parent = graph.insertVertex(parent, null, null, 0, 0, 400, 500, 'suppliers');
-        var parent2 = graph.insertVertex(graph.getDefaultParent(), null, null, 0, 0, 400, 500, 'suppliers');
-        var supplier1 = graph.insertVertex(parent, null, 'Industrialesud GmbH / Landau / DE', 0, 0, 400, 300, 'supplier');
-        var v1 = graph.insertVertex(supplier1, null, { data: data, title: 'Himmel G30//F34/F36 H50' }, 0, 0, 200, 220, "part");
-        var v2 = graph.insertVertex(v1, null, 'Himmel G30//F34/F36 H50', 0, 0, 200, 20, "partDetails");
-
-        for (let key in data) {
-          if (data.hasOwnProperty(key)) {
-            var v2 = graph.insertVertex(v1, null, key + ":" + data[key], 0, 0, 200, 20, "partDetails");
+        // begin rendering the datamodel
+        // render the suppliers
+        let suppliersParent = graph.insertVertex(parent, null, null, 0, 0, 100, 500, 'suppliers');
+        for (let i = 0; i < dataModel.suppliers.length; i++) {
+          let supplier = dataModel.suppliers[i];
+          let supplierNode = graph.insertVertex(suppliersParent, null, supplier, 0, 0, 400, 300, 'supplier');
+          // now iterate through the parts and add them 
+          for (let j = 0; j < supplier.parts.length; j++) {
+            let part = supplier.parts[j];
+            // first add the part node
+            let partNode = graph.insertVertex(supplierNode, null, part, 0, 0, 400, 300, 'part');
+            // then add the title of the part
+            graph.insertVertex(partNode, null, part.title, 0, 0, 200, 20, "partDetails");
+            for (let key in part) {
+              // and finally all of the details
+              if (part.hasOwnProperty(key) && key != 'id' && key != 'title') {
+                graph.insertVertex(partNode, null, key + ":" + part[key], 0, 0, 200, 20, "partDetails");
+              }
+            }
           }
+
+          // force an autosize
+          graph.autoSizeCell(supplierNode, false);
         }
+        // reuse the suppliers style for the logistics centers as well
+        let logisticCentersParent = graph.insertVertex(parent, null, null, 0, 0, 100, 300, 'suppliers');
+        for (let i = 0; i < dataModel.logisticsCenters.length; i++) {
+          let logisticCenter = dataModel.logisticsCenters[i];
+          let logisticNode = graph.insertVertex(logisticCentersParent, null, logisticCenter, 0, 0, 10, 300, 'supplier');
+          // now iterate through the parts and add them 
+          for (let j = 0; j < logisticCenter.capabilities.length; j++) {
+            let capability = logisticCenter.capabilities[j];
 
-        var v1 = graph.insertVertex(supplier1, null, { data: data, title: 'Himmel G30//F34/F36 H50' }, 0, 0, 200, 220, "part");
-        var v2 = graph.insertVertex(v1, null, 'Himmel G30//F34/F36 H50', 0, 0, 200, 20, "partDetails");
+            switch (capability.type) {
+              case 'forklift':
+                graph.insertVertex(logisticNode, null, null, 0, 0, 200, 20, "shape=mxgraph.lean_mapping.move_by_forklift");
+                break;
+              case 'part':
+                // first add the part node
+                let partNode = graph.insertVertex(logisticNode, null, capability, 0, 0, 400, 300, 'part');
+                // then add the title of the part
+                for (let key in capability) {
+                  // and finally all of the details
+                  if (capability.hasOwnProperty(key) && key != 'id' && key != 'title') {
+                    graph.insertVertex(partNode, null, key + ":" + capability[key], 0, 0, 200, 20, "partDetails");
+                  }
+                }
+                break;
+              case 'process':
+                //TODO: implement process 
+                graph.insertVertex(logisticNode, null, null, 0, 0, 200, 20, "shape=mxgraph.lean_mapping.manufacturing_process");
+              default:
+                break;
+            }
 
-        for (let key in data) {
-          if (data.hasOwnProperty(key)) {
-            var v2 = graph.insertVertex(v1, null, key + ":" + data[key], 0, 0, 200, 20, "partDetails");
           }
+          // force an autosize
+          graph.autoSizeCell(logisticNode, false);
+
         }
-        graph.autoSizeCell(parent, true);
-        graph.autoSizeCell(supplier1, true);
+        // reuse the suppliers style for the logistics centers as well
+        let factoryNode = graph.insertVertex(parent, null, null, 0, 0, 10, 300, 'suppliers');
+        for (let i = 0; i < dataModel.factory.halls.length; i++) {
+          let factoryHall = dataModel.factory.halls[i];
+          let hallNode = graph.insertVertex(factoryNode, null, factoryHall, 0, 0, 10, 300, 'supplier');
+          let inventoryNode = graph.insertVertex(hallNode, null, null, 0,0,0,0,'inventoryContainer');
+          // now iterate through the parts and add them 
+          for (let j = 0; j < factoryHall.inventories.length; j++) {
+            let inventory = factoryHall.inventories[j];
+            // first add the part node
+            let partNode = graph.insertVertex(inventoryNode, null, inventory, 0, 0, 400, 300, 'part');
+            // then add the title of the part
+            for (let key in inventory.info) {
+              // and finally all of the details
+              if (inventory.hasOwnProperty(key) && key != 'id' && key != 'title') {
+                graph.insertVertex(partNode, null, key + ":" + inventory[key], 0, 0, 200, 20, "partDetails");
+              }
+            }
+          }
+          // now iterate through the parts and add them 
+          for (let j = 0; j < factoryHall.capabilities.length; j++) {
+            let capability = factoryHall.capabilities[j];
+
+            switch (capability.type) {
+              case 'forklift':
+                graph.insertVertex(hallNode, null, null, 0, 0, 200, 20, "shape=mxgraph.lean_mapping.move_by_forklift");
+                break;
+              case 'part':
+                // first add the part node
+                let partNode = graph.insertVertex(hallNode, null, capability, 0, 0, 400, 300, 'part');
+                // then add the title of the part
+                for (let key in capability) {
+                  // and finally all of the details
+                  if (capability.hasOwnProperty(key) && key != 'id' && key != 'title') {
+                    graph.insertVertex(partNode, null, key + ":" + capability[key], 0, 0, 200, 20, "partDetails");
+                  }
+                }
+                break;
+              case 'process':
+                //TODO: implement process 
+                graph.insertVertex(hallNode, null, null, 0, 0, 200, 20, "shape=mxgraph.lean_mapping.manufacturing_process");
+              default:
+                break;
+            }
+          }
+
+          // force an autosize
+          graph.autoSizeCell(hallNode, false);
+
+        }
       }
       finally {
         // Updates the display
         graph.getModel().endUpdate();
       }
       graph.autoSizeCell(parent, true);
+      //graph.autoSizeCell(partNode, true)
+
       createToolbar(graph);
       createOutlineView(graph);
     };
@@ -259,13 +340,12 @@ window.onload = function () {
       style[mxConstants.STYLE_SHAPE] = mxConstants.SHAPE_RECTANGLE;
       style[mxConstants.STYLE_PERIMETER] = mxConstants.PERIMETER_RECTANGLE;
       graph.getStylesheet().putCellStyle('suppliers', style);
-
+      graph.getStylesheet().putCellStyle('inventoryContainer', style);
+            
       // create the supplier cell
       style = mxUtils.clone(style);
       style[mxConstants.STYLE_SHAPE] = 'mxgraph.lean_mapping.outside_sources';
       style[mxConstants.STYLE_FONTSIZE] = 13;
-      //style[mxConstants.STYLE_ALIGN] = mxConstants.ALIGN_LEFT;
-      // style[mxConstants.STYLE_STARTSIZE] = 22;
       style[mxConstants.STYLE_FONTCOLOR] = 'black';
       style[mxConstants.STYLE_STROKECOLOR] = 'black';
       graph.getStylesheet().putCellStyle('supplier', style);
@@ -291,6 +371,21 @@ window.onload = function () {
       style[mxConstants.STYLE_FILLCOLOR] = "#B3FF66";
       style[mxConstants.STYLE_FONTCOLOR] = "#446299";
       graph.getStylesheet().putDefaultEdgeStyle(style);
+    }
+
+    function loadLeanMappingShapes() {
+      var req = mxUtils.load('lean_mapping.xml');
+      var root = req.getDocumentElement();
+      var prefix = root.getAttribute("name");
+      var shape = root.firstChild;
+
+      while (shape != null) {
+        if (shape.nodeType == mxConstants.NODETYPE_ELEMENT) {
+          var name = prefix + '.' + shape.getAttribute('name').replace(/ /g, '_');
+          mxStencilRegistry.addStencil(name.toLowerCase(), new mxStencil(shape));
+        }
+        shape = shape.nextSibling;
+      }
     }
   }
 
