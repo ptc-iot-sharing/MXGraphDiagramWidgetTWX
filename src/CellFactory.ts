@@ -1,4 +1,5 @@
 import { mxgraph } from "./mxGraphImport"
+import {mxValueProcessLayout} from "./mxValueProcessLayout"
 
 let mxStackLayout = mxgraph.mxStackLayout;
 
@@ -14,28 +15,28 @@ class LayoutFactory {
     static hallInventoryLayout;
 
     public static initialize = function (graph) {
-        LayoutFactory.defaultLayout = new mxStackLayout(graph, false);
+        LayoutFactory.defaultLayout = new mxValueProcessLayout(graph, false);
         LayoutFactory.defaultLayout.resizeParent = true;
         LayoutFactory.defaultLayout.border = 1;
         LayoutFactory.defaultLayout.horizontal = true;
         LayoutFactory.defaultLayout.spacing = 50;
         LayoutFactory.defaultLayout.resizeParent = true;
 
-        LayoutFactory.supplierLayout = new mxStackLayout(graph, true);
+        LayoutFactory.supplierLayout = new mxValueProcessLayout(graph, true);
         LayoutFactory.supplierLayout.resizeParent = true;
         LayoutFactory.supplierLayout.spacing = 20;
         LayoutFactory.supplierLayout.marginTop = 110;
         LayoutFactory.supplierLayout.marginLeft = 10;
 
-        LayoutFactory.partLayout = new mxStackLayout(graph, false);
+        LayoutFactory.partLayout = new mxValueProcessLayout(graph, false);
         LayoutFactory.partLayout.resizeParent = true;
         LayoutFactory.partLayout.fill = true;
 
-        LayoutFactory.allSuppliersLayout = new mxStackLayout(graph, false);
+        LayoutFactory.allSuppliersLayout = new mxValueProcessLayout(graph, false);
         LayoutFactory.allSuppliersLayout.resizeParent = true;
         LayoutFactory.allSuppliersLayout.spacing = 20;
         
-        LayoutFactory.hallInventoryLayout = new mxStackLayout(graph, false);
+        LayoutFactory.hallInventoryLayout = new mxValueProcessLayout(graph, false);
         LayoutFactory.hallInventoryLayout.resizeParent = true;
         LayoutFactory.hallInventoryLayout.spacing = 20;
     }

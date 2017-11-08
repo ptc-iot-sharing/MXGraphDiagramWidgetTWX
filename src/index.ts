@@ -65,7 +65,7 @@ window.onload = function () {
       graph.constrainChildren = true;
       graph.extendParentsOnAdd = true;
       graph.extendParents = true;
-      graph.setAutoSizeCells(true);
+      //graph.setAutoSizeCells(true);
       // allow selection of cells
       graph.cellsSelectable = true;
       graph.border = 10;
@@ -165,7 +165,7 @@ window.onload = function () {
           }
 
           // force an autosize
-          graph.autoSizeCell(supplierNode, false);
+          //graph.autoSizeCell(supplierNode, false);
         }
         graph.cellSizeUpdated(suppliersParent, false);
         // reuse the suppliers style for the logistics centers as well
@@ -201,7 +201,7 @@ window.onload = function () {
 
           }
           // force an autosize
-          graph.autoSizeCell(logisticNode, false);
+          //graph.autoSizeCell(logisticNode, false);
           
         }
         // reuse the suppliers style for the logistics centers as well
@@ -251,7 +251,7 @@ window.onload = function () {
           }
 
           // force an autosize
-        graph.autoSizeCell(hallNode, false);
+        //graph.autoSizeCell(hallNode, false);
         }
         // now add the edges
         for (let i = 0; i < dataModel.transportLinks.length; i++) {
@@ -265,7 +265,7 @@ window.onload = function () {
         // Updates the display
         graph.getModel().endUpdate();
       }
-      graph.autoSizeCell(parent, true);
+      //graph.autoSizeCell(parent, true);
       //graph.autoSizeCell(partNode, true)
 
       createToolbar(graph);
