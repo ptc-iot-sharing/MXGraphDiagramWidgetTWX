@@ -341,7 +341,7 @@ export let dataModel = {
         ]
     },
     transportLinks: [{
-        fromId: '1',
+        fromId: '2',
         toId: '5',
         type: 'truck',
         info: {
@@ -364,7 +364,7 @@ export let dataModel = {
     },
     {
         fromId: '13',
-        toId: '21',
+        toId: '16',
         type: 'truck',
         info: {
             'Aktuell': '1 x pro Tag',
@@ -373,8 +373,8 @@ export let dataModel = {
         },
         label: 'F06'
     }, {
-        fromId: '21',
-        toId: '14',
+        fromId: '15',
+        toId: '16',
         type: 'truck',
         info: {
             'Aktuell': '1 x pro Tag',

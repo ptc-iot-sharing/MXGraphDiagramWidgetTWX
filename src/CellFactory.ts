@@ -16,7 +16,7 @@ class LayoutFactory {
     public static initialize = function (graph) {
         LayoutFactory.defaultLayout = new mxStackLayout(graph, false);
         LayoutFactory.defaultLayout.resizeParent = true;
-        LayoutFactory.defaultLayout.border = graph.border;
+        LayoutFactory.defaultLayout.border = 1;
         LayoutFactory.defaultLayout.horizontal = true;
         LayoutFactory.defaultLayout.spacing = 50;
         LayoutFactory.defaultLayout.resizeParent = true;
@@ -139,7 +139,7 @@ class DefaultEdgeRenderer extends CellRendererAbstract {
         let content = document.createElement('div');
         content.style.height = '100%';
         content.style.width = '100%';
-        content.textContent = cell.value;
+        content.textContent = cell.value.label;
         let image = document.createElement('img');
         image.src = 'https://upload.wikimedia.org/wikipedia/commons/thumb/1/1d/Linecons_small-truck.svg/2000px-Linecons_small-truck.svg.png'
         image.style.width = '25px';
