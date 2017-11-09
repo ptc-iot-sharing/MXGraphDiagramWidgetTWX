@@ -1,5 +1,5 @@
 import { mxgraph } from "./mxGraphImport"
-import {mxValueProcessLayout} from "./mxValueProcessLayout"
+import { mxValueProcessLayout } from "./mxValueProcessLayout"
 
 let mxStackLayout = mxgraph.mxStackLayout;
 
@@ -36,7 +36,7 @@ class LayoutFactory {
         LayoutFactory.allSuppliersLayout = new mxValueProcessLayout(graph, false);
         LayoutFactory.allSuppliersLayout.resizeParent = true;
         LayoutFactory.allSuppliersLayout.spacing = 20;
-        
+
         LayoutFactory.hallInventoryLayout = new mxValueProcessLayout(graph, false);
         LayoutFactory.hallInventoryLayout.resizeParent = true;
         LayoutFactory.hallInventoryLayout.spacing = 20;
@@ -85,7 +85,7 @@ class PartRenderer extends CellRendererAbstract {
 
     getLayout(cell: any): any { return LayoutFactory.partLayout }
 
-    isCellSelectable(cell: any): boolean { return true; }  
+    isCellSelectable(cell: any): boolean { return true; }
 
 }
 /**
@@ -108,7 +108,7 @@ class SupplierCellRenderer extends CellRendererAbstract {
     getLayout(cell: any): any { return LayoutFactory.supplierLayout }
 
     isCellSelectable(cell: any): boolean { return true; }
-    
+
 }
 
 /**
@@ -130,7 +130,7 @@ class DefaultVertexRenderer extends CellRendererAbstract {
     getLayout(cell: any): any { return LayoutFactory.defaultLayout }
 
     isCellSelectable(cell: any): boolean { return true; }
-    
+
 }
 
 /**
@@ -141,7 +141,7 @@ class DefaultEdgeRenderer extends CellRendererAbstract {
         let content = document.createElement('div');
         content.style.height = '100%';
         content.style.width = '100%';
-        content.textContent = cell.value? cell.value.label : "";
+        content.textContent = cell.value ? cell.value.label : "";
         let image = document.createElement('img');
         image.src = 'https://upload.wikimedia.org/wikipedia/commons/thumb/1/1d/Linecons_small-truck.svg/2000px-Linecons_small-truck.svg.png'
         image.style.width = '25px';
@@ -159,7 +159,7 @@ class DefaultEdgeRenderer extends CellRendererAbstract {
     isCellFoldable(cell: any): boolean { return false; }
 
     isCellSelectable(cell: any): boolean { return true; }
-    
+
 }
 
 class AllSupplierCell {
@@ -188,7 +188,7 @@ class PartDetailsCell {
     getLayout(cell: any): any { return LayoutFactory.defaultLayout }
 
     isCellSelectable(cell: any): boolean { return false; }
-    
+
 }
 
 
@@ -204,7 +204,7 @@ class HallInventoryCell {
     getLayout(cell: any): any { return LayoutFactory.hallInventoryLayout }
 
     isCellSelectable(cell: any): boolean { return false; }
-    
+
 }
 
 /**

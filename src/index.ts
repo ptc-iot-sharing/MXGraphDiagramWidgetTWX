@@ -78,10 +78,10 @@ window.onload = function () {
       let graphRenderer = new GraphCellRenderer(graph);
 
       // allow highlighting of cells on mouse over
-      new mxCellTracker(graph, '#00FF00', function(me) {
+      new mxCellTracker(graph, '#00FF00', function (me) {
         let cell = me.getCell();
         let excludedStyles = ["suppliers", "partDetails"];
-        if(cell && excludedStyles.indexOf(cell.style) >= 0) {
+        if (cell && excludedStyles.indexOf(cell.style) >= 0) {
           return null;
         } else {
           return cell;
@@ -206,7 +206,7 @@ window.onload = function () {
             }
 
           }
-          
+
         }
         // reuse the suppliers style for the logistics centers as well
         let factoryNode = graph.insertVertex(parent, null, null, 0, 0, 10, 300, 'suppliers');
