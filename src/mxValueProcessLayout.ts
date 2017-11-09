@@ -301,7 +301,10 @@ mxValueProcessLayout.prototype.execute = function (parent) {
         try {
             var tmp = 0;
             var last = null;
-            var lastValue = 0;
+            // last value along the growth axis (horizontal or vertical depending on the layout)
+            var lastValueG = 0;
+            // last value along the non-growth axis
+            var lastValueN = 0;
             var lastChild = null;
             var childCount = model.getChildCount(parent);
 
@@ -310,7 +313,12 @@ mxValueProcessLayout.prototype.execute = function (parent) {
 
                 if (!this.isVertexIgnored(child) && this.isVertexMovable(child)) {
                     var geo = model.getGeometry(child);
-                    
+                    if (model.getChildCount(child) == 0) {
+                        var preferredSize = this.graph.getPreferredSizeForCell(child);
+                        geo.width = preferredSize.width;
+                        geo.height = preferredSize.height;
+                    }
+
                     if (geo != null) {
                         geo = geo.clone();
 
@@ -342,10 +350,10 @@ mxValueProcessLayout.prototype.execute = function (parent) {
 
                         if (last != null) {
                             if (horizontal) {
-                                geo.x = lastValue + this.spacing + Math.floor(sw / 2);
+                                geo.x = lastValueG + this.spacing + Math.floor(sw / 2);
                             }
                             else {
-                                geo.y = lastValue + this.spacing + Math.floor(sw / 2);
+                                geo.y = lastValueG + this.spacing + Math.floor(sw / 2);
                             }
                         }
                         else if (!this.keepFirstLocation) {
@@ -378,17 +386,19 @@ mxValueProcessLayout.prototype.execute = function (parent) {
                         last = geo;
 
                         if (horizontal) {
-                            lastValue = last.x + last.width + Math.floor(sw / 2);
+                            lastValueG = last.x + last.width + Math.floor(sw / 2);
+                            lastValueN = Math.max(lastValueN, last.height + last.y);
                         }
                         else {
-                            lastValue = last.y + last.height + Math.floor(sw / 2);
+                            lastValueG = last.y + last.height + Math.floor(sw / 2);
+                            lastValueN = Math.max(lastValueN, last.width + last.x);
                         }
                     }
                 }
             }
 
             if (this.resizeParent && pgeo != null && last != null && !this.graph.isCellCollapsed(parent)) {
-                this.updateParentGeometry(parent, pgeo, last);
+                this.updateParentGeometry(parent, pgeo, last, lastValueN);
             }
             else if (this.resizeLast && pgeo != null && last != null && lastChild != null) {
                 if (horizontal) {
@@ -432,30 +442,37 @@ mxValueProcessLayout.prototype.setChildGeometry = function (child, geo) {
 * Only children where <isVertexIgnored> returns false are taken into
 * account.
 */
-mxValueProcessLayout.prototype.updateParentGeometry = function (parent, pgeo, last) {
+mxValueProcessLayout.prototype.updateParentGeometry = function (parent, pgeo, last, lastValueN) {
     var horizontal = this.isHorizontal();
     var model = this.graph.getModel();
 
     var pgeo2 = pgeo.clone();
+    var preferredSize = this.graph.getPreferredSizeForCell(parent);
 
     if (horizontal) {
+        pgeo2.height = Math.max(lastValueN + this.marginBottom, preferredSize.height);
+
         var tmp = last.x + last.width + this.spacing + this.marginRight;
 
         if (this.resizeParentMax) {
             pgeo2.width = Math.max(pgeo2.width, tmp);
         }
         else {
-            pgeo2.width = tmp;
+            pgeo2.width = Math.max(tmp, preferredSize.width);
         }
     }
     else {
+        
+       
+        pgeo2.width = Math.max(lastValueN + this.marginRight, preferredSize.width);
+
         var tmp = last.y + last.height + this.spacing + this.marginBottom;
 
         if (this.resizeParentMax) {
             pgeo2.height = Math.max(pgeo2.height, tmp);
         }
         else {
-            pgeo2.height = tmp;
+            pgeo2.height = Math.max(tmp, preferredSize.height);
         }
     }
 
