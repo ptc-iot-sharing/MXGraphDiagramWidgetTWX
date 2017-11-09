@@ -177,7 +177,9 @@ class AllSupplierCell {
 }
 
 class PartDetailsCell {
-    getRenderedLabel(cell: any): HTMLElement { return cell.value; };
+    getRenderedLabel(cell: any): any { 
+        return cell.value.key + ": " + cell.value.value;
+    };
 
     getTooltip(cell: any): String { return cell.value; }
 

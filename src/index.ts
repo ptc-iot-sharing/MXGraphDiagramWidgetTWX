@@ -164,11 +164,11 @@ window.onload = function () {
             // first add the part node
             let partNode = graph.insertVertex(supplierNode, part.id, part, 0, 0, 10, 300, 'part');
             // then add the title of the part
-            graph.insertVertex(partNode, null, part.title, 0, 0, 200, 20, "partDetails");
+            graph.insertVertex(partNode, null, {key: "name", value: part.title}, 0, 0, 200, 20, "partDetails");
             for (let key in part) {
               // and finally all of the details
               if (part.hasOwnProperty(key) && key != 'id' && key != 'title') {
-                graph.insertVertex(partNode, null, key + ":" + part[key], 0, 0, 200, 20, "partDetails");
+                graph.insertVertex(partNode, null, {key: key, value: part[key]}, 0, 0, 200, 20, "partDetails");
               }
             }
           }
@@ -367,7 +367,7 @@ window.onload = function () {
       // Creates the default style for edges
       style = {};
       style[mxConstants.STYLE_ROUNDED] = true;
-      style[mxConstants.STYLE_EDGE] = mxEdgeStyle.OrthConnector;
+      style[mxConstants.STYLE_EDGE] = mxConstants.EDGESTYLE_ORTHOGONAL;
       style[mxConstants.STYLE_SHAPE] = 'flexArrow';
       style[mxConstants.STYLE_ENDARROW] = mxConstants.ARROW_CLASSIC;
       style['width'] = 3;
