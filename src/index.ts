@@ -59,12 +59,14 @@ window.onload = function () {
       graph.setSplitEnabled(false);
       // don't allow cells to be dropped outside of their current parent
       graph.graphHandler.removeCellsFromParent = false;
-      // when a cells is collapsed, recalculate its preffered size
+      // when a cells is collapsed, recalculate its preferred size
       graph.collapseToPreferredSize = true;
       // cells should not be bigger than their parents
       graph.constrainChildren = true;
       graph.extendParentsOnAdd = true;
       graph.extendParents = true;
+      // disable the grid so things are more condensed
+      graph.gridEnabled = false;
       //graph.setAutoSizeCells(true);
       // allow selection of cells
       graph.cellsSelectable = true;
@@ -153,7 +155,7 @@ window.onload = function () {
           for (let j = 0; j < supplier.parts.length; j++) {
             let part = supplier.parts[j];
             // first add the part node
-            let partNode = graph.insertVertex(supplierNode, part.id, part, 0, 0, 400, 300, 'part');
+            let partNode = graph.insertVertex(supplierNode, part.id, part, 0, 0, 10, 300, 'part');
             // then add the title of the part
             graph.insertVertex(partNode, null, part.title, 0, 0, 200, 20, "partDetails");
             for (let key in part) {
@@ -183,7 +185,7 @@ window.onload = function () {
                 break;
               case 'part':
                 // first add the part node
-                let partNode = graph.insertVertex(logisticNode, null, capability, 0, 0, 400, 300, 'part');
+                let partNode = graph.insertVertex(logisticNode, null, capability, 0, 0, 200, 300, 'part');
                 // then add the title of the part
                 for (let key in capability) {
                   // and finally all of the details
@@ -214,7 +216,7 @@ window.onload = function () {
           for (let j = 0; j < factoryHall.inventories.length; j++) {
             let inventory = factoryHall.inventories[j];
             // first add the part node
-            let partNode = graph.insertVertex(inventoryNode, null, inventory, 0, 0, 400, 300, 'part');
+            let partNode = graph.insertVertex(inventoryNode, null, inventory, 0, 0, 200, 300, 'part');
             // then add the title of the part
             for (let key in inventory.info) {
               // and finally all of the details
@@ -233,7 +235,7 @@ window.onload = function () {
                 break;
               case 'part':
                 // first add the part node
-                let partNode = graph.insertVertex(hallNode, null, capability, 0, 0, 400, 300, 'part');
+                let partNode = graph.insertVertex(hallNode, null, capability, 0, 0, 200, 300, 'part');
                 // then add the title of the part
                 for (let key in capability) {
                   // and finally all of the details

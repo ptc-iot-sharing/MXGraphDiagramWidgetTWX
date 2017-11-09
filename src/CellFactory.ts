@@ -26,6 +26,7 @@ class LayoutFactory {
         LayoutFactory.supplierLayout.resizeParent = true;
         LayoutFactory.supplierLayout.spacing = 20;
         LayoutFactory.supplierLayout.marginTop = 110;
+        LayoutFactory.supplierLayout.marginBottom = 20;
         LayoutFactory.supplierLayout.marginLeft = 10;
 
         LayoutFactory.partLayout = new mxValueProcessLayout(graph, false);
@@ -97,7 +98,7 @@ class SupplierCellRenderer extends CellRendererAbstract {
     }
 
     getTooltip(cell: any): String {
-        return cell.value;
+        return cell.value.name;
     }
 
     isLabelClipped(cell: any): boolean { return true; }
@@ -140,7 +141,7 @@ class DefaultEdgeRenderer extends CellRendererAbstract {
         let content = document.createElement('div');
         content.style.height = '100%';
         content.style.width = '100%';
-        content.textContent = cell.value.label;
+        content.textContent = cell.value? cell.value.label : "";
         let image = document.createElement('img');
         image.src = 'https://upload.wikimedia.org/wikipedia/commons/thumb/1/1d/Linecons_small-truck.svg/2000px-Linecons_small-truck.svg.png'
         image.style.width = '25px';
