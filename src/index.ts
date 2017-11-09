@@ -67,7 +67,6 @@ window.onload = function () {
       graph.extendParents = true;
       // disable the grid so things are more condensed
       graph.gridEnabled = false;
-      //graph.setAutoSizeCells(true);
       // allow selection of cells
       graph.cellsSelectable = true;
       graph.border = 10;
@@ -79,7 +78,15 @@ window.onload = function () {
       let graphRenderer = new GraphCellRenderer(graph);
 
       // allow highlighting of cells on mouse over
-      new mxCellTracker(graph);
+      new mxCellTracker(graph, '#00FF00', function(me) {
+        let cell = me.getCell();
+        let excludedStyles = ["suppliers", "partDetails"];
+        if(cell && excludedStyles.indexOf(cell.style) >= 0) {
+          return null;
+        } else {
+          return cell;
+        }
+      });
 
       // Installs a custom tooltip for cells
       graph.getTooltipForCell = graphRenderer.getCellTooltip;
@@ -165,9 +172,6 @@ window.onload = function () {
               }
             }
           }
-
-          // force an autosize
-          //graph.autoSizeCell(supplierNode, false);
         }
         graph.cellSizeUpdated(suppliersParent, false);
         // reuse the suppliers style for the logistics centers as well
@@ -202,8 +206,6 @@ window.onload = function () {
             }
 
           }
-          // force an autosize
-          //graph.autoSizeCell(logisticNode, false);
           
         }
         // reuse the suppliers style for the logistics centers as well
@@ -252,8 +254,6 @@ window.onload = function () {
             }
           }
 
-          // force an autosize
-        //graph.autoSizeCell(hallNode, false);
         }
         // now add the edges
         for (let i = 0; i < dataModel.transportLinks.length; i++) {
@@ -267,8 +267,6 @@ window.onload = function () {
         // Updates the display
         graph.getModel().endUpdate();
       }
-      //graph.autoSizeCell(parent, true);
-      //graph.autoSizeCell(partNode, true)
 
       createToolbar(graph);
       createOutlineView(graph);
