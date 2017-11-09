@@ -13,6 +13,7 @@ class LayoutFactory {
     static partLayout;
     static allSuppliersLayout;
     static hallInventoryLayout;
+    static processLayout;
 
     public static initialize = function (graph) {
         LayoutFactory.defaultLayout = new mxValueProcessLayout(graph, false);
@@ -40,6 +41,14 @@ class LayoutFactory {
         LayoutFactory.hallInventoryLayout = new mxValueProcessLayout(graph, false);
         LayoutFactory.hallInventoryLayout.resizeParent = true;
         LayoutFactory.hallInventoryLayout.spacing = 20;
+
+        LayoutFactory.processLayout = new mxValueProcessLayout(graph, true);
+        LayoutFactory.processLayout.resizeParent = true;
+        LayoutFactory.processLayout.spacing = 10;
+        LayoutFactory.processLayout.marginTop = 5;
+        LayoutFactory.processLayout.marginBottom = 5;
+        LayoutFactory.processLayout.marginLeft = 5;        
+        
     }
 
 }
@@ -65,11 +74,10 @@ abstract class CellRendererAbstract {
 class PartRenderer extends CellRendererAbstract {
     cell: any;
     /**
-     * Renderer of a cell that represents a part. Don't return anything since the data inside
-     * is redered as separate cells
+     * Renderer of a cell that represents a part. Just return the title
      */
     getRenderedLabel(cell: any): any {
-        return "";
+        return cell.value.title;
     };
 
     /**
@@ -106,6 +114,28 @@ class SupplierCellRenderer extends CellRendererAbstract {
     isCellFoldable(cell: any): boolean { return true; }
 
     getLayout(cell: any): any { return LayoutFactory.supplierLayout }
+
+    isCellSelectable(cell: any): boolean { return true; }
+
+}
+
+/**
+ * The default process renderer. Just returns the value of the cell
+ */
+class ProcessCellRenderer extends CellRendererAbstract {
+    getRenderedLabel(cell: any): HTMLElement {
+        return cell.value.name;
+    }
+
+    getTooltip(cell: any): String {
+        return cell.value.name;
+    }
+
+    isLabelClipped(cell: any): boolean { return false; }
+
+    isCellFoldable(cell: any): boolean { return true; }
+
+    getLayout(cell: any): any { return LayoutFactory.processLayout }
 
     isCellSelectable(cell: any): boolean { return true; }
 
@@ -220,7 +250,8 @@ export class GraphCellRenderer {
         "defaultEdge": DefaultEdgeRenderer,
         "suppliers": AllSupplierCell,
         "partDetails": PartDetailsCell,
-        "inventoryContainer": HallInventoryCell
+        "inventoryContainer": HallInventoryCell,
+        "process": ProcessCellRenderer
     }
 
     constructor(graph) {

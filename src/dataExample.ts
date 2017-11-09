@@ -191,8 +191,8 @@ export let dataModel = {
                     capabilities: [{ type: 'operator' }, { type: 'X' }]
                 },
                 {
-                    'type': 'part',
-                    'Teilefamilie': 'Himmel F13/F06',
+                    'type': 'databox',
+                    'title': "Teilefamilie: Himmel F13/F06",
                     'Behälter': '3086699',
                     'Füllgrad': '11'
                 },

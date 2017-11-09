@@ -2,6 +2,7 @@ import { mxgraph } from "./mxGraphImport"
 import "./FlexArrowShape";
 import "./mxLeanMap";
 import { GraphCellRenderer } from './CellFactory'
+import { ValueProcessDiagramRenderer } from './ValueProcessNodeRenderer'
 
 import { dataModel } from './dataExample'
 
@@ -141,7 +142,7 @@ window.onload = function () {
         var parent = graph.getDefaultParent();
         layoutMgr.executeLayout(parent);
         new mxCircleLayout(graph).execute(graph.getDefaultParent());
-        // new mxParallelEdgeLayout(graph).execute(graph.getDefaultParent());
+        new mxParallelEdgeLayout(graph).execute(graph.getDefaultParent());
       }));
 
       // Gets the default parent for inserting new cells. This
@@ -153,61 +154,8 @@ window.onload = function () {
       graph.getModel().beginUpdate();
       try {
         // begin rendering the datamodel
-        // render the suppliers
-        let suppliersParent = graph.insertVertex(parent, null, null, 0, 0, 1800, 1800, 'suppliers');
-        for (let i = 0; i < dataModel.suppliers.length; i++) {
-          let supplier = dataModel.suppliers[i];
-          let supplierNode = graph.insertVertex(suppliersParent, supplier.id, supplier, 0, 0, 400, 300, 'supplier');
-          // now iterate through the parts and add them 
-          for (let j = 0; j < supplier.parts.length; j++) {
-            let part = supplier.parts[j];
-            // first add the part node
-            let partNode = graph.insertVertex(supplierNode, part.id, part, 0, 0, 10, 300, 'part');
-            // then add the title of the part
-            graph.insertVertex(partNode, null, {key: "name", value: part.title}, 0, 0, 200, 20, "partDetails");
-            for (let key in part) {
-              // and finally all of the details
-              if (part.hasOwnProperty(key) && key != 'id' && key != 'title') {
-                graph.insertVertex(partNode, null, {key: key, value: part[key]}, 0, 0, 200, 20, "partDetails");
-              }
-            }
-          }
-        }
-        graph.cellSizeUpdated(suppliersParent, false);
-        // reuse the suppliers style for the logistics centers as well
-        let logisticCentersParent = graph.insertVertex(parent, null, null, 0, 0, 100, 300, 'suppliers');
-        for (let i = 0; i < dataModel.logisticsCenters.length; i++) {
-          let logisticCenter = dataModel.logisticsCenters[i];
-          let logisticNode = graph.insertVertex(logisticCentersParent, logisticCenter.id, logisticCenter, 0, 0, 10, 300, 'supplier');
-          // now iterate through the parts and add them 
-          for (let j = 0; j < logisticCenter.capabilities.length; j++) {
-            let capability = logisticCenter.capabilities[j];
+        new ValueProcessDiagramRenderer(parent, dataModel, graph).render();
 
-            switch (capability.type) {
-              case 'forklift':
-                graph.insertVertex(logisticNode, null, null, 0, 0, 200, 20, "shape=mxgraph.lean_mapping.move_by_forklift");
-                break;
-              case 'part':
-                // first add the part node
-                let partNode = graph.insertVertex(logisticNode, null, capability, 0, 0, 200, 300, 'part');
-                // then add the title of the part
-                for (let key in capability) {
-                  // and finally all of the details
-                  if (capability.hasOwnProperty(key) && key != 'id' && key != 'title') {
-                    graph.insertVertex(partNode, null, key + ":" + capability[key], 0, 0, 200, 20, "partDetails");
-                  }
-                }
-                break;
-              case 'process':
-                //TODO: implement process 
-                graph.insertVertex(logisticNode, null, null, 0, 0, 200, 20, "shape=mxgraph.lean_mapping.manufacturing_process");
-              default:
-                break;
-            }
-
-          }
-
-        }
         // reuse the suppliers style for the logistics centers as well
         let factoryNode = graph.insertVertex(parent, null, null, 0, 0, 10, 300, 'suppliers');
         for (let i = 0; i < dataModel.factory.halls.length; i++) {
@@ -358,11 +306,20 @@ window.onload = function () {
       style[mxConstants.STYLE_STROKECOLOR] = 'black';
       graph.getStylesheet().putCellStyle('supplier', style);
 
+      // create the process cell
+      style = mxUtils.clone(style);
+      style[mxConstants.STYLE_SHAPE] = mxConstants.SHAPE_SWIMLANE;
+      style[mxConstants.STYLE_FONTSIZE] = 12;
+      style[mxConstants.STYLE_STARTSIZE] = 20;
+      style[mxConstants.STYLE_FONTCOLOR] = 'black';
+      style[mxConstants.STYLE_STROKECOLOR] = 'black';
+      graph.getStylesheet().putCellStyle('process', style);
+
       // create the style for the part cell
       style = mxUtils.clone(graph.getStylesheet().getDefaultEdgeStyle());
       style[mxConstants.STYLE_STROKECOLOR] = 'black';
-      style[mxConstants.STYLE_SHAPE] = mxConstants.SHAPE_RECTANGLE;
-      style[mxConstants.STYLE_PERIMETER] = mxConstants.PERIMETER_RECTANGLE;
+      style[mxConstants.STYLE_SHAPE] = mxConstants.SHAPE_SWIMLANE;
+      style[mxConstants.STYLE_STARTSIZE] = 25;      
       graph.getStylesheet().putCellStyle('part', style);
       // Creates the default style for edges
       style = {};
