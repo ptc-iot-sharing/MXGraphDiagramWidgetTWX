@@ -269,7 +269,7 @@ mxLeanCustomerSupplier.prototype.background = function(c, w, h)
 };
 
 mxLeanCustomerSupplier.prototype.getControlBounds =function (originalValue, w,h) {
-	var clampedHeight = Math.min(this.bounds.height * 0.3, this.maxSawToothHeight) * this.scale;
+	var clampedHeight = Math.min(this.bounds.height * 0.25, this.maxSawToothHeight - 5) * this.scale;
 	return new mxRectangle(originalValue.x, originalValue.y + clampedHeight, originalValue.width, originalValue.height);
 }
 
