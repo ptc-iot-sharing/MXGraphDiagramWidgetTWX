@@ -256,7 +256,7 @@ mxLeanCustomerSupplier.prototype.background = function(c, w, h)
 	c.begin();
     c.moveTo(0, h);
     // we don't want the header to expand forever;
-    var clampedHeight = Math.min(h * 0.3, 75);
+    var clampedHeight = Math.min(h * 0.3, this.maxSawToothHeight);
     c.lineTo(0, clampedHeight);
 	c.lineTo(w * 0.33, 0);
 	c.lineTo(w * 0.33, clampedHeight);
@@ -269,21 +269,23 @@ mxLeanCustomerSupplier.prototype.background = function(c, w, h)
 };
 
 mxLeanCustomerSupplier.prototype.getControlBounds =function (originalValue, w,h) {
-	var clampedHeight = Math.min(this.bounds.height * 0.3, 75) * this.scale;
+	var clampedHeight = Math.min(this.bounds.height * 0.3, this.maxSawToothHeight) * this.scale;
 	return new mxRectangle(originalValue.x, originalValue.y + clampedHeight, originalValue.width, originalValue.height);
 }
 
 mxLeanCustomerSupplier.prototype.getLabelBounds = function(rect)
 {
-    var clampedHeight = Math.min(rect.height * 0.3, 75) * this.scale;
+    var clampedHeight = Math.min(rect.height * 0.3, this.maxSawToothHeight) * this.scale;
 	return new mxRectangle(rect.x, rect.y + clampedHeight, rect.width, 30);
 };
 
 mxLeanCustomerSupplier.prototype.getGradientBounds = function(c, x, y, w, h)
 {
-    var clampedHeight = Math.min(h * 0.3, 75) * this.scale;
+    var clampedHeight = Math.min(h * 0.3, this.maxSawToothHeight) * this.scale;
 	return new mxRectangle(x, y + clampedHeight + 30, w, h - clampedHeight - 30);
 };
+
+mxLeanCustomerSupplier.prototype.maxSawToothHeight = 50;
 
 mxCellRenderer.registerShape('mxgraph.lean_mapping.outside_sources', mxLeanCustomerSupplier);
 
