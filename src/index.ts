@@ -306,7 +306,7 @@ window.onload = function () {
       style[mxConstants.STYLE_SHAPE] = 'mxgraph.lean_mapping.outside_sources';
       style[mxConstants.STYLE_FONTSIZE] = 13;
       style[mxConstants.STYLE_FONTCOLOR] = 'black';
-      style[mxConstants.STYLE_STROKECOLOR] = '#bbb';
+      style[mxConstants.STYLE_STROKECOLOR] = '#aaa';
       style[mxConstants.STYLE_STROKEWIDTH] = 2;
       graph.getStylesheet().putCellStyle('supplier', style);
 
@@ -315,8 +315,9 @@ window.onload = function () {
       style[mxConstants.STYLE_SHAPE] = mxConstants.SHAPE_SWIMLANE;
       style[mxConstants.STYLE_FONTSIZE] = 13;
       style[mxConstants.STYLE_STARTSIZE] = 20;
-      style[mxConstants.STYLE_FONTCOLOR] = 'black';
-      style[mxConstants.STYLE_STROKECOLOR] = 'black';
+      style[mxConstants.STYLE_STROKECOLOR] = '#2f4be9';
+      style[mxConstants.STYLE_FILLCOLOR] = '#4762f9';
+      style[mxConstants.STYLE_FONTCOLOR] = 'white';            
       graph.getStylesheet().putCellStyle('process', style);
 
       // create the style for the part cell

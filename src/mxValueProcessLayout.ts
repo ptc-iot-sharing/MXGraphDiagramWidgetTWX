@@ -125,6 +125,13 @@ mxValueProcessLayout.prototype.keepFirstLocation = false;
 mxValueProcessLayout.prototype.fill = false;
 
 /**
+* Variable: fillSpacing
+* 
+* The spacing to add to the fill of a box
+*/
+mxValueProcessLayout.prototype.fillSpacing = 0;
+
+/**
 * Variable: resizeParent
 * 
 * If the parent should be resized to match the width/height of the
@@ -374,10 +381,10 @@ mxValueProcessLayout.prototype.execute = function (parent) {
 
                         if (this.fill && fillValue != null) {
                             if (horizontal) {
-                                geo.height = fillValue;
+                                geo.height = fillValue + this.fillSpacing;
                             }
                             else {
-                                geo.width = fillValue;
+                                geo.width = fillValue + this.fillSpacing;
                             }
                         }
 

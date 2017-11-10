@@ -33,7 +33,8 @@ class LayoutFactory {
         LayoutFactory.partLayout = new mxValueProcessLayout(graph, false);
         LayoutFactory.partLayout.resizeParent = true;
         LayoutFactory.partLayout.fill = true;
-
+        LayoutFactory.partLayout.fillSpacing = 5;                
+        
         LayoutFactory.allSuppliersLayout = new mxValueProcessLayout(graph, false);
         LayoutFactory.allSuppliersLayout.resizeParent = true;
         LayoutFactory.allSuppliersLayout.spacing = 20;
