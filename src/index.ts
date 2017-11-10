@@ -286,8 +286,9 @@ window.onload = function () {
 
     function createStyles(graph) {
       // Enables crisp rendering of rectangles in SVG
-      var style = graph.getStylesheet().getDefaultEdgeStyle();
+      var style = graph.getStylesheet().getDefaultVertexStyle();
       style[mxConstants.STYLE_ROUNDED] = false;
+      style[mxConstants.STYLE_FONTCOLOR] = '#1d1b1b';
 
       // create the suppliers cell
       style = mxUtils.clone(style);
@@ -307,20 +308,23 @@ window.onload = function () {
       graph.getStylesheet().putCellStyle('supplier', style);
 
       // create the process cell
-      style = mxUtils.clone(style);
+      style = mxUtils.clone(graph.getStylesheet().getDefaultVertexStyle());
       style[mxConstants.STYLE_SHAPE] = mxConstants.SHAPE_SWIMLANE;
-      style[mxConstants.STYLE_FONTSIZE] = 12;
+      style[mxConstants.STYLE_FONTSIZE] = 13;
       style[mxConstants.STYLE_STARTSIZE] = 20;
       style[mxConstants.STYLE_FONTCOLOR] = 'black';
       style[mxConstants.STYLE_STROKECOLOR] = 'black';
       graph.getStylesheet().putCellStyle('process', style);
 
       // create the style for the part cell
-      style = mxUtils.clone(graph.getStylesheet().getDefaultEdgeStyle());
+      style = mxUtils.clone(graph.getStylesheet().getDefaultVertexStyle());
       style[mxConstants.STYLE_STROKECOLOR] = 'black';
       style[mxConstants.STYLE_SHAPE] = mxConstants.SHAPE_SWIMLANE;
-      style[mxConstants.STYLE_STARTSIZE] = 25;      
+      style[mxConstants.STYLE_FONTCOLOR] = 'black';      
+      style[mxConstants.STYLE_STARTSIZE] = 25;  
+      style[mxConstants.STYLE_FONTSIZE] = 13;      
       graph.getStylesheet().putCellStyle('part', style);
+
       // Creates the default style for edges
       style = {};
       style[mxConstants.STYLE_ROUNDED] = true;
