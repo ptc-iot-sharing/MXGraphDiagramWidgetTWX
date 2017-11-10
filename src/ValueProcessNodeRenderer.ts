@@ -82,6 +82,18 @@ class ForkliftNodeRenderer extends NodeRenderer {
 }
 
 /**
+ * Handles rendering of X type cells
+ */
+class CapabilityXNodeRenderer extends NodeRenderer {
+    /**
+     * render: Renders the an all supplier node
+     */
+    public render() {
+        this.graph.insertVertex(this.parent, null, 'X', 0, 0, 200, 20, "shape=rectangle;fontSize=18;strokeColor=black;strokeWidth=1;fillColor=transparent;spacing=6");
+    }
+}
+
+/**
  * Handles rendering of an operator
  */
 class OperatorNodeRenderer extends NodeRenderer {
@@ -184,6 +196,7 @@ class CapabilityFactory {
         "databox": DataBoxRenderer,
         "process": ProcessNodeRenderer,
         "operator": OperatorNodeRenderer,
+        "X": CapabilityXNodeRenderer,
         "default": NodeRenderer
     }
 
