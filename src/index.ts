@@ -44,7 +44,6 @@ window.onload = function () {
       loadLeanMappingShapes();
       // Creates the graph inside the given container
       var graph = new mxGraph(container);
-      container.style.background = 'url("node_modules/mxgraph/javascript/examples/editors/images/grid.gif")';
       // Allow panning using the right click buttion
       graph.setPanning(true);
       // allow resizing the container when an vertex moves outside of it
@@ -67,9 +66,10 @@ window.onload = function () {
       graph.extendParentsOnAdd = true;
       graph.extendParents = true;
       // disable the grid so things are more condensed
-      graph.gridEnabled = false;
+      graph.gridEnabled = true;
       // allow selection of cells
       graph.cellsSelectable = true;
+      graph.gridSnap = 3;
       graph.border = 10;
 
       // create the styles used in the graph
@@ -79,7 +79,7 @@ window.onload = function () {
       let graphRenderer = new GraphCellRenderer(graph);
 
       // allow highlighting of cells on mouse over
-      new mxCellTracker(graph, '#00FF00', function (me) {
+      new mxCellTracker(graph, '#00d5f4', function (me) {
         let cell = me.getCell();
         let excludedStyles = ["suppliers", "partDetails"];
         if (cell && excludedStyles.indexOf(cell.style) >= 0) {
@@ -289,7 +289,9 @@ window.onload = function () {
       var style = graph.getStylesheet().getDefaultVertexStyle();
       style[mxConstants.STYLE_ROUNDED] = false;
       style[mxConstants.STYLE_FONTCOLOR] = '#1d1b1b';
-
+      style[mxConstants.STYLE_STROKECOLOR] = '#dadfe2';
+      style[mxConstants.STYLE_FILLCOLOR] = '#f3f4f9';
+      
       // create the suppliers cell
       style = mxUtils.clone(style);
       style[mxConstants.STYLE_FILLCOLOR] = 'transparent';
@@ -304,7 +306,8 @@ window.onload = function () {
       style[mxConstants.STYLE_SHAPE] = 'mxgraph.lean_mapping.outside_sources';
       style[mxConstants.STYLE_FONTSIZE] = 13;
       style[mxConstants.STYLE_FONTCOLOR] = 'black';
-      style[mxConstants.STYLE_STROKECOLOR] = 'black';
+      style[mxConstants.STYLE_STROKECOLOR] = '#bbb';
+      style[mxConstants.STYLE_STROKEWIDTH] = 2;
       graph.getStylesheet().putCellStyle('supplier', style);
 
       // create the process cell
@@ -318,12 +321,20 @@ window.onload = function () {
 
       // create the style for the part cell
       style = mxUtils.clone(graph.getStylesheet().getDefaultVertexStyle());
-      style[mxConstants.STYLE_STROKECOLOR] = 'black';
+      style[mxConstants.STYLE_STROKECOLOR] = '#2f4be9';
       style[mxConstants.STYLE_SHAPE] = mxConstants.SHAPE_SWIMLANE;
-      style[mxConstants.STYLE_FONTCOLOR] = 'black';      
+      style[mxConstants.STYLE_FONTCOLOR] = 'white';      
       style[mxConstants.STYLE_STARTSIZE] = 25;  
       style[mxConstants.STYLE_FONTSIZE] = 13;      
+      style[mxConstants.STYLE_FILLCOLOR] = '#4762f9';     
       graph.getStylesheet().putCellStyle('part', style);
+
+      // create the style for the capability cell
+      style = mxUtils.clone(graph.getStylesheet().getDefaultVertexStyle());
+      style[mxConstants.STYLE_STROKECOLOR] = '#666666';
+      style[mxConstants.STYLE_FILLCOLOR] = '#bbb';
+      style[mxConstants.STYLE_STROKEWIDTH] = 1.5;
+      graph.getStylesheet().putCellStyle('capability', style);
 
       // Creates the default style for edges
       style = {};
@@ -336,8 +347,8 @@ window.onload = function () {
       style['endWidth'] = 11;
       style[mxConstants.STYLE_VERTICAL_ALIGN] = mxConstants.ALIGN_MIDDLE;
       style[mxConstants.STYLE_ALIGN] = mxConstants.ALIGN_CENTER;
-      style[mxConstants.STYLE_STROKECOLOR] = "#6482B9";
-      style[mxConstants.STYLE_FILLCOLOR] = "#B3FF66";
+      style[mxConstants.STYLE_STROKECOLOR] = "#43b9a4";
+      style[mxConstants.STYLE_FILLCOLOR] = "#42dcc0";
       style[mxConstants.STYLE_FONTCOLOR] = "#446299";
       graph.getStylesheet().putDefaultEdgeStyle(style);
     }

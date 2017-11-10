@@ -77,7 +77,7 @@ class ForkliftNodeRenderer extends NodeRenderer {
      * render: Renders the an all supplier node
      */
     public render() {
-        this.graph.insertVertex(this.parent, null, null, 0, 0, 200, 20, "shape=mxgraph.lean_mapping.move_by_forklift");
+        this.graph.insertVertex(this.parent, null, null, 0, 0, 200, 20, "capability;shape=mxgraph.lean_mapping.move_by_forklift");
     }
 }
 
@@ -101,7 +101,7 @@ class OperatorNodeRenderer extends NodeRenderer {
      * render: Renders the an all supplier node
      */
     public render() {
-        this.graph.insertVertex(this.parent, null, null, 0, 0, 200, 20, "shape=mxgraph.lean_mapping.operator");
+        this.graph.insertVertex(this.parent, null, null, 0, 0, 200, 20, "capability;shape=mxgraph.lean_mapping.operator");
     }
 }
 
