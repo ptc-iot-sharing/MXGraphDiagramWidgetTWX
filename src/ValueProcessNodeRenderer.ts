@@ -20,6 +20,20 @@ class NodeRenderer {
     }
 }
 
+/**
+ * Renderer for links in the diagram
+ */
+class LinkRenderer extends NodeRenderer {
+    protected source;
+    protected target;
+
+    constructor(parent, value, graph, source, target) {
+        super(parent, value, graph);
+        this.source = source;
+        this.target = target;
+    }
+}
+
 
 /**
  * A renderer that takes care of the entire value process diagram
@@ -32,7 +46,37 @@ export class ValueProcessDiagramRenderer extends NodeRenderer {
     public render() {
         new AllSuppliersNodeRenderer(this.parent, this.value.suppliers, this.graph).render();
         new AllLogisticCentersNodeRenderer(this.parent, this.value.logisticsCenters, this.graph).render();
-        new FactoryNodeRenderer(this.parent,this.value.factory, this.graph).render();
+        new FactoryNodeRenderer(this.parent, this.value.factory, this.graph).render();
+        // now add the edges
+        new AllLinksRenderer(this.parent, this.value.transportLinks, this.graph).render();
+    }
+}
+
+/**
+ * Handles rendering all of the links in the diagram
+ */
+class AllLinksRenderer extends NodeRenderer {
+    /**
+     * render: Renders all of the links in the diagram
+     */
+    public render() {
+        for (let i = 0; i < this.value.length; i++) {
+            let edge = this.value[i];
+            let source = this.graph.getModel().getCell(edge.fromId);
+            let target = this.graph.getModel().getCell(edge.toId);
+            if (edge.type == "truck") {
+                new TruckLinkRender(this.parent, edge, this.graph, source, target).render();
+            }
+        }
+    }
+}
+
+class TruckLinkRender extends LinkRenderer {
+    /**
+      * render: Renders the truck link
+      */
+    public render() {
+        this.graph.insertEdge(this.parent, null, this.value, this.source, this.target);
     }
 }
 
@@ -65,12 +109,12 @@ class FactoryHallNodeRenderer extends NodeRenderer {
         // now render all the inventories
         for (let i = 0; i < this.value.inventories.length; i++) {
             let inventory = this.value.inventories[i];
-            new InventoryNodeRenderer(inventoryNode, inventory, this.graph).render();  
-            inventory.info.title = inventory.name;         
+            new InventoryNodeRenderer(inventoryNode, inventory, this.graph).render();
+            inventory.info.title = inventory.name;
             new DataBoxRenderer(inventoryNode, inventory.info, this.graph).render();
         }
-         // now iterate through the capabilities and add them 
-         for (let j = 0; j < this.value.capabilities.length; j++) {
+        // now iterate through the capabilities and add them 
+        for (let j = 0; j < this.value.capabilities.length; j++) {
             let capability = this.value.capabilities[j];
             let renderer = CapabilityFactory.getCapabilityRenderer(capability.type);
             new renderer(hallNode, capability, this.graph).render();
@@ -283,7 +327,7 @@ class CapabilityFactory {
     }
 
     static getCapabilityRenderer(capability): NodeRendererConstructor {
-        if(this.mapping[capability]) {
+        if (this.mapping[capability]) {
             return this.mapping[capability];
         } else {
             return this.mapping["default"];

@@ -1,6 +1,5 @@
 import { mxgraph } from "./mxGraphImport"
 import { mxValueProcessLayout } from "./mxValueProcessLayout"
-import { fail } from "assert";
 
 let mxStackLayout = mxgraph.mxStackLayout;
 

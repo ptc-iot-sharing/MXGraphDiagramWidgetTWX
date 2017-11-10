@@ -155,13 +155,6 @@ window.onload = function () {
       try {
         // begin rendering the datamodel
         new ValueProcessDiagramRenderer(parent, dataModel, graph).render();
-        // now add the edges
-        for (let i = 0; i < dataModel.transportLinks.length; i++) {
-          let edge = dataModel.transportLinks[i];
-          let source = graph.getModel().getCell(edge.fromId);
-          let target = graph.getModel().getCell(edge.toId);
-          graph.insertEdge(parent, null, edge, source, target);
-        }
       }
       finally {
         // Updates the display
