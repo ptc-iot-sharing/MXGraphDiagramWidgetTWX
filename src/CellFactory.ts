@@ -26,7 +26,7 @@ class LayoutFactory {
         LayoutFactory.supplierLayout = new mxValueProcessLayout(graph, true);
         LayoutFactory.supplierLayout.resizeParent = true;
         LayoutFactory.supplierLayout.spacing = 20;
-        LayoutFactory.supplierLayout.marginTop = 110;
+        LayoutFactory.supplierLayout.marginTop = 80;
         LayoutFactory.supplierLayout.marginBottom = 20;
         LayoutFactory.supplierLayout.marginLeft = 10;
 

@@ -304,7 +304,7 @@ window.onload = function () {
       // create the supplier cell
       style = mxUtils.clone(style);
       style[mxConstants.STYLE_SHAPE] = 'mxgraph.lean_mapping.outside_sources';
-      style[mxConstants.STYLE_FONTSIZE] = 13;
+      style[mxConstants.STYLE_FONTSIZE] = 15;
       style[mxConstants.STYLE_FONTCOLOR] = 'black';
       style[mxConstants.STYLE_STROKECOLOR] = '#aaa';
       style[mxConstants.STYLE_STROKEWIDTH] = 2;
