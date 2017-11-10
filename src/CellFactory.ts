@@ -1,5 +1,6 @@
 import { mxgraph } from "./mxGraphImport"
 import { mxValueProcessLayout } from "./mxValueProcessLayout"
+import { fail } from "assert";
 
 let mxStackLayout = mxgraph.mxStackLayout;
 
@@ -14,6 +15,7 @@ class LayoutFactory {
     static allSuppliersLayout;
     static hallInventoryLayout;
     static processLayout;
+    static factoryLayout;
 
     public static initialize = function (graph) {
         LayoutFactory.defaultLayout = new mxValueProcessLayout(graph, false);
@@ -29,6 +31,13 @@ class LayoutFactory {
         LayoutFactory.supplierLayout.marginTop = 80;
         LayoutFactory.supplierLayout.marginBottom = 20;
         LayoutFactory.supplierLayout.marginLeft = 10;
+
+        LayoutFactory.factoryLayout = new mxValueProcessLayout(graph, false);
+        LayoutFactory.factoryLayout.resizeParent = true;
+        LayoutFactory.factoryLayout.spacing = 20;
+        LayoutFactory.factoryLayout.marginTop = 80;
+        LayoutFactory.factoryLayout.marginBottom = 20;
+        LayoutFactory.factoryLayout.marginLeft = 10;
 
         LayoutFactory.partLayout = new mxValueProcessLayout(graph, false);
         LayoutFactory.partLayout.resizeParent = true;
@@ -240,6 +249,21 @@ class HallInventoryCell {
 
 }
 
+class FactoryCellRenderer {
+    getRenderedLabel(cell: any): HTMLElement { return cell.value.name; };
+
+    getTooltip(cell: any): String { return cell.value.name; }
+
+    isLabelClipped(cell: any): boolean { return false; }
+
+    isCellFoldable(cell: any): boolean { return true; }
+
+    getLayout(cell: any): any { return LayoutFactory.factoryLayout }
+
+    isCellSelectable(cell: any): boolean { return false; }
+
+}
+
 /**
  * Factory method for getting renderer methods for cell
  */
@@ -252,6 +276,7 @@ export class GraphCellRenderer {
         "suppliers": AllSupplierCell,
         "partDetails": PartDetailsCell,
         "inventoryContainer": HallInventoryCell,
+        "factory": FactoryCellRenderer,
         "process": ProcessCellRenderer
     }
 
