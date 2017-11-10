@@ -155,54 +155,6 @@ window.onload = function () {
       try {
         // begin rendering the datamodel
         new ValueProcessDiagramRenderer(parent, dataModel, graph).render();
-
-        // reuse the suppliers style for the logistics centers as well
-        let factoryNode = graph.insertVertex(parent, null, null, 0, 0, 10, 300, 'suppliers');
-        for (let i = 0; i < dataModel.factory.halls.length; i++) {
-          let factoryHall = dataModel.factory.halls[i];
-          let hallNode = graph.insertVertex(factoryNode, factoryHall.id, factoryHall, 0, 0, 10, 300, 'supplier');
-          let inventoryNode = graph.insertVertex(hallNode, null, null, 0, 0, 0, 0, 'inventoryContainer');
-          // now iterate through the parts and add them 
-          for (let j = 0; j < factoryHall.inventories.length; j++) {
-            let inventory = factoryHall.inventories[j];
-            // first add the part node
-            let partNode = graph.insertVertex(inventoryNode, null, inventory, 0, 0, 200, 300, 'part');
-            // then add the title of the part
-            for (let key in inventory.info) {
-              // and finally all of the details
-              if (inventory.hasOwnProperty(key) && key != 'id' && key != 'title') {
-                graph.insertVertex(partNode, null, key + ":" + inventory[key], 0, 0, 200, 20, "partDetails");
-              }
-            }
-          }
-          // now iterate through the parts and add them 
-          for (let j = 0; j < factoryHall.capabilities.length; j++) {
-            let capability = factoryHall.capabilities[j];
-
-            switch (capability.type) {
-              case 'forklift':
-                graph.insertVertex(hallNode, null, null, 0, 0, 200, 20, "shape=mxgraph.lean_mapping.move_by_forklift");
-                break;
-              case 'part':
-                // first add the part node
-                let partNode = graph.insertVertex(hallNode, null, capability, 0, 0, 200, 300, 'part');
-                // then add the title of the part
-                for (let key in capability) {
-                  // and finally all of the details
-                  if (capability.hasOwnProperty(key) && key != 'id' && key != 'title') {
-                    graph.insertVertex(partNode, null, key + ":" + capability[key], 0, 0, 200, 20, "partDetails");
-                  }
-                }
-                break;
-              case 'process':
-                //TODO: implement process 
-                graph.insertVertex(hallNode, null, null, 0, 0, 200, 20, "shape=mxgraph.lean_mapping.manufacturing_process");
-              default:
-                break;
-            }
-          }
-
-        }
         // now add the edges
         for (let i = 0; i < dataModel.transportLinks.length; i++) {
           let edge = dataModel.transportLinks[i];
@@ -309,6 +261,9 @@ window.onload = function () {
       style[mxConstants.STYLE_STROKECOLOR] = '#aaa';
       style[mxConstants.STYLE_STROKEWIDTH] = 2;
       graph.getStylesheet().putCellStyle('supplier', style);
+
+      style = mxUtils.clone(style);
+      graph.getStylesheet().putCellStyle('factory', style);     
 
       // create the process cell
       style = mxUtils.clone(graph.getStylesheet().getDefaultVertexStyle());

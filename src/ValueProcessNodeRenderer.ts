@@ -32,6 +32,49 @@ export class ValueProcessDiagramRenderer extends NodeRenderer {
     public render() {
         new AllSuppliersNodeRenderer(this.parent, this.value.suppliers, this.graph).render();
         new AllLogisticCentersNodeRenderer(this.parent, this.value.logisticsCenters, this.graph).render();
+        new FactoryNodeRenderer(this.parent,this.value.factory, this.graph).render();
+    }
+}
+
+/**
+ * Handles rendering a given factory
+ */
+class FactoryNodeRenderer extends NodeRenderer {
+    /**
+     * render: Renders the factory and the halls in it
+     */
+    public render() {
+        let factoryNode = this.graph.insertVertex(this.parent, null, this.value, 0, 0, 1800, 1800, 'factory');
+        for (let i = 0; i < this.value.halls.length; i++) {
+            let factoryHall = this.value.halls[i];
+            new FactoryHallNodeRenderer(factoryNode, factoryHall, this.graph).render();
+        }
+    }
+}
+
+/**
+ * Handles rendering a given factory hall
+ */
+class FactoryHallNodeRenderer extends NodeRenderer {
+    /**
+     * render: Renders the factory and the halls in it
+     */
+    public render() {
+        let hallNode = this.graph.insertVertex(this.parent, null, this.value, 0, 0, 1800, 1800, 'supplier');
+        let inventoryNode = this.graph.insertVertex(hallNode, null, null, 0, 0, 0, 0, 'inventoryContainer');
+        // now render all the inventories
+        for (let i = 0; i < this.value.inventories.length; i++) {
+            let inventory = this.value.inventories[i];
+            new InventoryNodeRenderer(inventoryNode, inventory, this.graph).render();  
+            inventory.info.title = inventory.name;         
+            new DataBoxRenderer(inventoryNode, inventory.info, this.graph).render();
+        }
+         // now iterate through the capabilities and add them 
+         for (let j = 0; j < this.value.capabilities.length; j++) {
+            let capability = this.value.capabilities[j];
+            let renderer = CapabilityFactory.getCapabilityRenderer(capability.type);
+            new renderer(hallNode, capability, this.graph).render();
+        }
     }
 }
 
@@ -94,11 +137,47 @@ class CapabilityXNodeRenderer extends NodeRenderer {
 }
 
 /**
+ * Handles rendering of generic text type cells
+ */
+class TextNodeRenderer extends NodeRenderer {
+    /**
+     * render: Renders the an all supplier node
+     */
+    public render() {
+        this.graph.insertVertex(this.parent, null, this.value.value, 0, 0, 200, 20, "fontSize=12;spacing=6;whiteSpace=wrap");
+    }
+}
+
+/**
+ * Handles rendering of a lift
+ */
+class LiftNodeRenderer extends NodeRenderer {
+    /**
+     * render: Renders the an all supplier node
+     */
+    public render() {
+        this.graph.insertVertex(this.parent, null, null, 0, 0, 200, 20, "capability;shape=mxgraph.lean_mapping.lift");
+    }
+}
+
+/**
+ * Handles rendering of a inventoryBox
+ */
+class InventoryNodeRenderer extends NodeRenderer {
+    /**
+     * render: Renders the an all supplier node
+     */
+    public render() {
+        this.graph.insertVertex(this.parent, null, null, 0, 0, 200, 20, "capability;shape=mxgraph.lean_mapping.inventory_box");
+    }
+}
+
+/**
  * Handles rendering of an operator
  */
 class OperatorNodeRenderer extends NodeRenderer {
     /**
-     * render: Renders the an all supplier node
+     * render: Renders the operator note using a custom shape
      */
     public render() {
         this.graph.insertVertex(this.parent, null, null, 0, 0, 200, 20, "capability;shape=mxgraph.lean_mapping.operator");
@@ -197,6 +276,9 @@ class CapabilityFactory {
         "process": ProcessNodeRenderer,
         "operator": OperatorNodeRenderer,
         "X": CapabilityXNodeRenderer,
+        "lift": LiftNodeRenderer,
+        "inventory": InventoryNodeRenderer,
+        "text": TextNodeRenderer,
         "default": NodeRenderer
     }
 
