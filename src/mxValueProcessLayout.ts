@@ -457,7 +457,7 @@ mxValueProcessLayout.prototype.updateParentGeometry = function (parent, pgeo, la
     var preferredSize = this.graph.getPreferredSizeForCell(parent);
 
     if (horizontal) {
-        pgeo2.height = Math.max(lastValueN + this.marginBottom, preferredSize.height);
+        pgeo2.height = Math.max(lastValueN + this.marginBottom, preferredSize ? preferredSize.height : 0);
 
         var tmp = last.x + last.width + this.spacing + this.marginRight;
 
@@ -465,7 +465,7 @@ mxValueProcessLayout.prototype.updateParentGeometry = function (parent, pgeo, la
             pgeo2.width = Math.max(pgeo2.width, tmp);
         }
         else {
-            pgeo2.width = Math.max(tmp, preferredSize.width);
+            pgeo2.width = Math.max(tmp, preferredSize ? preferredSize.width : 0);
         }
     }
     else {

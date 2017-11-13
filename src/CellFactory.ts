@@ -41,8 +41,8 @@ class LayoutFactory {
         LayoutFactory.partLayout = new mxValueProcessLayout(graph, false);
         LayoutFactory.partLayout.resizeParent = true;
         LayoutFactory.partLayout.fill = true;
-        LayoutFactory.partLayout.fillSpacing = 5;                
-        
+        LayoutFactory.partLayout.fillSpacing = 5;
+
         LayoutFactory.allSuppliersLayout = new mxValueProcessLayout(graph, false);
         LayoutFactory.allSuppliersLayout.resizeParent = true;
         LayoutFactory.allSuppliersLayout.spacing = 20;
@@ -56,8 +56,8 @@ class LayoutFactory {
         LayoutFactory.processLayout.spacing = 10;
         LayoutFactory.processLayout.marginTop = 5;
         LayoutFactory.processLayout.marginBottom = 5;
-        LayoutFactory.processLayout.marginLeft = 5;        
-        
+        LayoutFactory.processLayout.marginLeft = 5;
+
     }
 
 }
@@ -178,14 +178,23 @@ class DefaultVertexRenderer extends CellRendererAbstract {
 class DefaultEdgeRenderer extends CellRendererAbstract {
     getRenderedLabel(cell: any): HTMLElement {
         let content = document.createElement('div');
-        content.style.height = '100%';
-        content.style.width = '100%';
-        content.textContent = cell.value ? cell.value.label : "";
+        content.classList.add("edgeLabelTruck");
+        let label = document.createElement('span');
+        label.textContent = cell.value ? cell.value.label : "";
+        content.appendChild(label);
         let image = document.createElement('img');
-        image.src = 'https://upload.wikimedia.org/wikipedia/commons/thumb/1/1d/Linecons_small-truck.svg/2000px-Linecons_small-truck.svg.png'
-        image.style.width = '25px';
-        image.style.height = '25px';
+        image.src = 'truckIcon.png';
         content.appendChild(image);
+        if (cell.value && cell.value.info) {
+            for (const key in cell.value.info) {
+                if (cell.value.info.hasOwnProperty(key)) {
+                    const element = cell.value.info[key];
+                    let label = document.createElement("span");
+                    label.textContent = key + ": " + cell.value.info[key];
+                    content.appendChild(label);
+                }
+            }
+        }
         return content;
     }
 
@@ -216,7 +225,7 @@ class AllSupplierCell {
 }
 
 class PartDetailsCell {
-    getRenderedLabel(cell: any): any { 
+    getRenderedLabel(cell: any): any {
         return cell.value.key + ": " + cell.value.value;
     };
 
