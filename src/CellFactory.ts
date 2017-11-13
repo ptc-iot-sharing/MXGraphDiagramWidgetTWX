@@ -183,7 +183,7 @@ class DefaultEdgeRenderer extends CellRendererAbstract {
         label.textContent = cell.value ? cell.value.label : "";
         content.appendChild(label);
         let image = document.createElement('img');
-        image.src = 'truckIcon.png';
+        image.src = '/src/images/truckIcon.png';
         content.appendChild(image);
         if (cell.value && cell.value.info) {
             for (const key in cell.value.info) {
