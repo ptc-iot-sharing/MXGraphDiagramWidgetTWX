@@ -1,0 +1,10 @@
+
+    .edgeLabelTruck {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+    .edgeLabelTruck img {
+        width: 52px;
+        height: 25px;
+    }

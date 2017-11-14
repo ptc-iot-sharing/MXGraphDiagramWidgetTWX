@@ -5,7 +5,7 @@ import "./mxLeanMap";
 import { GraphCellRenderer } from './CellFactory'
 import { ValueProcessDiagramRenderer } from './ValueProcessNodeRenderer'
 import {CreateGraphOutline, CreateGraphToolbar} from "./mxGraphUtils";
-
+require("../styles/styles.css");
 
 let mxGraph = mxgraph.mxGraph,
   mxShape = mxgraph.mxShape,
