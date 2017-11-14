@@ -1,27 +1,24 @@
 var path = require("path");
 var webpack = require('webpack');
 var CopyWebpackPlugin = require('copy-webpack-plugin');
-const ExtractTextPlugin = require("extract-text-webpack-plugin");
 
 module.exports = {
     entry: {
         // htmlDemo: "./src/index.ts",
         mxdiagram_runtime: './src/mxdiagram.runtime.ts',
-        mxdiagram_ide: './src/mxdiagram.ide.ts',
-        vendor: ['mxgraph']
+        mxdiagram_ide: './src/mxdiagram.ide.ts'
     },
     output: {
         path: path.join(__dirname, "ui", "mxdiagram"),
         filename: "[name].bundle.js",
         chunkFilename: "[id].chunk.js",
-        publicPath: "../Common/extensions/mxdiagram_ExtensionPackage/ui/mxdiagram/"
+        publicPath: "../Common/extensions/mxdiagram_ExtensionPackage/ui/mxdiagram/",
     },
     plugins: [
         new webpack.optimize.CommonsChunkPlugin({
             name: "mxdiagram_runtime",
-            minChunks: Infinity,
-            filename: "mxdiagram_runtime.bundle.js",
-            chunks: ['vendor']
+            async: true, 
+            children: true
         }),
         new CopyWebpackPlugin([
             { from: 'src/mxgraph', to: 'mxgraph' }
