@@ -4,7 +4,6 @@ import "./FlexArrowShape";
 import "./mxLeanMap";
 import { GraphCellRenderer } from './CellFactory'
 import { ValueProcessDiagramRenderer } from './ValueProcessNodeRenderer'
-import {CreateGraphOutline, CreateGraphToolbar} from "./mxGraphUtils";
 require("../styles/styles.css");
 
 let mxGraph = mxgraph.mxGraph,
@@ -149,9 +148,7 @@ export function createValueProcessDiagram(container, data) {
         // Updates the display
         graph.getModel().endUpdate();
       }
-
-      CreateGraphToolbar(graph);
-      CreateGraphOutline(graph);
+      return graph;
     };
 
     function createStyles(graph) {

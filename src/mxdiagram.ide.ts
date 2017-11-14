@@ -35,7 +35,7 @@ TW.IDE.Widgets.mxdiagram = function() {
                     'defaultValue': {},
                     'isBindingTarget': true
                 },
-                'GraphExport': {
+                'XMLDiagram': {
                     'description': 'A XML file with the a mxgraph diagram',
                     'baseType': 'XML',
                     'isVisible': true,
@@ -46,14 +46,14 @@ TW.IDE.Widgets.mxdiagram = function() {
                     'description': 'Show the tools window',
                     'baseType': 'BOOLEAN',
                     'isVisible': true,
-                    'defaultValue': {},
+                    'defaultValue': true,
                     'isBindingTarget': true
                 },
                 'ShowOutline': {
                     'description': 'Show the outline window',
                     'baseType': 'BOOLEAN',
                     'isVisible': true,
-                    'defaultValue': {},
+                    'defaultValue': true,
                     'isBindingTarget': true
                 },
                 // add any additional properties here
