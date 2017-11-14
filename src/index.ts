@@ -1,5 +1,5 @@
-import { dataModel } from './dataExample'
-import {createValueProcessDiagram} from './mxValueProcessDiagram'
+import { dataModel } from './value_process/dataExample'
+import {createValueProcessDiagram} from './value_process/mxValueProcessDiagram'
 
 
 window.onload = function () {

@@ -6,6 +6,7 @@ import { GraphCellRenderer } from './CellFactory'
 import { ValueProcessDiagramRenderer } from './ValueProcessNodeRenderer'
 import {CreateGraphOutline, CreateGraphToolbar} from "./mxGraphUtils";
 
+
 let mxGraph = mxgraph.mxGraph,
   mxShape = mxgraph.mxShape,
   mxRubberband = mxgraph.mxRubberband,
@@ -227,7 +228,7 @@ export function createValueProcessDiagram(container, data) {
     }
 
     function loadLeanMappingShapes() {
-      var req = mxUtils.load('lean_mapping.xml');
+      var req = mxUtils.load(require('../images/lean_mapping.xml'));
       var root = req.getDocumentElement();
       var prefix = root.getAttribute("name");
       var shape = root.firstChild;

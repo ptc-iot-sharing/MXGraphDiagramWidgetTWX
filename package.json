@@ -7,16 +7,21 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "build": "webpack --progress -p",
     "watch": "webpack --progress --watch",
-    "server": "webpack-dev-server --open"
+    "server": "webpack-dev-server --open",
+    "packageExtension": "gradlew.bat upload"
   },
   "author": "",
   "license": "ISC",
   "devDependencies": {
     "@types/node": "^8.0.47",
+    "@types/webpack-env": "^1.13.2",
     "awesome-typescript-loader": "^3.2.3",
+    "copy-webpack-plugin": "^4.2.0",
+    "file-loader": "^1.1.5",
     "source-map-loader": "^0.2.3",
     "ts-loader": "^3.1.1",
     "typescript": "^2.6.1",
+    "url-loader": "^0.6.2",
     "webpack-dev-server": "^2.9.3"
   },
   "dependencies": {

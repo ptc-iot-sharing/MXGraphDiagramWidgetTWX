@@ -12,27 +12,27 @@ export function CreateGraphToolbar(graph) {
 
     var tb = new mxToolbar(content);
 
-    tb.addItem('Zoom In', '/src/images/zoom_in32.png', function (evt) {
+    tb.addItem('Zoom In', require('../images/zoom_in32.png'), function (evt) {
         graph.zoomIn();
     });
 
-    tb.addItem('Zoom Out', '/src/images/zoom_out32.png', function (evt) {
+    tb.addItem('Zoom Out', require('../images/zoom_out32.png'), function (evt) {
         graph.zoomOut();
     });
 
-    tb.addItem('Actual Size', '/src/images/view_1_132.png', function (evt) {
+    tb.addItem('Actual Size', require('../images/view_1_132.png'), function (evt) {
         graph.zoomActual();
     });
 
-    tb.addItem('Print', '/src/images/print32.png', function (evt) {
+    tb.addItem('Print', require('../images/print32.png'), function (evt) {
         var preview = new mxPrintPreview(graph, 1);
         preview.open();
     });
-    tb.addItem('Show', '/src/images/newtab32.png', function (evt) {
+    tb.addItem('Show', require('../images/newtab32.png'), function (evt) {
         mxUtils.show(graph, null, 10, 10);
     });
 
-    tb.addItem('Poster Print', '/src/images/press32.png', function (evt) {
+    tb.addItem('Poster Print', require('../images/press32.png'), function (evt) {
         var pageCount = mxUtils.prompt('Enter maximum page count', '1');
 
         if (pageCount != null) {
