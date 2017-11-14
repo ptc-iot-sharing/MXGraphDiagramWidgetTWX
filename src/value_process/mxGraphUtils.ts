@@ -42,7 +42,7 @@ export function CreateGraphToolbar(graph) {
         }
     });
 
-    let toolsWindow = new mxWindow('Tools', content, 0, 0, 240, 66, true);
+    let toolsWindow = new mxWindow('Tools', content, 50, 50, 240, 66, true);
     toolsWindow.setMaximizable(false);
     toolsWindow.setScrollable(false);
     toolsWindow.setResizable(false);
@@ -60,7 +60,7 @@ export function CreateGraphOutline(graph) {
     content.style.overflow = 'hidden';
     var outline = new mxOutline(graph, content);
     // create the window itself
-    let outlineWindow = new mxWindow('Outline', content, 200, 0, 200, 300, true);
+    let outlineWindow = new mxWindow('Outline', content, 250, 50, 200, 300, true);
     outlineWindow.setMaximizable(false);
     outlineWindow.setScrollable(false);
     outlineWindow.setResizable(true);
