@@ -159,7 +159,7 @@ class DefaultVertexRenderer extends CellRendererAbstract {
     }
 
     getTooltip(cell: any): String {
-        return "";
+        return cell.value ? cell.value.tooltip : "";
     }
 
     isLabelClipped(cell: any): boolean { return false; }

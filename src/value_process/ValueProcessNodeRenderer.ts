@@ -164,7 +164,7 @@ class ForkliftNodeRenderer extends NodeRenderer {
      * render: Renders the an all supplier node
      */
     public render() {
-        this.graph.insertVertex(this.parent, null, null, 0, 0, 200, 20, "capability;shape=mxgraph.lean_mapping.move_by_forklift");
+        this.graph.insertVertex(this.parent, null, {tooltip: 'Forklift'}, 0, 0, 200, 20, "capability;shape=mxgraph.lean_mapping.move_by_forklift");
     }
 }
 
@@ -200,7 +200,7 @@ class LiftNodeRenderer extends NodeRenderer {
      * render: Renders the an all supplier node
      */
     public render() {
-        this.graph.insertVertex(this.parent, null, null, 0, 0, 200, 20, "capability;shape=mxgraph.lean_mapping.lift");
+        this.graph.insertVertex(this.parent, null, {tooltip: 'Lift'}, 0, 0, 200, 20, "capability;shape=mxgraph.lean_mapping.lift");
     }
 }
 
@@ -212,7 +212,7 @@ class InventoryNodeRenderer extends NodeRenderer {
      * render: Renders the an all supplier node
      */
     public render() {
-        this.graph.insertVertex(this.parent, null, null, 0, 0, 200, 20, "capability;shape=mxgraph.lean_mapping.inventory_box");
+        this.graph.insertVertex(this.parent, null, {tooltip: 'Lift'}, 0, 0, 200, 20, "capability;shape=mxgraph.lean_mapping.inventory_box");
     }
 }
 
@@ -224,7 +224,7 @@ class OperatorNodeRenderer extends NodeRenderer {
      * render: Renders the operator note using a custom shape
      */
     public render() {
-        this.graph.insertVertex(this.parent, null, null, 0, 0, 200, 20, "capability;shape=mxgraph.lean_mapping.operator");
+        this.graph.insertVertex(this.parent, null, {tooltip: 'Operator'}, 0, 0, 200, 20, "capability;shape=mxgraph.lean_mapping.operator");
     }
 }
 
@@ -293,7 +293,7 @@ class DataBoxRenderer extends NodeRenderer {
         // then add the title of the part
         for (let key in this.value) {
             // and finally all of the details
-            if (this.value.hasOwnProperty(key) && key != 'id' && key != 'title' && key != 'type') {
+            if (this.value.hasOwnProperty(key) && key != 'id' && key != 'title' && key != 'type' && key != 'objectLink') {
                 new DataBoxItemRenderer(partNode, { key: key, value: this.value[key] }, this.graph).render();
             }
         }
