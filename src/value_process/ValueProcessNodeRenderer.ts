@@ -88,7 +88,7 @@ class FactoryNodeRenderer extends NodeRenderer {
      * render: Renders the factory and the halls in it
      */
     public render() {
-        let factoryNode = this.graph.insertVertex(this.parent, null, this.value, 0, 0, 1800, 1800, 'factory');
+        let factoryNode = this.graph.insertVertex(this.parent, this.value.id, this.value, 0, 0, 1800, 1800, 'factory');
         for (let i = 0; i < this.value.halls.length; i++) {
             let factoryHall = this.value.halls[i];
             new FactoryHallNodeRenderer(factoryNode, factoryHall, this.graph).render();
