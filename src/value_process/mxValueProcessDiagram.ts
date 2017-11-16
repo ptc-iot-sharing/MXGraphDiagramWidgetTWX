@@ -140,6 +140,12 @@ export function createValueProcessDiagram(container, data) {
         // Updates the display
         graph.getModel().endUpdate();
       }
+      // Adds a button to execute the layout
+      var parent = graph.getDefaultParent();
+      layoutMgr.executeLayout(parent);
+      new mxCircleLayout(graph).execute(graph.getDefaultParent());
+      new mxParallelEdgeLayout(graph).execute(graph.getDefaultParent());
+      
       return graph;
     };
 
