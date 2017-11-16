@@ -125,14 +125,6 @@ export function createValueProcessDiagram(container, data) {
       // Enables rubberband selection
       new mxRubberband(graph);
 
-      // Adds a button to execute the layout
-      document.body.appendChild(mxUtils.button('Arrange', function (evt) {
-        var parent = graph.getDefaultParent();
-        layoutMgr.executeLayout(parent);
-        new mxCircleLayout(graph).execute(graph.getDefaultParent());
-        new mxParallelEdgeLayout(graph).execute(graph.getDefaultParent());
-      }));
-
       // Gets the default parent for inserting new cells. This
       // is normally the first child of the root (ie. layer 0).
       var parent = graph.getDefaultParent();
