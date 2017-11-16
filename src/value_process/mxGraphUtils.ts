@@ -47,6 +47,7 @@ export function CreateGraphToolbar(graph) {
     toolsWindow.setScrollable(false);
     toolsWindow.setResizable(false);
     toolsWindow.setVisible(true);
+    return toolsWindow;
 }
 
 export function CreateGraphOutline(graph) {
@@ -68,4 +69,5 @@ export function CreateGraphOutline(graph) {
     outlineWindow.setClosable(true);
     // zoom actual to view the full chart
     graph.zoomActual();
+    return outlineWindow;
 }
