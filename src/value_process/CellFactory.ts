@@ -105,11 +105,7 @@ class PartRenderer extends CellRendererAbstract {
 
     isLabelClipped(cell: any): boolean { return true; }
 
-    isCellFoldable(cell: any): boolean { return true; }
-
     getLayout(cell: any): any { return LayoutFactory.partLayout }
-
-    isCellSelectable(cell: any): boolean { return true; }
 
 }
 /**
@@ -131,11 +127,7 @@ class SupplierCellRenderer extends CellRendererAbstract {
 
     isLabelClipped(cell: any): boolean { return true; }
 
-    isCellFoldable(cell: any): boolean { return true; }
-
     getLayout(cell: any): any { return LayoutFactory.supplierLayout }
-
-    isCellSelectable(cell: any): boolean { return true; }
 
 }
 
@@ -151,13 +143,7 @@ class ProcessCellRenderer extends CellRendererAbstract {
         return cell.value.name;
     }
 
-    isLabelClipped(cell: any): boolean { return false; }
-
-    isCellFoldable(cell: any): boolean { return true; }
-
     getLayout(cell: any): any { return LayoutFactory.processLayout }
-
-    isCellSelectable(cell: any): boolean { return true; }
 
 }
 
@@ -173,13 +159,7 @@ class DefaultVertexRenderer extends CellRendererAbstract {
         return cell.value ? cell.value.tooltip : "";
     }
 
-    isLabelClipped(cell: any): boolean { return false; }
-
     isCellFoldable(cell: any): boolean { return false; }
-
-    getLayout(cell: any): any { return LayoutFactory.defaultLayout }
-
-    isCellSelectable(cell: any): boolean { return true; }
 
 }
 
@@ -215,11 +195,7 @@ class DefaultEdgeRenderer extends CellRendererAbstract {
         return "";
     }
 
-    isLabelClipped(cell: any): boolean { return false; }
-
     isCellFoldable(cell: any): boolean { return false; }
-
-    isCellSelectable(cell: any): boolean { return true; }
 
 }
 
@@ -227,8 +203,6 @@ class AllSupplierCell extends CellRendererAbstract {
     getRenderedLabel(cell: any): HTMLElement { return; };
 
     getTooltip(cell: any): String { return; }
-
-    isLabelClipped(cell: any): boolean { return false; }
 
     isCellFoldable(cell: any): boolean { return false; }
 
@@ -244,11 +218,7 @@ class PartDetailsCell  extends CellRendererAbstract {
 
     getTooltip(cell: any): String { return cell.value; }
 
-    isLabelClipped(cell: any): boolean { return false; }
-
     isCellFoldable(cell: any): boolean { return false; }
-
-    getLayout(cell: any): any { return LayoutFactory.defaultLayout }
 
     isCellSelectable(cell: any): boolean { return false; }
 
@@ -259,8 +229,6 @@ class HallInventoryCell extends CellRendererAbstract {
     getRenderedLabel(cell: any): HTMLElement { return undefined; };
 
     getTooltip(cell: any): String { return cell.value; }
-
-    isLabelClipped(cell: any): boolean { return false; }
 
     isCellFoldable(cell: any): boolean { return false; }
 
@@ -274,10 +242,6 @@ class FactoryCellRenderer extends CellRendererAbstract {
     getRenderedLabel(cell: any): HTMLElement { return cell.value.name; };
 
     getTooltip(cell: any): String { return cell.value.name; }
-
-    isLabelClipped(cell: any): boolean { return false; }
-
-    isCellFoldable(cell: any): boolean { return true; }
 
     getLayout(cell: any): any { return LayoutFactory.factoryLayout }
 
