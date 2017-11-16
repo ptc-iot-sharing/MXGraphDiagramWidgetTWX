@@ -78,6 +78,8 @@ abstract class CellRendererAbstract {
     getLayout(cell: any): any { return LayoutFactory.defaultLayout };
 
     isCellSelectable(cell: any): boolean { return true }
+
+    isCellEditable(cell: any): boolean {return false;}
 }
 
 class PartRenderer extends CellRendererAbstract {
@@ -221,7 +223,7 @@ class DefaultEdgeRenderer extends CellRendererAbstract {
 
 }
 
-class AllSupplierCell {
+class AllSupplierCell extends CellRendererAbstract {
     getRenderedLabel(cell: any): HTMLElement { return; };
 
     getTooltip(cell: any): String { return; }
@@ -235,7 +237,7 @@ class AllSupplierCell {
     isCellSelectable(cell: any): boolean { return false; }
 }
 
-class PartDetailsCell {
+class PartDetailsCell  extends CellRendererAbstract {
     getRenderedLabel(cell: any): any {
         return cell.value.key + ": " + cell.value.value;
     };
@@ -253,7 +255,7 @@ class PartDetailsCell {
 }
 
 
-class HallInventoryCell {
+class HallInventoryCell extends CellRendererAbstract {
     getRenderedLabel(cell: any): HTMLElement { return undefined; };
 
     getTooltip(cell: any): String { return cell.value; }
@@ -268,7 +270,7 @@ class HallInventoryCell {
 
 }
 
-class FactoryCellRenderer {
+class FactoryCellRenderer extends CellRendererAbstract {
     getRenderedLabel(cell: any): HTMLElement { return cell.value.name; };
 
     getTooltip(cell: any): String { return cell.value.name; }
