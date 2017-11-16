@@ -67,7 +67,7 @@ class LayoutFactory {
  * A abstract cell renderer. This is responsible for rendering the label, and tooltip of a cell
  */
 abstract class CellRendererAbstract {
-    getRenderedLabel(cell: any): HTMLElement { return; };
+    getRenderedLabel(cell: any): string { return; };
 
     getTooltip(cell: any): String { return; }
 
@@ -79,7 +79,7 @@ abstract class CellRendererAbstract {
 
     isCellSelectable(cell: any): boolean { return true }
 
-    isCellEditable(cell: any): boolean {return false;}
+    isCellEditable(cell: any): boolean { return false; }
 }
 
 class PartRenderer extends CellRendererAbstract {
@@ -93,7 +93,7 @@ class PartRenderer extends CellRendererAbstract {
         link.textContent = cell.value.title;
         link.target = '_blank';
         link.style.color = 'white';
-        return link;
+        return link.outerHTML;
     };
 
     /**
@@ -113,12 +113,12 @@ class PartRenderer extends CellRendererAbstract {
  * At the moment this is rendererd as a swimlane cell with only the title
  */
 class SupplierCellRenderer extends CellRendererAbstract {
-    getRenderedLabel(cell: any): HTMLElement {
+    getRenderedLabel(cell: any): string {
         let link = document.createElement('a');
         link.href = cell.value.objectLink;
         link.textContent = cell.value.name;
         link.target = '_blank';
-        return link;
+        return link.outerHTML;
     }
 
     getTooltip(cell: any): String {
@@ -135,7 +135,7 @@ class SupplierCellRenderer extends CellRendererAbstract {
  * The default process renderer. Just returns the value of the cell
  */
 class ProcessCellRenderer extends CellRendererAbstract {
-    getRenderedLabel(cell: any): HTMLElement {
+    getRenderedLabel(cell: any): string {
         return cell.value.name;
     }
 
@@ -151,7 +151,7 @@ class ProcessCellRenderer extends CellRendererAbstract {
  * The default cell renderer. Just returns the value of the cell
  */
 class DefaultVertexRenderer extends CellRendererAbstract {
-    getRenderedLabel(cell: any): HTMLElement {
+    getRenderedLabel(cell: any): string {
         return cell.value;
     }
 
@@ -167,7 +167,7 @@ class DefaultVertexRenderer extends CellRendererAbstract {
  * The default edge renderer.
  */
 class DefaultEdgeRenderer extends CellRendererAbstract {
-    getRenderedLabel(cell: any): HTMLElement {
+    getRenderedLabel(cell: any): string {
         let content = document.createElement('div');
         content.classList.add("edgeLabelTruck");
         let link = document.createElement('a');
@@ -188,7 +188,7 @@ class DefaultEdgeRenderer extends CellRendererAbstract {
                 }
             }
         }
-        return content;
+        return content.outerHTML;
     }
 
     getTooltip(cell: any): String {
@@ -200,7 +200,7 @@ class DefaultEdgeRenderer extends CellRendererAbstract {
 }
 
 class AllSupplierCell extends CellRendererAbstract {
-    getRenderedLabel(cell: any): HTMLElement { return; };
+    getRenderedLabel(cell: any): string { return; };
 
     getTooltip(cell: any): String { return; }
 
@@ -211,7 +211,7 @@ class AllSupplierCell extends CellRendererAbstract {
     isCellSelectable(cell: any): boolean { return false; }
 }
 
-class PartDetailsCell  extends CellRendererAbstract {
+class PartDetailsCell extends CellRendererAbstract {
     getRenderedLabel(cell: any): any {
         let container = document.createElement('div');
         let keyElement = document.createElement('strong');
@@ -219,21 +219,24 @@ class PartDetailsCell  extends CellRendererAbstract {
         container.appendChild(keyElement);
         let valueElement = document.createElement('span');
         valueElement.textContent = cell.value.value;
-        container.appendChild(valueElement);        
-        return container;
+        container.appendChild(valueElement);
+        return container.outerHTML;
     };
 
-    getTooltip(cell: any): String { return cell.value; }
+    getTooltip(cell: any): String { return cell.key + ": " + cell.value; }
 
     isCellFoldable(cell: any): boolean { return false; }
 
     isCellSelectable(cell: any): boolean { return false; }
 
+    isCellEditable(cell: any): boolean {
+        return cell.value.isEditable ? true : false;
+    }
 }
 
 
 class HallInventoryCell extends CellRendererAbstract {
-    getRenderedLabel(cell: any): HTMLElement { return undefined; };
+    getRenderedLabel(cell: any): string { return undefined; };
 
     getTooltip(cell: any): String { return cell.value; }
 
@@ -246,7 +249,7 @@ class HallInventoryCell extends CellRendererAbstract {
 }
 
 class FactoryCellRenderer extends CellRendererAbstract {
-    getRenderedLabel(cell: any): HTMLElement { return cell.value.name; };
+    getRenderedLabel(cell: any): string { return cell.value.name; };
 
     getTooltip(cell: any): String { return cell.value.name; }
 
@@ -316,5 +319,10 @@ export class GraphCellRenderer {
     public isCellSelectable = (cell) => {
         let cellRenderer = this.getRendererForCell(cell);
         return new cellRenderer().isCellSelectable(cell);
+    }
+
+    public isCellEditable = (cell) => {
+        let cellRenderer = this.getRendererForCell(cell);
+        return new cellRenderer().isCellEditable(cell);
     }
 }

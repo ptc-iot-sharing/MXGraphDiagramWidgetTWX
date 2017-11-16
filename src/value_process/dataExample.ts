@@ -14,7 +14,7 @@ export let dataModel = {
                     'Sequenzprod.': 'ja',
                     'Teilefamilie': undefined,
                     'Name': 'Himmel',
-                    'Variantenzahl': 'G30/F90: 18; F34/F36: 132',
+                    'Variantenzahl': {value: 'G30/F90: 18; F34/F36: 132', isEditable: true},
                     'BehälterTyp': '3104026',
                     'Füllgrad': '6',
                     'needBy': 'bis 06/20'

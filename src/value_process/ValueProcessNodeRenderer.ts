@@ -294,7 +294,17 @@ class DataBoxRenderer extends NodeRenderer {
         for (let key in this.value) {
             // and finally all of the details
             if (this.value.hasOwnProperty(key) && key != 'id' && key != 'title' && key != 'type' && key != 'objectLink') {
-                new DataBoxItemRenderer(partNode, { key: key, value: this.value[key] }, this.graph).render();
+                let value: any = {
+                    key: key
+                };
+                if(typeof this.value[key] == 'string') {
+                    value.value = this.value[key]; 
+                    value.isEditable = false;
+                } else if(this.value[key]) {
+                    value.value = this.value[key].value; 
+                    value.isEditable = true;
+                }
+                new DataBoxItemRenderer(partNode, value, this.graph).render();
             }
         }
     }
@@ -305,7 +315,7 @@ class DataBoxItemRenderer extends NodeRenderer {
      * render: Renders the an all supplier node
      */
     public render() {
-        this.graph.insertVertex(this.parent, null, { key: this.value.key, value: this.value.value }, 0, 0, 200, 20, "partDetails");
+        this.graph.insertVertex(this.parent, null, this.value, 0, 0, 200, 20, "partDetails");
     }
 }
 
