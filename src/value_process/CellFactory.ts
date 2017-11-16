@@ -86,7 +86,12 @@ class PartRenderer extends CellRendererAbstract {
      * Renderer of a cell that represents a part. Just return the title
      */
     getRenderedLabel(cell: any): any {
-        return cell.value.title;
+        let link = document.createElement('a');
+        link.href = cell.value.objectLink;
+        link.textContent = cell.value.title;
+        link.target = '_blank';
+        link.style.color = 'white';
+        return link;
     };
 
     /**
@@ -111,7 +116,11 @@ class PartRenderer extends CellRendererAbstract {
  */
 class SupplierCellRenderer extends CellRendererAbstract {
     getRenderedLabel(cell: any): HTMLElement {
-        return cell.value.name;
+        let link = document.createElement('a');
+        link.href = cell.value.objectLink;
+        link.textContent = cell.value.name;
+        link.target = '_blank';
+        return link;
     }
 
     getTooltip(cell: any): String {
@@ -179,9 +188,11 @@ class DefaultEdgeRenderer extends CellRendererAbstract {
     getRenderedLabel(cell: any): HTMLElement {
         let content = document.createElement('div');
         content.classList.add("edgeLabelTruck");
-        let label = document.createElement('span');
-        label.textContent = cell.value ? cell.value.label : "";
-        content.appendChild(label);
+        let link = document.createElement('a');
+        link.href = cell.value ? cell.value.objectLink : "";
+        link.textContent = cell.value ? cell.value.label : "";
+        link.target = '_blank';
+        content.appendChild(link);
         let image = document.createElement('img');
         image.src = require('../images/truckIcon.png');
         content.appendChild(image);
