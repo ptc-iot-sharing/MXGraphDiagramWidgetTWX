@@ -4,7 +4,7 @@ var CopyWebpackPlugin = require('copy-webpack-plugin');
 
 module.exports = {
     entry: {
-        // htmlDemo: "./src/index.ts",
+        htmlDemo: "./src/index.ts",
         mxdiagram_runtime: './src/mxdiagram.runtime.ts',
         mxdiagram_ide: './src/mxdiagram.ide.ts'
     },
