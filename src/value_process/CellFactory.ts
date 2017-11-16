@@ -213,7 +213,14 @@ class AllSupplierCell extends CellRendererAbstract {
 
 class PartDetailsCell  extends CellRendererAbstract {
     getRenderedLabel(cell: any): any {
-        return cell.value.key + ": " + cell.value.value;
+        let container = document.createElement('div');
+        let keyElement = document.createElement('strong');
+        keyElement.textContent = cell.value.key + ': ';
+        container.appendChild(keyElement);
+        let valueElement = document.createElement('span');
+        valueElement.textContent = cell.value.value;
+        container.appendChild(valueElement);        
+        return container;
     };
 
     getTooltip(cell: any): String { return cell.value; }

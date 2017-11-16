@@ -57,7 +57,7 @@ export function createValueProcessDiagram(container, data) {
       graph.gridEnabled = true;
       // allow selection of cells
       graph.cellsSelectable = true;
-      graph.gridSnap = 3;
+      graph.gridSize = 5;
       graph.border = 10;
 
       // create the styles used in the graph
