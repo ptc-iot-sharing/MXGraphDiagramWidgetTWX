@@ -32,6 +32,8 @@ export function createValueProcessDiagram(container, data) {
     loadLeanMappingShapes();
     // Creates the graph inside the given container
     var graph = new mxGraph(container);
+    // Disables the built-in context menu
+    mxEvent.disableContextMenu(container);
     // Allow panning using the right click buttion
     graph.setPanning(true);
     // allow resizing the container when an vertex moves outside of it
