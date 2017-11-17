@@ -99,7 +99,7 @@ export function createValueProcessDiagram(container, data) {
     graph.cellLabelChanged = function (cell, newValue, autoSize) {
       if (cell.value && cell.value.isEditable) {
         cell.value.value = newValue;
-        newValue = cell.value;        
+        newValue = cell.value;
       } 
       graphCellLabelChanged.apply(this, [cell, newValue, autoSize]);
     };

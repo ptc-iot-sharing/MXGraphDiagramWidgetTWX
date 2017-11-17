@@ -27,6 +27,7 @@ TW.Runtime.Widgets.mxdiagram = function () {
                 this.resetCurrentGraph();
                 let container = this.jqElement[0];
                 let currentGraph = valueProcessDiagramLoader.createValueProcessDiagram(container, updatePropertyInfo.RawDataFromInvoke);
+                this.initializeEventListener(currentGraph);
                 if (this.getProperty('ShowTools')) {
                     currentGraphResources.push(mxGraphUtils.CreateGraphToolbar(currentGraph));
                 }
@@ -38,6 +39,24 @@ TW.Runtime.Widgets.mxdiagram = function () {
         }
     }
 
+    this.initializeEventListener = function (graph) {
+        let thisWidget = this;
+        graph.addListener('labelChanged', function(sender, evt)
+        {
+            let cell = evt.getProperty('cell');
+            
+            if (cell != null)
+            {
+                if(cell.value.id) {
+                    thisWidget.setProperty("EditedCellId", cell.value.id + "-" + cell.value.key);
+                } else {
+                    thisWidget.setProperty("EditedCellId", cell.parent.value.id + "-" + cell.value.key);
+                }
+                thisWidget.setProperty("EditedCellNewLabel", cell.value.value);
+                thisWidget.jqElement.triggerHandler('CellLabelChanged');
+            }
+        });
+    }
     this.resetCurrentGraph = function () {
         for (const object of currentGraphResources) {
             object.destroy();

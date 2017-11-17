@@ -58,7 +58,26 @@ TW.IDE.Widgets.mxdiagram = function() {
                     'defaultValue': true,
                     'isBindingTarget': true
                 },
-                // add any additional properties here
+                'EditedCellId': {
+                    'description': 'The id of the cell where the label just changed. Tied to the CellLabelChanged event',
+                    'baseType': 'STRING',
+                    'isVisible': true,
+                    'isBindingSource': true
+                },
+                'EditedCellNewLabel': {
+                    'description': 'The contents of the cell where the label just changed. Tied to the CellLabelChanged event',
+                    'baseType': 'STRING',
+                    'isVisible': true,
+                    'isBindingSource': true
+                }
+            }
+        };
+    };
+
+    this.widgetEvents = function () {
+        return {
+            'CellLabelChanged': {
+                'warnIfNotBound': false
             }
         };
     };
