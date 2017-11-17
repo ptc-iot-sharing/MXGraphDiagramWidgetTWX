@@ -1,8 +1,10 @@
 declare const TW: any;
+require("./styles/ide.css");
+
 TW.IDE.Widgets.mxdiagram = function() {
 
     this.widgetIconUrl = function() {
-        return "../Common/extensions/mxdiagram_ExtensionPackage/ui/mxdiagram/mxdiagram.png";
+        return require('./images/diagramicon.png');
     };
     this.widgetProperties = function() {
         return {
