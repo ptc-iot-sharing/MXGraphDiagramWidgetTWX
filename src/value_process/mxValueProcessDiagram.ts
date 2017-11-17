@@ -21,7 +21,8 @@ let mxGraph = mxgraph.mxGraph,
   mxParallelEdgeLayout = mxgraph.mxParallelEdgeLayout,
   mxCircleLayout = mxgraph.mxCircleLayout,
   mxStencilRegistry = mxgraph.mxStencilRegistry,
-  mxStencil = mxgraph.mxStencil;
+  mxStencil = mxgraph.mxStencil,
+  mxCellEditor = mxgraph.mxCellEditor;
 
 export function createValueProcessDiagram(container, data) {
   // Checks if the browser is supported
@@ -79,6 +80,27 @@ export function createValueProcessDiagram(container, data) {
         return cell;
       }
     });
+
+    /**
+     * Retrieves the editing value of a cell
+     */
+    graph.getEditingValue = function (cell) {
+      if (cell.value && cell.value.isEditable) {
+        return cell.value.value;
+      }
+    };
+
+    /**
+     * Sets the cell label back after a edit
+     */
+    let graphCellLabelChanged = graph.cellLabelChanged;
+    graph.cellLabelChanged = function (cell, newValue, autoSize) {
+      if (cell.value && cell.value.isEditable) {
+        cell.value.value = newValue;
+        newValue = cell.value;        
+      } 
+      graphCellLabelChanged.apply(this, [cell, newValue, autoSize]);
+    };
 
     // Installs a custom tooltip for cells
     graph.getTooltipForCell = graphRenderer.getCellTooltip;
