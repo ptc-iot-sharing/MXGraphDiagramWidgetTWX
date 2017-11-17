@@ -22,7 +22,8 @@ let mxGraph = mxgraph.mxGraph,
   mxCircleLayout = mxgraph.mxCircleLayout,
   mxStencilRegistry = mxgraph.mxStencilRegistry,
   mxStencil = mxgraph.mxStencil,
-  mxCellEditor = mxgraph.mxCellEditor;
+  mxCellEditor = mxgraph.mxCellEditor,
+  mxKeyHandler = mxgraph.mxKeyHandler;
 
 export function createValueProcessDiagram(container, data) {
   // Checks if the browser is supported
@@ -80,7 +81,8 @@ export function createValueProcessDiagram(container, data) {
         return cell;
       }
     });
-
+    // a handler for basic keystrokes (eg. return, escape during editing).
+    new mxKeyHandler(graph);
     /**
      * Retrieves the editing value of a cell
      */
