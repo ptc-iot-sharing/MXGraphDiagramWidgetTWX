@@ -63,10 +63,16 @@ export function createValueProcessDiagram(container, data) {
     graph.cellsSelectable = true;
     graph.gridSize = 5;
     graph.border = 10;
-    graph.panningHandler.useLeftButtonForPanning = true;
-    graph.panningHandler.ignoreCell = true;
-    graph.container.style.cursor = 'move';
-
+    // Forces panning for middle and right mouse buttons
+    var panningHandlerIsForcePanningEvent = graph.panningHandler.isForcePanningEvent;
+    graph.panningHandler.isForcePanningEvent = function (me) {
+      // Ctrl+left button is reported as right button in FF on Mac
+      return panningHandlerIsForcePanningEvent.apply(this, arguments) || (mxEvent.isMouseEvent(me.getEvent()) &&
+        (this.usePopupTrigger || !mxEvent.isPopupTrigger(me.getEvent())) &&
+        ((!mxEvent.isControlDown(me.getEvent()) &&
+          mxEvent.isRightMouseButton(me.getEvent())) ||
+          mxEvent.isMiddleMouseButton(me.getEvent())));
+    };
     // create the styles used in the graph
     createStyles(graph);
 
@@ -102,7 +108,7 @@ export function createValueProcessDiagram(container, data) {
       if (cell.value && cell.value.isEditable) {
         cell.value.value = newValue;
         newValue = cell.value;
-      } 
+      }
       graphCellLabelChanged.apply(this, [cell, newValue, autoSize]);
     };
 
