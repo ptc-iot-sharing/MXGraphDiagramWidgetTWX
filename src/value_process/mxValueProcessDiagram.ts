@@ -1,5 +1,5 @@
 
-import { mxgraph } from "./mxGraphImport"
+import { mxgraph } from "../generic/mxGraphImport"
 import "./FlexArrowShape";
 import "./mxLeanMap";
 import { GraphCellRenderer } from './CellFactory'

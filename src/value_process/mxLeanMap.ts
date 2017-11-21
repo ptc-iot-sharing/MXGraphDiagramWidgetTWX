@@ -1,4 +1,4 @@
-import {mxgraph} from "./mxGraphImport"
+import {mxgraph} from "../generic/mxGraphImport"
 
 let mxShape = mxgraph.mxShape,
     mxUtils = mxgraph.mxUtils,

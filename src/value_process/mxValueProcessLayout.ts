@@ -4,7 +4,7 @@
  * Copyright (c) 2017, Petrisor Lacatus
  */
 
-import { mxgraph } from "./mxGraphImport"
+import { mxgraph } from "../generic/mxGraphImport"
 
 let mxGraphLayout = mxgraph.mxGraphLayout,
     mxRectangle = mxgraph.mxRectangle,

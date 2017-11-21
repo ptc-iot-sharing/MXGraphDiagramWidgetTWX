@@ -1,4 +1,4 @@
-import { mxgraph } from "./mxGraphImport"
+import { mxgraph } from "../generic/mxGraphImport"
 import { mxValueProcessLayout } from "./mxValueProcessLayout"
 
 let mxStackLayout = mxgraph.mxStackLayout;

@@ -13,10 +13,10 @@ TW.Runtime.Widgets.mxdiagram = function () {
         };
     }
 
-    this.afterRender = async function () {
+    this.afterRender = async function () {     
         valueProcessDiagramLoader = await import('./value_process/mxValueProcessDiagram');
         if (this.getProperty('ShowTools') || this.getProperty('ShowOutline')) {
-            mxGraphUtils = await import('./value_process/mxGraphUtils');
+            mxGraphUtils = await import('./generic/mxGraphUtils');
         }
     }
 

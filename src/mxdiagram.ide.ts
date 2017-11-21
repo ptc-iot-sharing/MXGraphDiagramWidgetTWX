@@ -8,8 +8,8 @@ TW.IDE.Widgets.mxdiagram = function() {
     };
     this.widgetProperties = function() {
         return {
-            'name': 'mxDiagram Value Process',
-            'description': 'mxDiagram Value process diagram',
+            'name': 'mxGraph Diagram',
+            'description': 'Display diagrams using mxGraph.',
             'category': ['Common'],
             'iconImage': 'mxdiagram.png',
             'isExtension': true,
@@ -31,7 +31,7 @@ TW.IDE.Widgets.mxdiagram = function() {
                     'isBindingTarget': false
                 },
                 'ValueDiagram': {
-                    'description': 'A JSON representing a value diagram',
+                    'description': 'A JSON representing a value process diagram',
                     'baseType': 'JSON',
                     'isVisible': true,
                     'defaultValue': {},
