@@ -63,6 +63,9 @@ export function createValueProcessDiagram(container, data) {
     graph.cellsSelectable = true;
     graph.gridSize = 5;
     graph.border = 10;
+    graph.panningHandler.useLeftButtonForPanning = true;
+    graph.panningHandler.ignoreCell = true;
+    graph.container.style.cursor = 'move';
 
     // create the styles used in the graph
     createStyles(graph);
