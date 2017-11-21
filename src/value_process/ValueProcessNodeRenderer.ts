@@ -110,14 +110,14 @@ class FactoryHallNodeRenderer extends NodeRenderer {
         for (let i = 0; i < this.value.inventories.length; i++) {
             let inventory = this.value.inventories[i];
             new InventoryNodeRenderer(inventoryNode, inventory, this.graph).render();
-            inventory.info.title = inventory.name;
+            inventory.info.push({key: 'title', value: inventory.name});
             new DataBoxRenderer(inventoryNode, inventory.info, this.graph).render();
         }
         // now iterate through the capabilities and add them 
         for (let j = 0; j < this.value.capabilities.length; j++) {
             let capability = this.value.capabilities[j];
             let renderer = CapabilityFactory.getCapabilityRenderer(capability.type);
-            new renderer(hallNode, capability, this.graph).render();
+            new renderer(hallNode, capability.info ? capability.info : capability, this.graph).render();
         }
     }
 }
@@ -151,7 +151,7 @@ class LogisticCenterNodeRenderer extends NodeRenderer {
         for (let j = 0; j < this.value.capabilities.length; j++) {
             let capability = this.value.capabilities[j];
             let renderer = CapabilityFactory.getCapabilityRenderer(capability.type);
-            new renderer(logisticCenter, capability, this.graph).render();
+            new renderer(logisticCenter, capability.info ? capability.info : capability, this.graph).render();
         }
     }
 }
@@ -212,7 +212,7 @@ class InventoryNodeRenderer extends NodeRenderer {
      * render: Renders the an all supplier node
      */
     public render() {
-        this.graph.insertVertex(this.parent, null, {tooltip: 'Lift'}, 0, 0, 200, 20, "capability;shape=mxgraph.lean_mapping.inventory_box");
+        this.graph.insertVertex(this.parent, null, {tooltip: 'Inventory'}, 0, 0, 200, 20, "capability;shape=mxgraph.lean_mapping.inventory_box");
     }
 }
 
@@ -241,7 +241,7 @@ class ProcessNodeRenderer extends NodeRenderer {
         for (let j = 0; j < this.value.capabilities.length; j++) {
             let capability = this.value.capabilities[j];
             let renderer = CapabilityFactory.getCapabilityRenderer(capability.type);
-            new renderer(processNode, capability, this.graph).render();
+            new renderer(processNode, capability.info ? capability.info : capability, this.graph).render();
         }
 
     }
@@ -289,22 +289,22 @@ class DataBoxRenderer extends NodeRenderer {
      * render: Renders the an all supplier node
      */
     public render() {
-        let partNode = this.graph.insertVertex(this.parent, this.value.id, this.value, 0, 0, 10, 300, 'part');
-        // then add the title of the part
-        for (let key in this.value) {
+        let value = {
+            objectLink: undefined,
+            title: undefined
+        };
+        for (const item of this.value) {
+            if(item.key == 'title') {
+                value.title = item.value;
+            } else if (item.key == 'objectLink') {
+                value.objectLink = item.value;
+            }
+        }
+        let partNode = this.graph.insertVertex(this.parent, this.value.id, value, 0, 0, 10, 300, 'part');
+        for (let info of this.value) {
             // and finally all of the details
-            if (this.value.hasOwnProperty(key) && key != 'id' && key != 'title' && key != 'type' && key != 'objectLink') {
-                let value: any = {
-                    key: key
-                };
-                if(typeof this.value[key] == 'string') {
-                    value.value = this.value[key]; 
-                    value.isEditable = false;
-                } else if(this.value[key]) {
-                    value.value = this.value[key].value; 
-                    value.isEditable = true;
-                }
-                new DataBoxItemRenderer(partNode, value, this.graph).render();
+            if (info.key != 'id' && info.key != 'title' && info.key != 'type' && info.key != 'objectLink') {
+                new DataBoxItemRenderer(partNode, info, this.graph).render();
             }
         }
     }
