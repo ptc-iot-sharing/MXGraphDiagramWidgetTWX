@@ -1,5 +1,5 @@
 TW.Runtime.Widgets.mxdiagram = function () {
-    let valueProcessDiagramLoader, mxGraphUtils;
+    let mxGraphNamespace, valueProcessDiagramLoader, mxGraphUtils;
     // a list of resources that are hold by the current graph
     let currentGraphResources = [];
     // the html is really simple. just a div acting as the container
@@ -13,8 +13,8 @@ TW.Runtime.Widgets.mxdiagram = function () {
         };
     }
 
-    this.afterRender = async function () {     
-        valueProcessDiagramLoader = await import('./value_process/mxValueProcessDiagram');
+    this.afterRender = async function () {   
+        mxGraphNamespace = await import("./generic/mxGraphImport");
         if (this.getProperty('ShowTools') || this.getProperty('ShowOutline')) {
             mxGraphUtils = await import('./generic/mxGraphUtils');
         }
@@ -24,17 +24,20 @@ TW.Runtime.Widgets.mxdiagram = function () {
         this.setProperty(updatePropertyInfo.TargetProperty, updatePropertyInfo.RawDataFromInvoke);
         switch (updatePropertyInfo.TargetProperty) {
             case 'ValueDiagram':
+                if(!valueProcessDiagramLoader) {
+                    valueProcessDiagramLoader = await import('./value_process/mxValueProcessDiagram');                    
+                }
                 this.resetCurrentGraph();
                 let container = this.jqElement[0];
                 let currentGraph = valueProcessDiagramLoader.createValueProcessDiagram(container, updatePropertyInfo.RawDataFromInvoke);
                 this.initializeEventListener(currentGraph);
-                if (this.getProperty('ShowTools')) {
+                currentGraphResources.push(currentGraph);              
+                if (mxGraphUtils && this.getProperty('ShowTools')) {
                     currentGraphResources.push(mxGraphUtils.CreateGraphToolbar(currentGraph));
                 }
-                if (this.getProperty('ShowTools')) {
+                if (mxGraphUtils && this.getProperty('ShowOutline')) {
                     currentGraphResources.push(mxGraphUtils.CreateGraphOutline(currentGraph));
                 }
-                currentGraphResources.push(currentGraph);
                 break;
         }
     }
@@ -57,6 +60,7 @@ TW.Runtime.Widgets.mxdiagram = function () {
             }
         });
     }
+    
     this.resetCurrentGraph = function () {
         for (const object of currentGraphResources) {
             object.destroy();
