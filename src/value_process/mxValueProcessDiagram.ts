@@ -4,7 +4,6 @@ import "./FlexArrowShape";
 import "./mxLeanMap";
 import { GraphCellRenderer } from './CellFactory'
 import { ValueProcessDiagramRenderer } from './ValueProcessNodeRenderer'
-require("../styles/styles.css");
 
 let mxGraph = mxgraph.mxGraph,
   mxShape = mxgraph.mxShape,

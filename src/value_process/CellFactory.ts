@@ -173,7 +173,9 @@ class DefaultVertexRenderer extends CellRendererAbstract {
 class DefaultEdgeRenderer extends CellRendererAbstract {
     getRenderedLabel(cell: any): string {
         let content = document.createElement('div');
-        content.classList.add("edgeLabelTruck");
+        content.style.display = 'flex';
+        content.style.flexDirection = 'column';
+        content.style.alignItems = 'center';
         let link = document.createElement('a');
         link.href = cell.value ? cell.value.objectLink : "";
         link.textContent = cell.value ? cell.value.label : "";
@@ -181,6 +183,8 @@ class DefaultEdgeRenderer extends CellRendererAbstract {
         content.appendChild(link);
         let image = document.createElement('img');
         image.src = require('../images/truckIcon.png');
+        image.style.width = '52px';
+        image.style.height = '25px';
         content.appendChild(image);
         if (cell.value && cell.value.info) {
             for (const key in cell.value.info) {
