@@ -66,4 +66,8 @@ TW.Runtime.Widgets.mxdiagram = function () {
             object.destroy();
         }
     }
+
+    this.beforeDestroy = function() {
+        this.resetCurrentGraph();
+    }
 }
