@@ -291,19 +291,22 @@ class DataBoxRenderer extends NodeRenderer {
     public render() {
         let value = {
             objectLink: undefined,
-            title: undefined
+            title: undefined,
+            id: undefined
         };
         for (const item of this.value) {
             if(item.key == 'title') {
                 value.title = item.value;
             } else if (item.key == 'objectLink') {
                 value.objectLink = item.value;
+            } else if (item.key == 'id') {
+                value.id = item.value;
             }
         }
-        let partNode = this.graph.insertVertex(this.parent, this.value.id, value, 0, 0, 10, 300, 'part');
+        let partNode = this.graph.insertVertex(this.parent, value.id, value, 0, 0, 10, 300, 'part');
         for (let info of this.value) {
             // and finally all of the details
-            if (info.key != 'id' && info.key != 'title' && info.key != 'type' && info.key != 'objectLink') {
+            if (info.value && info.key != 'id' && info.key != 'title' && info.key != 'type' && info.key != 'objectLink') {
                 new DataBoxItemRenderer(partNode, info, this.graph).render();
             }
         }
