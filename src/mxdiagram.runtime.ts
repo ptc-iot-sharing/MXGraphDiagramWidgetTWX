@@ -1,5 +1,5 @@
 TW.Runtime.Widgets.mxdiagram = function () {
-    let mxGraphNamespace, valueProcessDiagramLoader, mxGraphUtils;
+    let mxGraphNamespace, valueProcessDiagramLoader, mxGraphUtils, xmlDiagramLoader;
     // a list of resources that are hold by the current graph
     let currentGraphResources = [];
     // the html is really simple. just a div acting as the container
@@ -30,17 +30,31 @@ TW.Runtime.Widgets.mxdiagram = function () {
                 this.resetCurrentGraph();
                 let container = this.jqElement[0];
                 let currentGraph = valueProcessDiagramLoader.createValueProcessDiagram(container, updatePropertyInfo.RawDataFromInvoke);
-                this.initializeEventListener(currentGraph);
-                currentGraphResources.push(currentGraph);              
-                if (mxGraphUtils && this.getProperty('ShowTools')) {
-                    currentGraphResources.push(mxGraphUtils.CreateGraphToolbar(currentGraph));
-                }
-                if (mxGraphUtils && this.getProperty('ShowOutline')) {
-                    currentGraphResources.push(mxGraphUtils.CreateGraphOutline(currentGraph));
-                }
+                this.setNewActiveGraph(currentGraph);
                 break;
+            case 'XMLDiagram': {
+                if(!xmlDiagramLoader) {
+                    xmlDiagramLoader = await import('./xml_codec/mxGraphXmlDiagram');                    
+                }
+                this.resetCurrentGraph();
+                let container = this.jqElement[0];
+                let currentGraph = xmlDiagramLoader.createGraphFromXML(container, updatePropertyInfo.SinglePropertyValue);
+                this.setNewActiveGraph(currentGraph);
+                break;
+            }
         }
     }
+
+    this.setNewActiveGraph = function (newGraph) {
+        this.initializeEventListener(newGraph);
+        currentGraphResources.push(newGraph);              
+        if (mxGraphUtils && this.getProperty('ShowTools')) {
+            currentGraphResources.push(mxGraphUtils.CreateGraphToolbar(newGraph));
+        }
+        if (mxGraphUtils && this.getProperty('ShowOutline')) {
+            currentGraphResources.push(mxGraphUtils.CreateGraphOutline(newGraph));
+        }
+    };
 
     this.initializeEventListener = function (graph) {
         let thisWidget = this;
