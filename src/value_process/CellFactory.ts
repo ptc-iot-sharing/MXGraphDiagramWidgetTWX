@@ -88,12 +88,16 @@ class PartRenderer extends CellRendererAbstract {
      * Renderer of a cell that represents a part. Just return the title
      */
     getRenderedLabel(cell: any): any {
-        let link = document.createElement('a');
-        link.href = cell.value.objectLink;
-        link.textContent = cell.value.title;
-        link.target = '_blank';
-        link.style.color = 'white';
-        return link.outerHTML;
+        if(cell.value.objectLink) {
+            let link = document.createElement('a');
+            link.href = cell.value.objectLink;
+            link.textContent = cell.value.title;
+            link.target = '_blank';
+            link.style.color = 'white';
+            return link.outerHTML;
+        } else {
+            return cell.value.title;
+        }
     };
 
     /**
@@ -223,7 +227,7 @@ class PartDetailsCell extends CellRendererAbstract {
         return container.outerHTML;
     };
 
-    getTooltip(cell: any): String { return cell.key + ": " + cell.value; }
+    getTooltip(cell: any): String { return cell.value.key + ": " + cell.value.value; }
 
     isCellFoldable(cell: any): boolean { return false; }
 
