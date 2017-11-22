@@ -15,9 +15,7 @@ TW.Runtime.Widgets.mxdiagram = function () {
 
     this.afterRender = async function () {   
         mxGraphNamespace = await import("./generic/mxGraphImport");
-        if (this.getProperty('ShowTools') || this.getProperty('ShowOutline')) {
-            mxGraphUtils = await import('./generic/mxGraphUtils');
-        }
+        mxGraphUtils = await import('./generic/mxGraphUtils');
     }
 
     this.updateProperty = async function (updatePropertyInfo) {

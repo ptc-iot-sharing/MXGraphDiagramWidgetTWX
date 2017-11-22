@@ -4,6 +4,7 @@ import "./FlexArrowShape";
 import "./mxLeanMap";
 import { GraphCellRenderer } from './CellFactory'
 import { ValueProcessDiagramRenderer } from './ValueProcessNodeRenderer'
+import { loadStencilFiles } from "../generic/mxGraphUtils";
 
 let mxGraph = mxgraph.mxGraph,
   mxShape = mxgraph.mxShape,
@@ -30,7 +31,7 @@ export function createValueProcessDiagram(container, data) {
     mxUtils.error('Browser is not supported!', 200, false);
   }
   else {
-    loadLeanMappingShapes();
+    loadStencilFiles([require('./resources/lean_mapping.xml')]);
     // Creates the graph inside the given container
     var graph = new mxGraph(container);
     // Disables the built-in context menu
@@ -258,20 +259,5 @@ export function createValueProcessDiagram(container, data) {
     style[mxConstants.STYLE_FILLCOLOR] = "#42dcc0";
     style[mxConstants.STYLE_FONTCOLOR] = "#446299";
     graph.getStylesheet().putDefaultEdgeStyle(style);
-  }
-
-  function loadLeanMappingShapes() {
-    var req = mxUtils.load(require('./resources/lean_mapping.xml'));
-    var root = req.getDocumentElement();
-    var prefix = root.getAttribute("name");
-    var shape = root.firstChild;
-
-    while (shape != null) {
-      if (shape.nodeType == mxConstants.NODETYPE_ELEMENT) {
-        var name = prefix + '.' + shape.getAttribute('name').replace(/ /g, '_');
-        mxStencilRegistry.addStencil(name.toLowerCase(), new mxStencil(shape));
-      }
-      shape = shape.nextSibling;
-    }
   }
 }

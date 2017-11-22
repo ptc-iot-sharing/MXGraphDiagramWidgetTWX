@@ -1,10 +1,13 @@
 import { mxgraph } from "./mxGraphImport"
 
 let mxUtils = mxgraph.mxUtils,
-mxToolbar = mxgraph.mxToolbar,
-mxPrintPreview = mxgraph.mxPrintPreview,
-mxWindow = mxgraph.mxWindow,
-mxOutline = mxgraph.mxOutline;
+    mxToolbar = mxgraph.mxToolbar,
+    mxPrintPreview = mxgraph.mxPrintPreview,
+    mxWindow = mxgraph.mxWindow,
+    mxOutline = mxgraph.mxOutline,
+    mxStencilRegistry = mxgraph.mxStencilRegistry,
+    mxStencil = mxgraph.mxStencil,
+    mxConstants = mxgraph.mxConstants;
 
 export function CreateGraphToolbar(graph) {
     var content = document.createElement('div');
@@ -70,4 +73,21 @@ export function CreateGraphOutline(graph) {
     // zoom actual to view the full chart
     graph.zoomActual();
     return outlineWindow;
+}
+
+export function loadStencilFiles(files: string[]) {
+    for (const filePath of files) {
+        var req = mxUtils.load(filePath);
+        var root = req.getDocumentElement();
+        var prefix = root.getAttribute("name");
+        var shape = root.firstChild;
+
+        while (shape != null) {
+            if (shape.nodeType == mxConstants.NODETYPE_ELEMENT) {
+                var name = prefix + '.' + shape.getAttribute('name').replace(/ /g, '_');
+                mxStencilRegistry.addStencil(name.toLowerCase(), new mxStencil(shape));
+            }
+            shape = shape.nextSibling;
+        }
+    }
 }
