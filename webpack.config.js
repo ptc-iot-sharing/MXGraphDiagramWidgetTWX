@@ -44,7 +44,6 @@ module.exports = {
             // All output '.js' files will have any sourcemaps re-processed by 'source-map-loader'.
             { enforce: "pre", test: /\.js$/, loader: "source-map-loader" },
             {
-                include: path.join(__dirname, 'src/images'),
                 test: /\.(png|jp(e*)g|svg|xml)$/,
                 loader: 'url-loader?limit=30000&name=images/[name].[ext]'
             },

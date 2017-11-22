@@ -182,7 +182,7 @@ class DefaultEdgeRenderer extends CellRendererAbstract {
         link.target = '_blank';
         content.appendChild(link);
         let image = document.createElement('img');
-        image.src = require('../images/truckIcon.png');
+        image.src = require('./resources/truckIcon.png');
         image.style.width = '52px';
         image.style.height = '25px';
         content.appendChild(image);

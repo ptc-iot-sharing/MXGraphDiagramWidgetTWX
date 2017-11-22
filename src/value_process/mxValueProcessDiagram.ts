@@ -261,7 +261,7 @@ export function createValueProcessDiagram(container, data) {
   }
 
   function loadLeanMappingShapes() {
-    var req = mxUtils.load(require('../images/lean_mapping.xml'));
+    var req = mxUtils.load(require('./resources/lean_mapping.xml'));
     var root = req.getDocumentElement();
     var prefix = root.getAttribute("name");
     var shape = root.firstChild;
