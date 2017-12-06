@@ -1,6 +1,8 @@
 export let mxgraph = require("mxgraph")({
-    mxImageBasePath: "ui/mxdiagram/mxgraph/images",
-    mxBasePath: "ui/mxdiagram/mxgraph"
+   // mxImageBasePath: "ui/mxdiagram/mxgraph/images",
+   // mxBasePath: "ui/mxdiagram/mxgraph",
+    mxImageBasePath: "../Common/extensions/mxdiagram_ExtensionPackage/ui/mxdiagram/mxgraph/images",
+    mxBasePath: "../Common/extensions/mxdiagram_ExtensionPackage/ui/mxdiagram/mxgraph"
 });
 
 /**
