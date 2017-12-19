@@ -3,6 +3,8 @@ TW.Runtime.Widgets.mxdiagram = function () {
     // a list of resources that are hold by the current graph
     let currentGraphResources = [];
     // the html is really simple. just a div acting as the container
+    let graph;
+
     this.renderHtml = function () {
         return '<div class="widget-content widget-mxgraph"></div>';
     };
@@ -37,10 +39,70 @@ TW.Runtime.Widgets.mxdiagram = function () {
                 this.resetCurrentGraph();
                 let container = this.jqElement[0];
                 let currentGraph = xmlDiagramLoader.createGraphFromXML(container, updatePropertyInfo.SinglePropertyValue);
+                graph = currentGraph;
+
                 this.setNewActiveGraph(currentGraph);
                 break;
             }
+            case 'JSONArrayGraphCells': {
+                if (graph == null){
+                    break;
+                }
+
+                var data = updatePropertyInfo.SinglePropertyValue;
+                var graphCells = JSON.parse(updatePropertyInfo.RawSinglePropertyValue);
+
+                for (var i = 0; i < graphCells.length; i++){
+                    var cellId = graphCells[i].id;
+                    var value = graphCells[i].value;
+                    var fillColor = graphCells[i].fillColor;
+                    var strokeColor = graphCells[i].strokeColor;
+
+                    var cell = this.getGraphCell(graph, cellId);
+                    cell.value.setAttribute("label",  value);
+                    var style = cell.getStyle();
+                    this.setCellColor(cell, fillColor, "fillColor");
+                    this.setCellColor(cell, strokeColor, "strokeColor");
+
+                    graph.refresh(cell);
+                }
+
+                break;
+            }
         }
+    }
+
+    this.setCellColor = function(cell, color, colorType){
+        var style = cell.getStyle();
+        var styleBeforeColor = style.substring(0, style.indexOf(colorType + "=") + (colorType + "=").length);
+        var styleAfterColor = style.substring(style.indexOf(colorType + "=") + (colorType + "=").length + "#ffffff".length, style.length);
+        var newStyle = styleBeforeColor + color + styleAfterColor;
+        cell.setStyle(newStyle);
+    }
+
+    this.getGraphCell = function(parent, cellId){
+        
+        var cells = [];
+        if(parent.getChildCells){
+            cells = parent.getChildCells();
+        } else if (parent.children){
+            cells = parent.children;
+        }
+        var foundCell;
+
+        for(var i = 0; i < cells.length; i++){
+            if(cells[i].value != undefined && cells[i].value.getAttribute("customId") == cellId){
+                foundCell = cells[i];
+                break;
+            } else{
+                if(foundCell == null){
+                    this.getGraphCell(cells[i], cellId);
+                }
+            }
+        }
+
+        return foundCell;
+
     }
 
     this.setNewActiveGraph = function (newGraph) {
@@ -69,7 +131,24 @@ TW.Runtime.Widgets.mxdiagram = function () {
                 }
                 thisWidget.setProperty("EditedCellNewLabel", cell.value.value);
                 thisWidget.jqElement.triggerHandler('CellLabelChanged');
+                
             }
+        });
+
+        graph.getSelectionModel().addListener('change', function(sender, evt)
+        {
+            var cells = evt.getProperty('removed');//.getProperty('added');
+            
+            for (var i = 0; i < cells.length; i++){
+
+                var cell = cells[i];
+
+                if (cell != null && cell.value && cell.value.getAttribute){
+                    thisWidget.setProperty("SelectedCellId", cell.value.getAttribute("customId"));
+                    thisWidget.jqElement.triggerHandler('SelectedCellChanged');
+                }
+            }
+          
         });
     }
     

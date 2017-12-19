@@ -39,9 +39,9 @@ TW.IDE.Widgets.mxdiagram = function() {
                 },
                 'XMLDiagram': {
                     'description': 'A XML file with the a mxgraph diagram',
-                    'baseType': 'XML',
+                    'baseType': 'TEXT',
                     'isVisible': true,
-                    'defaultValue': {},
+                    'defaultValue': "{}",
                     'isBindingTarget': true
                 },
                 'ShowTools': {
@@ -69,6 +69,19 @@ TW.IDE.Widgets.mxdiagram = function() {
                     'baseType': 'STRING',
                     'isVisible': true,
                     'isBindingSource': true
+                },
+                'JSONArrayGraphCells':{
+                    'description': 'Json object containing id, value, fillColors and strokeColor',
+                    'baseType': 'STRING',
+                    'isVisible': true,
+                    'defaultValue': "{}",
+                    'isBindingTarget': true
+                },
+                'SelectedCellId':{
+                    'description': 'Selected cell id',
+                    'baseType': 'STRING',
+                    'isVisible': true,
+                    'isBindingSource': true
                 }
             }
         };
@@ -77,6 +90,9 @@ TW.IDE.Widgets.mxdiagram = function() {
     this.widgetEvents = function () {
         return {
             'CellLabelChanged': {
+                'warnIfNotBound': false
+            },
+            'SelectedCellChanged': {
                 'warnIfNotBound': false
             }
         };

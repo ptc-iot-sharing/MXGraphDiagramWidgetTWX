@@ -28,6 +28,7 @@
     "webpack-dev-server": "^2.9.3"
   },
   "dependencies": {
-    "mxgraph": "git+https://github.com/NicCOConnor/mxgraph.git"
+    "mxgraph": "git+https://github.com/NicCOConnor/mxgraph.git",
+    "pako": "^1.0.6"
   }
 }
