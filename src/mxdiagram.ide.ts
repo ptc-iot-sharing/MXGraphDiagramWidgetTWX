@@ -58,6 +58,11 @@ TW.IDE.Widgets.mxdiagram = function() {
                     'defaultValue': true,
                     'isBindingTarget': true
                 },
+                'CustomShapesXMLPath': {
+                    'description': 'URL that points to a xml shapes file',
+                    'baseType': 'STRING',
+                    'isVisible': true
+                },
                 'EditedCellId': {
                     'description': 'The id of the cell where the label just changed. Tied to the CellLabelChanged event',
                     'baseType': 'STRING',
