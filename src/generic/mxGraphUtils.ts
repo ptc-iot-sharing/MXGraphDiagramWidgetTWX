@@ -7,7 +7,8 @@ let mxUtils = mxgraph.mxUtils,
     mxOutline = mxgraph.mxOutline,
     mxStencilRegistry = mxgraph.mxStencilRegistry,
     mxStencil = mxgraph.mxStencil,
-    mxConstants = mxgraph.mxConstants;
+    mxConstants = mxgraph.mxConstants,
+    mxCodec = mxgraph.mxCodec;
 
 export function CreateGraphToolbar(graph) {
     var content = document.createElement('div');
@@ -89,5 +90,13 @@ export function loadStencilFiles(files: string[]) {
             }
             shape = shape.nextSibling;
         }
+    }
+}
+
+export function loadStyleFiles(files: string[], graph) {
+    for (const filePath of files) {
+        var req = mxUtils.load(filePath);
+        var root = req.getDocumentElement();
+        new mxCodec(root.ownerDocument).decode(root, graph.getStylesheet());
     }
 }

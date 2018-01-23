@@ -1,5 +1,5 @@
 import { mxgraph } from "../generic/mxGraphImport"
-import { loadStencilFiles } from "../generic/mxGraphUtils";
+import { loadStencilFiles, loadStyleFiles } from "../generic/mxGraphUtils";
 let pako = require('pako');
 
 let mxGraph = mxgraph.mxGraph,
@@ -29,6 +29,9 @@ export function createGraphFromXML(container, data) {
     graph.centerZoom = false;
     graph.setTooltips(false);
     graph.setEnabled(true);
+    // add the default styles
+    const defaultStyles = require("../resources/defaultStyles.xml");
+    loadStyleFiles([defaultStyles], graph);
 
     // Changes the default style for edges "in-place"
     let style = graph.getStylesheet().getDefaultEdgeStyle();
@@ -52,8 +55,6 @@ export function createGraphFromXML(container, data) {
     }
     decoder.decode(node, graph.getModel());
     graph.resizeContainer = false;
-
-
 
     return graph;
 }
