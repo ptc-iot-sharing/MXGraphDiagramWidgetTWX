@@ -29,6 +29,7 @@ export function createGraphFromXML(container, data) {
     graph.centerZoom = false;
     graph.setTooltips(false);
     graph.setEnabled(true);
+    graph.setHtmlLabels(true);
     // add the default styles
     const defaultStyles = require("../resources/defaultStyles.xml");
     loadStyleFiles([defaultStyles], graph);
