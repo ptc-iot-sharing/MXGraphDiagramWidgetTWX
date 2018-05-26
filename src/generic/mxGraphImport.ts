@@ -1,9 +1,7 @@
-export let mxgraph = require("mxgraph")({
-   // mxImageBasePath: "ui/mxdiagram/mxgraph/images",
-   // mxBasePath: "ui/mxdiagram/mxgraph",
-    mxImageBasePath: "../Common/extensions/mxdiagram_ExtensionPackage/ui/mxdiagram/mxgraph/images",
-    mxBasePath: "../Common/extensions/mxdiagram_ExtensionPackage/ui/mxdiagram/mxgraph"
-});
+window["mxImageBasePath"] =  "../Common/extensions/mxdiagram_ExtensionPackage/ui/mxdiagram/mxgraph/images";
+window["mxBasePath"] = "../Common/extensions/mxdiagram_ExtensionPackage/ui/mxdiagram/mxgraph"
+
+export let mxgraph = require('jjgraph');
 
 /**
  * The mxgraph library expect to have all of the necessary function directly on window.
