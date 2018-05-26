@@ -87,6 +87,43 @@ TW.IDE.Widgets.mxdiagram = function() {
                     'baseType': 'STRING',
                     'isVisible': true,
                     'isBindingSource': true
+                },
+                'AutoLayout': {
+                    'description': 'The layout to be applied to loaded XML.',
+                    'baseType': 'STRING',
+                    'defaultValue': 'None',
+                    'selectOptions': [{
+                        value: 'None',
+                        text: 'None'
+                    }, {
+                        value: 'Horizontal Flow',
+                        text: 'Horizontal Flow'
+                    },
+                    {
+                        value: 'Vertical Flow',
+                        text: 'Vertical Flow'
+                    },
+                    {
+                        value: 'Horizontal Tree',
+                        text: 'Horizontal Tree'
+                    },
+                    {
+                        value: 'Vertical Tree',
+                        text: 'Vertical Tree'
+                    },
+                    {
+                        value: 'Radial Tree',
+                        text: 'Radial Tree'
+                    },
+                    {
+                        value: 'Organic',
+                        text: 'Organic'
+                    },
+                    {
+                        value: 'Circle',
+                        text: 'Circle'
+                    },
+                ]
                 }
             }
         };

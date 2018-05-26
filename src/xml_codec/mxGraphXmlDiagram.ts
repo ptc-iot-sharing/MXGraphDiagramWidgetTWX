@@ -10,18 +10,24 @@ let mxGraph = mxgraph.mxGraph,
     mxEvent = mxgraph.mxEvent,
     mxCellRenderer = mxgraph.mxCellRenderer,
     mxShape = mxgraph.mxShape,
-    mxStencil = mxgraph.mxStencil;
-
+    mxStencil = mxgraph.mxStencil,
+    mxHierarchicalLayout = mxgraph.mxHierarchicalLayout,
+    mxCompactTreeLayout = mxgraph.mxCompactTreeLayout,
+    mxRadialTreeLayout = mxgraph.mxRadialTreeLayout,
+    mxCircleLayout = mxgraph.mxCircleLayout,
+    mxFastOrganicLayout = mxgraph.mxFastOrganicLayout;
 
 /**
  * The list of stencils we import
  */
 const stencilList = [require('../resources/stencils/agitators.xml'), require('../resources/stencils/apparatus_elements.xml'), require('../resources/stencils/agitators.xml'), require('../resources/stencils/centrifuges.xml'), require('../resources/stencils/compressors.xml'), require('../resources/stencils/compressors_iso.xml'), require('../resources/stencils/crushers_grinding.xml'), require('../resources/stencils/driers.xml'), require('../resources/stencils/engines.xml'), require('../resources/stencils/feeders.xml'), require('../resources/stencils/filters.xml'), require('../resources/stencils/fittings.xml'), require('../resources/stencils/flow_sensors.xml'), require('../resources/stencils/heat_exchangers.xml'), require('../resources/stencils/instruments.xml'), require('../resources/stencils/misc.xml'), require('../resources/stencils/mixers.xml'), require('../resources/stencils/piping.xml'), require('../resources/stencils/feeders.xml'), require('../resources/stencils/feeders.xml'), require('../resources/stencils/pumps.xml'), require('../resources/stencils/pumps_din.xml'), require('../resources/stencils/pumps_iso.xml'), require('../resources/stencils/separators.xml'), require('../resources/stencils/shaping_machines.xml'), require('../resources/stencils/valves.xml'), require('../resources/stencils/vessels.xml')];
 
-export function createGraphFromXML(container, data, customShapes) {
+export function createGraphFromXML(container, data, customShapes, layout) {
     loadStencilFiles(stencilList);
-    // now load the custom xml shapes
-    loadStencilFiles([customShapes]);
+    if (customShapes) {
+        // now load the custom xml shapes
+        loadStencilFiles([customShapes]);
+    }
 
     let xmlData = mxUtils.parseXml(data);
     let decoder = new mxCodec(xmlData);
@@ -57,11 +63,55 @@ export function createGraphFromXML(container, data, customShapes) {
         }
     }
     decoder.decode(node, graph.getModel());
-    graph.resizeContainer = false;
+    graph.resizeContainer = true;
+    graph.extendParents = true;
+
+    if (layoutExecutorFactory[layout]) {
+        layoutExecutorFactory[layout](graph);
+    }
 
     return graph;
-}
 
+}
+const layoutExecutorFactory = {
+    "Horizontal Flow": (graph) => {
+        let layout = new mxHierarchicalLayout(graph, mxConstants.DIRECTION_WEST);
+        layout.execute(graph.getDefaultParent(), null);
+    },
+    "Vertical Flow": (graph) => {
+        let layout = new mxHierarchicalLayout(graph, mxConstants.DIRECTION_NORTH);
+        layout.execute(graph.getDefaultParent(), null);
+    },
+    "Horizontal Tree": (graph) => {
+        let layout = new mxCompactTreeLayout(graph, true);
+        layout.edgeRouting = false;
+        layout.levelDistance = 30;
+
+        layout.execute(graph.getDefaultParent());
+    },
+    "Vertical Tree": (graph) => {
+        let layout = new mxCompactTreeLayout(graph, false);
+        layout.edgeRouting = false;
+        layout.levelDistance = 30;
+
+        layout.execute(graph.getDefaultParent());
+    },
+    "Radial Tree": (graph) => {
+        let layout = new mxRadialTreeLayout(graph, false);
+        layout.autoRadius = true;
+        layout.levelDistance = 80;
+        layout.execute(graph.getDefaultParent());
+    },
+    "Organic": (graph) => {
+        let layout = new mxFastOrganicLayout(graph);
+        layout.execute(graph.getDefaultParent());
+    },
+    "Circle": (graph) => {
+        let layout = new mxCircleLayout(graph);
+        layout.execute(graph.getDefaultParent());
+    },
+
+}
 var mxCellRendererCreateShape = mxCellRenderer.prototype.createShape;
 mxCellRenderer.prototype.createShape = function (state) {
     if (state.style != null && typeof (pako) !== 'undefined') {
