@@ -1,6 +1,6 @@
 {
     "name": "mxdiagram",
-    "version": "0.0.160",
+    "version": "0.0.170",
     "description": "Widget to display draw.io diagrams or value process diagrams",
     "thingworxServer": "http://localhost:8016/",
     "thingworxUser": "Administrator",

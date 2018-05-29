@@ -1,12 +1,12 @@
 declare const TW: any;
 require("./styles/ide.css");
 
-TW.IDE.Widgets.mxdiagram = function() {
+TW.IDE.Widgets.mxdiagram = function () {
 
-    this.widgetIconUrl = function() {
+    this.widgetIconUrl = function () {
         return require('./images/diagramicon.png');
     };
-    this.widgetProperties = function() {
+    this.widgetProperties = function () {
         return {
             'name': 'mxGraph Diagram',
             'description': 'Display diagrams using mxGraph.',
@@ -75,14 +75,14 @@ TW.IDE.Widgets.mxdiagram = function() {
                     'isVisible': true,
                     'isBindingSource': true
                 },
-                'JSONArrayGraphCells':{
+                'JSONArrayGraphCells': {
                     'description': 'Json object containing id, value, fillColors and strokeColor',
                     'baseType': 'STRING',
                     'isVisible': true,
                     'defaultValue': "{}",
                     'isBindingTarget': true
                 },
-                'SelectedCellId':{
+                'SelectedCellId': {
                     'description': 'Selected cell id',
                     'baseType': 'STRING',
                     'isVisible': true,
@@ -123,7 +123,44 @@ TW.IDE.Widgets.mxdiagram = function() {
                         value: 'Circle',
                         text: 'Circle'
                     },
-                ]
+                    ]
+                },
+                'EdgeStyle': {
+                    'description': 'The edge style to be applied to loaded XML.',
+                    'baseType': 'STRING',
+                    'defaultValue': 'None',
+                    'selectOptions': [{
+                        value: 'None',
+                        text: 'None'
+                    }, {
+                        value: 'ElbowConnector',
+                        text: 'Elbow Connector'
+                    },
+                    {
+                        value: 'EntityRelation',
+                        text: 'Entity Relation'
+                    },
+                    {
+                        value: 'Loop',
+                        text: 'Loop'
+                    },
+                    {
+                        value: 'SideToSide',
+                        text: 'Side To Side'
+                    },
+                    {
+                        value: 'TopToBottom',
+                        text: 'Top To Bottom'
+                    },
+                    {
+                        value: 'SegmentConnector',
+                        text: 'Segment Connector'
+                    },
+                    {
+                        value: 'OrthConnector',
+                        text: 'Orth Connector'
+                    },
+                    ]
                 }
             }
         };
@@ -140,7 +177,7 @@ TW.IDE.Widgets.mxdiagram = function() {
         };
     };
 
-    this.renderHtml = function() {
+    this.renderHtml = function () {
         return '<div class="widget-content widget-mxdiagram-viewer"></div>';
     };
 

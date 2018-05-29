@@ -15,14 +15,15 @@ let mxGraph = mxgraph.mxGraph,
     mxCompactTreeLayout = mxgraph.mxCompactTreeLayout,
     mxRadialTreeLayout = mxgraph.mxRadialTreeLayout,
     mxCircleLayout = mxgraph.mxCircleLayout,
-    mxFastOrganicLayout = mxgraph.mxFastOrganicLayout;
+    mxFastOrganicLayout = mxgraph.mxFastOrganicLayout,
+    mxRectangle = mxgraph.mxRectangle;
 
 /**
  * The list of stencils we import
  */
 const stencilList = [require('../resources/stencils/agitators.xml'), require('../resources/stencils/apparatus_elements.xml'), require('../resources/stencils/agitators.xml'), require('../resources/stencils/centrifuges.xml'), require('../resources/stencils/compressors.xml'), require('../resources/stencils/compressors_iso.xml'), require('../resources/stencils/crushers_grinding.xml'), require('../resources/stencils/driers.xml'), require('../resources/stencils/engines.xml'), require('../resources/stencils/feeders.xml'), require('../resources/stencils/filters.xml'), require('../resources/stencils/fittings.xml'), require('../resources/stencils/flow_sensors.xml'), require('../resources/stencils/heat_exchangers.xml'), require('../resources/stencils/instruments.xml'), require('../resources/stencils/misc.xml'), require('../resources/stencils/mixers.xml'), require('../resources/stencils/piping.xml'), require('../resources/stencils/feeders.xml'), require('../resources/stencils/feeders.xml'), require('../resources/stencils/pumps.xml'), require('../resources/stencils/pumps_din.xml'), require('../resources/stencils/pumps_iso.xml'), require('../resources/stencils/separators.xml'), require('../resources/stencils/shaping_machines.xml'), require('../resources/stencils/valves.xml'), require('../resources/stencils/vessels.xml')];
 
-export function createGraphFromXML(container, data, customShapes, layout) {
+export function createGraphFromXML(container, data, customShapes, layout, edgeStyle) {
     loadStencilFiles(stencilList);
     if (customShapes) {
         // now load the custom xml shapes
@@ -44,7 +45,14 @@ export function createGraphFromXML(container, data, customShapes, layout) {
 
     // Changes the default style for edges "in-place"
     let style = graph.getStylesheet().getDefaultEdgeStyle();
-    style[mxConstants.STYLE_EDGE] = mxEdgeStyle.ElbowConnector;
+    if (edgeStyle != "None") {
+        style[mxConstants.STYLE_EDGE] = mxEdgeStyle[edgeStyle];
+    } else {
+        style[mxConstants.STYLE_EDGE] = 'none';
+    }
+
+    setGraphState(node, graph);
+
     // Forces panning for middle and right mouse buttons
     var panningHandlerIsForcePanningEvent = graph.panningHandler.isForcePanningEvent;
     graph.panningHandler.isForcePanningEvent = function (me) {
@@ -180,3 +188,43 @@ function bytesToString(arr) {
 
     return result.join('');
 };
+
+function setGraphState(xmlNode, graph) {
+    graph.gridEnabled = xmlNode.getAttribute('grid') != '0';
+    graph.gridSize = parseFloat(xmlNode.getAttribute('gridSize')) || mxGraph.prototype.gridSize;
+    graph.graphHandler.guidesEnabled = xmlNode.getAttribute('guides') != '0';
+    graph.setTooltips(xmlNode.getAttribute('tooltips') != '0');
+    graph.setConnectable(xmlNode.getAttribute('connect') != '0');
+    graph.connectionArrowsEnabled = xmlNode.getAttribute('arrows') != '0';
+    graph.foldingEnabled = xmlNode.getAttribute('fold') != '0';
+
+    if (graph.foldingEnabled) {
+        graph.cellRenderer.forceControlClickHandler = graph.foldingEnabled;
+    }
+
+    var ps = xmlNode.getAttribute('pageScale');
+
+    if (ps != null) {
+        graph.pageScale = ps;
+    }
+    else {
+        graph.pageScale = mxGraph.prototype.pageScale;
+    }
+
+    var pw = xmlNode.getAttribute('pageWidth');
+    var ph = xmlNode.getAttribute('pageHeight');
+
+    if (pw != null && ph != null) {
+        graph.pageFormat = new mxRectangle(0, 0, parseFloat(pw), parseFloat(ph));
+    }
+
+    // Loads the persistent state settings
+    var bg = xmlNode.getAttribute('background');
+
+    if (bg != null && bg.length > 0) {
+        graph.background = bg;
+    }
+    else {
+        graph.background = graph.defaultGraphBackground;
+    }
+}
