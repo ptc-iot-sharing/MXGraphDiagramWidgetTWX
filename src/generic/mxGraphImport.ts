@@ -15,6 +15,10 @@ mxgraph.mxCodec.prototype.decode = function (node, into) {
         var ctor = null;
         try {
             ctor = mxgraph[node.nodeName];
+            // maybe we are dealing with a window object like Array. 
+            if(!ctor) {
+                ctor = window[node.nodeName];
+            }
         }
         catch (err) {
             // ignore
