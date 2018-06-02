@@ -100,3 +100,9 @@ export function loadStyleFiles(files: string[], graph) {
         new mxCodec(root.ownerDocument).decode(root, graph.getStylesheet());
     }
 }
+
+export function exportGraphAsXml(graph) {
+    var encoder = new mxCodec();
+	var node = encoder.encode(graph.getModel());
+	return mxUtils.getXml(node);
+}

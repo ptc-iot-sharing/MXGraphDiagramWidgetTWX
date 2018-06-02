@@ -42,7 +42,8 @@ TW.IDE.Widgets.mxdiagram = function () {
                     'baseType': 'TEXT',
                     'isVisible': true,
                     'defaultValue': "{}",
-                    'isBindingTarget': true
+                    'isBindingTarget': true,
+                    'isBindingSource': true
                 },
                 'ShowTools': {
                     'description': 'Show the tools window',
@@ -174,6 +175,12 @@ TW.IDE.Widgets.mxdiagram = function () {
             'SelectedCellChanged': {
                 'warnIfNotBound': false
             }
+        };
+    };
+
+    this.widgetServices = function () {
+        return {
+            'GenerateXML': { 'warnIfNotBound': false, 'description': 'Updates the XML property with the changes done to the graph' }
         };
     };
 

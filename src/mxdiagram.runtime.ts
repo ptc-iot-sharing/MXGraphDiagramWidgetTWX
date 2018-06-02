@@ -115,6 +115,7 @@ TW.Runtime.Widgets.mxdiagram = function () {
         if (mxGraphUtils && this.getProperty('ShowOutline')) {
             currentGraphResources.push(mxGraphUtils.CreateGraphOutline(newGraph));
         }
+        this.setProperty("XMLDiagram", mxGraphUtils.exportGraphAsXml(newGraph));
     };
 
     this.initializeEventListener = function (graph) {
@@ -152,7 +153,12 @@ TW.Runtime.Widgets.mxdiagram = function () {
           
         });
     }
-    
+
+    this.serviceInvoked = function (serviceName) {    
+        if(serviceName=="GenerateXML") {
+            this.setProperty("XMLDiagram", mxGraphUtils.exportGraphAsXml(graph));
+        }
+    }
     this.resetCurrentGraph = function () {
         for (const object of currentGraphResources) {
             object.destroy();
