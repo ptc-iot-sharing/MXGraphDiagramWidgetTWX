@@ -174,6 +174,9 @@ TW.IDE.Widgets.mxdiagram = function () {
             },
             'SelectedCellChanged': {
                 'warnIfNotBound': false
+            },
+            'CellDoubleClicked': {
+                'warnIfNotBound': false
             }
         };
     };

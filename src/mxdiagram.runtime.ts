@@ -9,13 +9,13 @@ TW.Runtime.Widgets.mxdiagram = function () {
         return '<div class="widget-content widget-mxgraph"></div>';
     };
 
-    this.runtimeProperties  =  function  () {
-        return  {
+    this.runtimeProperties = function () {
+        return {
             needsDataLoadingAndError: true,
         };
     }
 
-    this.afterRender = async function () {   
+    this.afterRender = async function () {
         mxGraphNamespace = await import("./generic/mxGraphImport");
         mxGraphUtils = await import('./generic/mxGraphUtils');
     }
@@ -24,8 +24,8 @@ TW.Runtime.Widgets.mxdiagram = function () {
         this.setProperty(updatePropertyInfo.TargetProperty, updatePropertyInfo.RawDataFromInvoke);
         switch (updatePropertyInfo.TargetProperty) {
             case 'ValueDiagram':
-                if(!valueProcessDiagramLoader) {
-                    valueProcessDiagramLoader = await import('./value_process/mxValueProcessDiagram');                    
+                if (!valueProcessDiagramLoader) {
+                    valueProcessDiagramLoader = await import('./value_process/mxValueProcessDiagram');
                 }
                 this.resetCurrentGraph();
                 let container = this.jqElement[0];
@@ -33,12 +33,12 @@ TW.Runtime.Widgets.mxdiagram = function () {
                 this.setNewActiveGraph(currentGraph);
                 break;
             case 'XMLDiagram': {
-                if(!xmlDiagramLoader) {
-                    xmlDiagramLoader = await import('./xml_codec/mxGraphXmlDiagram');                    
+                if (!xmlDiagramLoader) {
+                    xmlDiagramLoader = await import('./xml_codec/mxGraphXmlDiagram');
                 }
                 this.resetCurrentGraph();
                 let container = this.jqElement[0];
-                let currentGraph = xmlDiagramLoader.createGraphFromXML(container, updatePropertyInfo.SinglePropertyValue, 
+                let currentGraph = xmlDiagramLoader.createGraphFromXML(container, updatePropertyInfo.SinglePropertyValue,
                     this.getProperty("CustomShapesXMLPath"), this.getProperty("AutoLayout"), this.getProperty("EdgeStyle"));
                 graph = currentGraph;
 
@@ -46,21 +46,21 @@ TW.Runtime.Widgets.mxdiagram = function () {
                 break;
             }
             case 'JSONArrayGraphCells': {
-                if (graph == null){
+                if (graph == null) {
                     break;
                 }
 
                 var data = updatePropertyInfo.SinglePropertyValue;
                 var graphCells = JSON.parse(updatePropertyInfo.RawSinglePropertyValue);
 
-                for (var i = 0; i < graphCells.length; i++){
+                for (var i = 0; i < graphCells.length; i++) {
                     var cellId = graphCells[i].id;
                     var value = graphCells[i].value;
                     var fillColor = graphCells[i].fillColor;
                     var strokeColor = graphCells[i].strokeColor;
 
                     var cell = this.getGraphCell(graph, cellId);
-                    cell.value.setAttribute("label",  value);
+                    cell.value.setAttribute("label", value);
                     var style = cell.getStyle();
                     this.setCellColor(cell, fillColor, "fillColor");
                     this.setCellColor(cell, strokeColor, "strokeColor");
@@ -73,7 +73,7 @@ TW.Runtime.Widgets.mxdiagram = function () {
         }
     }
 
-    this.setCellColor = function(cell, color, colorType){
+    this.setCellColor = function (cell, color, colorType) {
         var style = cell.getStyle();
         var styleBeforeColor = style.substring(0, style.indexOf(colorType + "=") + (colorType + "=").length);
         var styleAfterColor = style.substring(style.indexOf(colorType + "=") + (colorType + "=").length + "#ffffff".length, style.length);
@@ -81,22 +81,22 @@ TW.Runtime.Widgets.mxdiagram = function () {
         cell.setStyle(newStyle);
     }
 
-    this.getGraphCell = function(parent, cellId){
-        
+    this.getGraphCell = function (parent, cellId) {
+
         var cells = [];
-        if(parent.getChildCells){
+        if (parent.getChildCells) {
             cells = parent.getChildCells();
-        } else if (parent.children){
+        } else if (parent.children) {
             cells = parent.children;
         }
         var foundCell;
 
-        for(var i = 0; i < cells.length; i++){
-            if(cells[i].value != undefined && cells[i].value.getAttribute("customId") == cellId){
+        for (var i = 0; i < cells.length; i++) {
+            if (cells[i].value != undefined && cells[i].value.getAttribute("customId") == cellId) {
                 foundCell = cells[i];
                 break;
-            } else{
-                if(foundCell == null){
+            } else {
+                if (foundCell == null) {
                     this.getGraphCell(cells[i], cellId);
                 }
             }
@@ -108,7 +108,7 @@ TW.Runtime.Widgets.mxdiagram = function () {
 
     this.setNewActiveGraph = function (newGraph) {
         this.initializeEventListener(newGraph);
-        currentGraphResources.push(newGraph);              
+        currentGraphResources.push(newGraph);
         if (mxGraphUtils && this.getProperty('ShowTools')) {
             currentGraphResources.push(mxGraphUtils.CreateGraphToolbar(newGraph));
         }
@@ -120,44 +120,49 @@ TW.Runtime.Widgets.mxdiagram = function () {
 
     this.initializeEventListener = function (graph) {
         let thisWidget = this;
-        graph.addListener('labelChanged', function(sender, evt)
-        {
+        graph.addListener('labelChanged', function (sender, evt) {
             let cell = evt.getProperty('cell');
-            
-            if (cell != null)
-            {
-                if(cell.value.id) {
+
+            if (cell != null) {
+                if (cell.value.id) {
                     thisWidget.setProperty("EditedCellId", cell.value.id + "-" + cell.value.key);
                 } else {
                     thisWidget.setProperty("EditedCellId", cell.parent.value.id + "-" + cell.value.key);
                 }
                 thisWidget.setProperty("EditedCellNewLabel", cell.value.value);
                 thisWidget.jqElement.triggerHandler('CellLabelChanged');
-                
+
             }
         });
 
-        graph.getSelectionModel().addListener('change', function(sender, evt)
-        {
+        graph.getSelectionModel().addListener('change', function (sender, evt) {
             var cells = evt.getProperty('removed');//.getProperty('added');
-            
-            for (var i = 0; i < cells.length; i++){
+
+            for (var i = 0; i < cells.length; i++) {
 
                 var cell = cells[i];
 
-                if (cell != null && cell.value && cell.value.getAttribute){
+                if (cell != null && cell.value && cell.value.getAttribute) {
                     thisWidget.setProperty("SelectedCellId", cell.value.getAttribute("customId"));
                     thisWidget.jqElement.triggerHandler('SelectedCellChanged');
                 }
             }
-          
+
+        });
+
+        graph.addListener('doubleClick', function (sender, evt) {
+            var cell = evt.getProperty('cell');
+            if (cell && cell.value && cell.value.getAttribute) {
+                thisWidget.setProperty("SelectedCellId", cell.value.getAttribute("customId"));
+                thisWidget.jqElement.triggerHandler('CellDoubleClicked');
+            }
         });
     }
 
-    this.serviceInvoked = function (serviceName) {    
-        if(serviceName=="GenerateXML") {
+    this.serviceInvoked = function (serviceName) {
+        if (serviceName == "GenerateXML") {
             this.setProperty("XMLDiagram", mxGraphUtils.exportGraphAsXml(graph));
-        }
+        } 
     }
     this.resetCurrentGraph = function () {
         for (const object of currentGraphResources) {
@@ -165,7 +170,7 @@ TW.Runtime.Widgets.mxdiagram = function () {
         }
     }
 
-    this.beforeDestroy = function() {
+    this.beforeDestroy = function () {
         this.resetCurrentGraph();
     }
 }
