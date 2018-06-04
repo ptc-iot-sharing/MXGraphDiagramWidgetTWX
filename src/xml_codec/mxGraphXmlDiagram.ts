@@ -191,6 +191,7 @@ function bytesToString(arr) {
 
 function setGraphState(xmlNode, graph) {
     graph.gridEnabled = xmlNode.getAttribute('grid') != '0';
+    graph.setCellsLocked(xmlNode.getAttribute('locked') != '0');
     graph.gridSize = parseFloat(xmlNode.getAttribute('gridSize')) || mxGraph.prototype.gridSize;
     graph.graphHandler.guidesEnabled = xmlNode.getAttribute('guides') != '0';
     graph.setTooltips(xmlNode.getAttribute('tooltips') != '0');
