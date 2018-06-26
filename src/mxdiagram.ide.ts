@@ -50,14 +50,18 @@ TW.IDE.Widgets.mxdiagram = function () {
                     'baseType': 'BOOLEAN',
                     'isVisible': true,
                     'defaultValue': true,
-                    'isBindingTarget': true
                 },
                 'ShowOutline': {
                     'description': 'Show the outline window',
                     'baseType': 'BOOLEAN',
                     'isVisible': true,
                     'defaultValue': true,
-                    'isBindingTarget': true
+                },
+                'AutoFit': {
+                    'description': 'Make the graph fit the container when it first loads',
+                    'baseType': 'BOOLEAN',
+                    'isVisible': true,
+                    'defaultValue': false,
                 },
                 'CustomShapesXMLPath': {
                     'description': 'URL that points to a xml shapes file',

@@ -115,7 +115,12 @@ TW.Runtime.Widgets.mxdiagram = function () {
         if (mxGraphUtils && this.getProperty('ShowOutline')) {
             currentGraphResources.push(mxGraphUtils.CreateGraphOutline(newGraph));
         }
-        this.setProperty("XMLDiagram", mxGraphUtils.exportGraphAsXml(newGraph));
+        if (mxGraphUtils) {
+            this.setProperty("XMLDiagram", mxGraphUtils.exportGraphAsXml(newGraph));
+        }
+        if (this.getProperty("AutoFit")) {
+            graph.fit();
+        }
     };
 
     this.initializeEventListener = function (graph) {
@@ -136,8 +141,8 @@ TW.Runtime.Widgets.mxdiagram = function () {
         });
 
         graph.getSelectionModel().addListener('change', function (sender, evt) {
-            var cells = evt.getProperty('removed');//.getProperty('added');
-
+            var cells = evt.getProperty('removed') || [];
+            
             for (var i = 0; i < cells.length; i++) {
 
                 var cell = cells[i];
@@ -162,7 +167,7 @@ TW.Runtime.Widgets.mxdiagram = function () {
     this.serviceInvoked = function (serviceName) {
         if (serviceName == "GenerateXML") {
             this.setProperty("XMLDiagram", mxGraphUtils.exportGraphAsXml(graph));
-        } 
+        }
     }
     this.resetCurrentGraph = function () {
         for (const object of currentGraphResources) {
