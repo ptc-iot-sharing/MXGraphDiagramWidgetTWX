@@ -1,6 +1,6 @@
 {
     "name": "mxdiagram",
-    "version": "0.0.186",
+    "version": "0.0.187",
     "description": "Widget to display draw.io diagrams or value process diagrams",
     "thingworxServer": "http://localhost:8016/",
     "thingworxUser": "Administrator",
@@ -51,7 +51,7 @@
         "zip-webpack-plugin": "^3.0.0"
     },
     "dependencies": {
-        "jjgraph": "^3.8.0-2",
+        "jjgraph": "github:stefan-lacatus/jjgraph#master",
         "pako": "^1.0.6"
     }
 }
