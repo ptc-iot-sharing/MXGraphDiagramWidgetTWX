@@ -4,7 +4,30 @@ TW.Runtime.Widgets.mxdiagram = function () {
     let currentGraphResources = [];
     // the html is really simple. just a div acting as the container
     let graph;
+    let resizeInterval;
 
+    this.initializeResponsiveContainer = function (element: HTMLElement) {
+        // whenever the element resizes, we must be responsive.
+        // so watch for element resizes via an interval
+        function onResize(element, callback) {
+            let height = element.clientHeight;
+            let width = element.clientWidth;
+
+            return setInterval(() => {
+                if (element.clientHeight != height || element.clientWidth != width) {
+                    height = element.clientHeight;
+                    width = element.clientWidth;
+                    callback();
+                }
+            }, 500);
+        }
+        resizeInterval = onResize(element, () => {
+            if (graph) {
+                graph.doResizeContainer(element.clientWidth, element.clientHeight);
+                graph.fit();
+            }
+        });
+    }
     this.renderHtml = function () {
         return '<div class="widget-content widget-mxgraph"></div>';
     };
@@ -16,6 +39,7 @@ TW.Runtime.Widgets.mxdiagram = function () {
     }
 
     this.afterRender = async function () {
+        this.boundingBox.css({ width: "100%", height: "100%" });
         mxGraphNamespace = await import("./generic/mxGraphImport");
         mxGraphUtils = await import('./generic/mxGraphUtils');
     }
@@ -106,6 +130,10 @@ TW.Runtime.Widgets.mxdiagram = function () {
 
     }
 
+    this.graphChanged = function (graph) {
+        // empty function be overriden when in a script for example
+    }
+
     this.setNewActiveGraph = function (newGraph) {
         this.initializeEventListener(newGraph);
         currentGraphResources.push(newGraph);
@@ -120,7 +148,9 @@ TW.Runtime.Widgets.mxdiagram = function () {
         }
         if (this.getProperty("AutoFit")) {
             graph.fit();
+            this.initializeResponsiveContainer(this.boundingBox[0]);
         }
+        this.graphChanged(newGraph);
     };
 
     this.initializeEventListener = function (graph) {
@@ -142,7 +172,7 @@ TW.Runtime.Widgets.mxdiagram = function () {
 
         graph.getSelectionModel().addListener('change', function (sender, evt) {
             var cells = evt.getProperty('removed') || [];
-            
+
             for (var i = 0; i < cells.length; i++) {
 
                 var cell = cells[i];
@@ -176,6 +206,7 @@ TW.Runtime.Widgets.mxdiagram = function () {
     }
 
     this.beforeDestroy = function () {
+        clearInterval(resizeInterval);
         this.resetCurrentGraph();
     }
 }
