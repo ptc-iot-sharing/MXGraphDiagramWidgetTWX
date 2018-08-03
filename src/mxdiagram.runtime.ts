@@ -1,9 +1,7 @@
 TW.Runtime.Widgets.mxdiagram = function () {
-    let mxGraphNamespace, valueProcessDiagramLoader, mxGraphUtils, xmlDiagramLoader;
+    let valueProcessDiagramLoader, xmlDiagramLoader;
     // a list of resources that are hold by the current graph
     let currentGraphResources = [];
-    // the html is really simple. just a div acting as the container
-    let graph;
     let resizeInterval;
 
     this.initializeResponsiveContainer = function (element: HTMLElement) {
@@ -22,9 +20,9 @@ TW.Runtime.Widgets.mxdiagram = function () {
             }, 500);
         }
         resizeInterval = onResize(element, () => {
-            if (graph) {
-                graph.doResizeContainer(element.clientWidth, element.clientHeight);
-                graph.fit();
+            if (this.graph) {
+                this.graph.doResizeContainer(element.clientWidth, element.clientHeight);
+                this.graph.fit();
             }
         });
     }
@@ -40,8 +38,8 @@ TW.Runtime.Widgets.mxdiagram = function () {
 
     this.afterRender = async function () {
         this.boundingBox.css({ width: "100%", height: "100%" });
-        mxGraphNamespace = await import("./generic/mxGraphImport");
-        mxGraphUtils = await import('./generic/mxGraphUtils');
+        this.mxGraphNamespace = await import("./generic/mxGraphImport");
+        this.mxGraphUtils = await import('./generic/mxGraphUtils');
     }
 
     this.updateProperty = async function (updatePropertyInfo) {
@@ -64,13 +62,11 @@ TW.Runtime.Widgets.mxdiagram = function () {
                 let container = this.jqElement[0];
                 let currentGraph = xmlDiagramLoader.createGraphFromXML(container, updatePropertyInfo.SinglePropertyValue,
                     this.getProperty("CustomShapesXMLPath"), this.getProperty("AutoLayout"), this.getProperty("EdgeStyle"));
-                graph = currentGraph;
-
                 this.setNewActiveGraph(currentGraph);
                 break;
             }
             case 'JSONArrayGraphCells': {
-                if (graph == null) {
+                if (this.graph == null) {
                     break;
                 }
 
@@ -83,13 +79,13 @@ TW.Runtime.Widgets.mxdiagram = function () {
                     var fillColor = graphCells[i].fillColor;
                     var strokeColor = graphCells[i].strokeColor;
 
-                    var cell = this.getGraphCell(graph, cellId);
+                    var cell = this.getGraphCell(this.graph, cellId);
                     cell.value.setAttribute("label", value);
                     var style = cell.getStyle();
                     this.setCellColor(cell, fillColor, "fillColor");
                     this.setCellColor(cell, strokeColor, "strokeColor");
 
-                    graph.refresh(cell);
+                    this.graph.refresh(cell);
                 }
 
                 break;
@@ -135,19 +131,20 @@ TW.Runtime.Widgets.mxdiagram = function () {
     }
 
     this.setNewActiveGraph = function (newGraph) {
+        this.graph = newGraph;
         this.initializeEventListener(newGraph);
         currentGraphResources.push(newGraph);
-        if (mxGraphUtils && this.getProperty('ShowTools')) {
-            currentGraphResources.push(mxGraphUtils.CreateGraphToolbar(newGraph));
+        if (this.mxGraphUtils && this.getProperty('ShowTools')) {
+            currentGraphResources.push(this.mxGraphUtils.CreateGraphToolbar(newGraph));
         }
-        if (mxGraphUtils && this.getProperty('ShowOutline')) {
-            currentGraphResources.push(mxGraphUtils.CreateGraphOutline(newGraph));
+        if (this.mxGraphUtils && this.getProperty('ShowOutline')) {
+            currentGraphResources.push(this.mxGraphUtils.CreateGraphOutline(newGraph));
         }
-        if (mxGraphUtils) {
-            this.setProperty("XMLDiagram", mxGraphUtils.exportGraphAsXml(newGraph));
+        if (this.mxGraphUtils) {
+            this.setProperty("XMLDiagram", this.mxGraphUtils.exportGraphAsXml(newGraph));
         }
         if (this.getProperty("AutoFit")) {
-            graph.fit();
+            this.graph.fit();
             this.initializeResponsiveContainer(this.boundingBox[0]);
         }
         this.graphChanged(newGraph);
@@ -196,7 +193,7 @@ TW.Runtime.Widgets.mxdiagram = function () {
 
     this.serviceInvoked = function (serviceName) {
         if (serviceName == "GenerateXML") {
-            this.setProperty("XMLDiagram", mxGraphUtils.exportGraphAsXml(graph));
+            this.setProperty("XMLDiagram", this.mxGraphUtils.exportGraphAsXml(this.graph));
         }
     }
     this.resetCurrentGraph = function () {

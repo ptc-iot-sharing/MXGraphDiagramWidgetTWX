@@ -1,10 +1,10 @@
 {
     "name": "mxdiagram",
-    "version": "0.0.198",
+    "version": "0.0.200",
     "description": "Widget to display draw.io diagrams or value process diagrams",
     "thingworxServer": "http://localhost:8016/",
     "thingworxUser": "Administrator",
-    "thingworxPassword": "Administrator",
+    "thingworxPassword": "admin",
     "author": "Thingworx RoIcenter",
     "minimumThingWorxVersion": "6.0.0",
     "homepage": "http://roicentersvn/placatus/MxGraphDiagramWidget",
