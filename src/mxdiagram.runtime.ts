@@ -112,7 +112,7 @@ TW.Runtime.Widgets.mxdiagram = function () {
         var foundCell;
 
         for (var i = 0; i < cells.length; i++) {
-            if (cells[i].value != undefined && cells[i].value.getAttribute("customId") == cellId) {
+            if (cells[i].value != undefined && cells[i].value.getAttribute && cells[i].value.getAttribute("customId") == cellId) {
                 foundCell = cells[i];
                 break;
             } else {
