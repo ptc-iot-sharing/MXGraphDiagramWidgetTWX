@@ -1,10 +1,10 @@
 {
     "name": "mxdiagram",
-    "version": "0.0.203",
+    "version": "0.0.211",
     "description": "Widget to display draw.io diagrams or value process diagrams",
     "thingworxServer": "http://localhost:8016/",
     "thingworxUser": "Administrator",
-    "thingworxPassword": "admin",
+    "thingworxPassword": "Administrator",
     "author": "Thingworx RoIcenter",
     "minimumThingWorxVersion": "6.0.0",
     "homepage": "http://roicentersvn/placatus/MxGraphDiagramWidget",
@@ -51,6 +51,7 @@
         "zip-webpack-plugin": "^3.0.0"
     },
     "dependencies": {
+        "es6-promise-promise": "^1.0.0",
         "jjgraph": "github:stefan-lacatus/jjgraph#master",
         "pako": "^1.0.6"
     }

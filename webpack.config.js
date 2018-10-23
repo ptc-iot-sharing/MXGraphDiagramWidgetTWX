@@ -44,12 +44,15 @@ module.exports = function (env, argv) {
         plugins: [
             // delete build and zip folders
             new CleanWebpackPlugin(['build', 'zip']),
+            new webpack.ProvidePlugin({
+                Promise: 'es6-promise-promise'
+            }),
             // in case we just want to copy some resources directly to the widget package, then do it here
             new CopyWebpackPlugin([{ from: 'src/mxgraph', to: 'mxgraph' }]),
             // generates the metadata xml file and adds it to the archive
             new WidgetMetadataGenerator(),
             new DeclarationBundlerPlugin({
-                moduleName:`${packageJson.name}`,
+                moduleName: `${packageJson.name}`,
                 out: path.join('typings', `${packageJson.name}.d.ts`),
                 excludePattern: new RegExp(`${packageJson.name}\.ide\.ts.*`),
             }),
@@ -83,7 +86,7 @@ module.exports = function (env, argv) {
             rules: [
                 {
                     test: /(\.jsx|\.js)$/,
-                    exclude: /(node_modules|bower_components)/,
+                    //exclude: /(node_modules|bower_components)/,
                     use: {
                         loader: 'babel-loader',
                         options: {
@@ -99,7 +102,7 @@ module.exports = function (env, argv) {
                 },
                 {
                     test: /\.(png|jp(e*)g|svg|xml)$/,
-                    loader: 'url-loader?limit=30000&name=images/[name].[ext]'
+                    loader: 'file-loader'
                 },
                 {
                     test: /\.css$/,
