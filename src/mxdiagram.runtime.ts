@@ -79,7 +79,7 @@ TW.Runtime.Widgets.mxdiagram = function () {
                     var fillColor = graphCells[i].fillColor;
                     var strokeColor = graphCells[i].strokeColor;
 
-                    var cell = this.getGraphCell(this.graph, cellId);
+                    var cell = this.getGraphCell(this.graph.getModel().cells, cellId);
                     cell.value.setAttribute("label", value);
                     var style = cell.getStyle();
                     this.setCellColor(cell, fillColor, "fillColor");
@@ -101,25 +101,19 @@ TW.Runtime.Widgets.mxdiagram = function () {
         cell.setStyle(newStyle);
     }
 
-    this.getGraphCell = function (parent, cellId) {
-
-        var cells = [];
-        if (parent.getChildCells) {
-            cells = parent.getChildCells();
-        } else if (parent.children) {
-            cells = parent.children;
-        }
+    this.getGraphCell = function (cells, cellId) {
         var foundCell;
-
-        for (var i = 0; i < cells.length; i++) {
-            if (cells[i].value != undefined && cells[i].value.getAttribute && cells[i].value.getAttribute("customId") == cellId) {
-                foundCell = cells[i];
-                break;
-            } else {
-                if (foundCell == null) {
-                    this.getGraphCell(cells[i], cellId);
+        for (const cellIterator in cells) {
+            if (cells.hasOwnProperty(cellIterator)) {
+                const cell = cells[cellIterator];
+                if (cell.value != undefined && cell.value.getAttribute && cell.value.getAttribute("customId") == cellId) {
+                    foundCell = cell;
+                    break;
                 }
             }
+        }
+        if(!foundCell) {
+            foundCell = cells[cellId]
         }
 
         return foundCell;
@@ -174,9 +168,14 @@ TW.Runtime.Widgets.mxdiagram = function () {
 
                 var cell = cells[i];
 
-                if (cell != null && cell.value && cell.value.getAttribute) {
-                    thisWidget.setProperty("SelectedCellId", cell.value.getAttribute("customId"));
-                    thisWidget.jqElement.triggerHandler('SelectedCellChanged');
+                if (cell) {
+                    if (cell.value && cell.value.getAttribute) {
+                        thisWidget.setProperty("SelectedCellId", cell.value.getAttribute("customId"));
+                        thisWidget.jqElement.triggerHandler('SelectedCellChanged');
+                    } else {
+                        thisWidget.setProperty("SelectedCellId", cell.id);
+                        thisWidget.jqElement.triggerHandler('SelectedCellChanged');
+                    }
                 }
             }
 
@@ -184,9 +183,14 @@ TW.Runtime.Widgets.mxdiagram = function () {
 
         graph.addListener('doubleClick', function (sender, evt) {
             var cell = evt.getProperty('cell');
-            if (cell && cell.value && cell.value.getAttribute) {
-                thisWidget.setProperty("SelectedCellId", cell.value.getAttribute("customId"));
-                thisWidget.jqElement.triggerHandler('CellDoubleClicked');
+            if (cell) {
+                if (cell.value && cell.value.getAttribute) {
+                    thisWidget.setProperty("SelectedCellId", cell.value.getAttribute("customId"));
+                    thisWidget.jqElement.triggerHandler('CellDoubleClicked');
+                } else {
+                    thisWidget.setProperty("SelectedCellId", cell.id);
+                    thisWidget.jqElement.triggerHandler('CellDoubleClicked');
+                }
             }
         });
     }
