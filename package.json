@@ -7,13 +7,13 @@
     "thingworxPassword": "Administrator12345",
     "author": "Thingworx RoIcenter placatus",
     "minimumThingWorxVersion": "6.0.0",
-    "homepage": "https://github.com/ptc-iot-sharing/ThreeViewerWidgetTWX",
+    "homepage": "https://github.com/ptc-iot-sharing/MXGraphDiagramWidgetTWX",
     "autoUpdate": {
-        "gitHubURL": "https://api.github.com/repos/ptc-iot-sharing/ThreeViewerWidgetTWX/releases/latest"
+        "gitHubURL": "https://api.github.com/repos/ptc-iot-sharing/MXGraphDiagramWidgetTWX/releases/latest"
     },
     "repository": {
         "type": "git",
-        "url": "https://github.com/ptc-iot-sharing/ThreeViewerWidgetTWX.git"
+        "url": "https://github.com/ptc-iot-sharing/MXGraphDiagramWidgetTWX.git"
     },
     "scripts": {
         "test": "echo \"Error: no test specified\" && exit 1",
