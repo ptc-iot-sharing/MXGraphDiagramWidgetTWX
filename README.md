@@ -2,26 +2,6 @@
 
 View diagrams generated with [draw.io](https://draw.io), interact with them and more. It uses the [mxGraph](https://jgraph.github.io/mxgraph/) library.
 
-# Index
-
-- [About](#about)
-- [Usage](#usage)
-    + [The SVG file](#1-the-svg-file)
-    + [The data infotable](#2-the-data-infotable)
-      - [Overrides in a nested infotable](#21-overrides-in-a-nested-infotable)
-      - [Overrides in a flat infotable](#overrides-in-a-flat-infotable)
-      - [Types of overrides](#22-types-of-overrides)
-    + [Bindings and properties](#3-bindings-and-properties)
-    + [Installation](#4-installation)
-- [Development](#development)
-- [Resources](#resources)
-  * [SVG Demo starter kit](#2-svg-demo-starter-kit)
-    + [Installation](#21-installation)
-    + [Usage](#22-usage)
-- [Gallery](#gallery)
-- [Credit/Acknowledgment](#credit-acknowledgment)
-- [License](#license)
-
 # About
 This is a Thingworx widget allowing visualization of dynamic [draw.io](https://draw.io) diagrams. The diagrams themselves can be exported from draw.io, or, generated dynamically by a service.
 
@@ -69,7 +49,7 @@ The following commands allow you to build and compile your widget:
 
 #  Gallery
 
-![mxGraph](demo/img/mxGraph1.jpg)
+![mxGraph](demo/img/mxGraph1.png)
 
 ![mxGraph](demo/img/mxGraph2.png)
 
