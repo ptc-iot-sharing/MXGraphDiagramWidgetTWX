@@ -94,10 +94,21 @@ TW.Runtime.Widgets.mxdiagram = function () {
     }
 
     this.setCellColor = function (cell, color, colorType) {
-        var style = cell.getStyle();
+         var style = cell.getStyle();
+        let newStyle:string;
+        
+        //there is a posibility that the style of the element does not contain any color information.
+        //1. When the style contains color information
+        if (style.indexOf(colorType + "=")!=-1)
+        {
         var styleBeforeColor = style.substring(0, style.indexOf(colorType + "=") + (colorType + "=").length);
-        var styleAfterColor = style.substring(style.indexOf(colorType + "=") + (colorType + "=").length + "#ffffff".length, style.length);
-        var newStyle = styleBeforeColor + color + styleAfterColor;
+        var styleAfterColor = style.substring(style.indexOf(colorType + "=") + (colorType + "=").length + color.length, style.length);
+        newStyle = styleBeforeColor + color + styleAfterColor;
+        }
+        //2. When the style does not contain color information
+        else{
+             newStyle = style+";"+colorType+"="+color;    
+        }
         cell.setStyle(newStyle);
     }
 
