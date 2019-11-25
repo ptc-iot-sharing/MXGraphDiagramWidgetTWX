@@ -53,7 +53,6 @@ The following commands allow you to build and compile your widget:
 
 ![mxGraph](demo/img/mxGraph2.png)
 
-![mxGraph](demo/img/mxGraph3.png)
 
 # Credit/Acknowledgment
 Petrisor Lacatus  (@stefan-lacatus)
