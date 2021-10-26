@@ -20,7 +20,7 @@ The main entry point for the widget is the `XMLDiagram` property. This represent
 * `JSONArrayGraphCells`: Override allowing you to do state formatting on the element. It should be an JSON object containing id, value, fillColor and strokeColor.
 * `SelectedCellId`: The Id of the currently selected cell.
 * `AutoLayout`: The layout algorithm to be applied in the cells in the diagram. By default, no algorithm is selected, meaning that the positions of the cells in the XML are respected. If one algorithm is selected, the graph will be organized acording to that layout.
-* `EdgeStyle`: Override the edge style algorithm in the XML. Usually used toghether with `AutoLayout`, allows for generation of good looking edged between cells.
+* `EdgeStyleValue`: Override the edge style algorithm in the XML. Usually used toghether with `AutoLayout`, allows for generation of good looking edged between cells.
 
 
 The following events are also available:
