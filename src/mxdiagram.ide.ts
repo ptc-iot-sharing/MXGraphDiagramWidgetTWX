@@ -130,7 +130,7 @@ TW.IDE.Widgets.mxdiagram = function () {
                     },
                     ]
                 },
-                'EdgeStyle': {
+                'EdgeStyleValue': {
                     'description': 'The edge style to be applied to loaded XML.',
                     'baseType': 'STRING',
                     'defaultValue': 'None',
