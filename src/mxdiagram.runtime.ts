@@ -61,7 +61,7 @@ TW.Runtime.Widgets.mxdiagram = function () {
                 this.resetCurrentGraph();
                 let container = this.jqElement[0];
                 let currentGraph = xmlDiagramLoader.createGraphFromXML(container, updatePropertyInfo.SinglePropertyValue,
-                    this.getProperty("CustomShapesXMLPath"), this.getProperty("AutoLayout"), this.getProperty("EdgeStyleType"));
+                    this.getProperty("CustomShapesXMLPath"), this.getProperty("AutoLayout"), this.getProperty("EdgeStyleValue"));
                 this.setNewActiveGraph(currentGraph);
                 break;
             }
