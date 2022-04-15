@@ -59,4 +59,5 @@ The following commands allow you to build and compile your widget:
 Petrisor Lacatus  (@stefan-lacatus)
 
 #  License
+This Extension is provided as-is and without warranty or support. It is not part of the PTC product suite.
 [ISC License](LICENSE.MD)
